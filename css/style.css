@@ -7,12 +7,7 @@ html, body {
 }
 
 div {
-    /* border-size: 1px;
-    border-style: solid;
-    border-color: black; */
     text-align: center;
-    /* padding: 0px;
-    margin: 0px; */
 }
 
 select option {
@@ -29,6 +24,8 @@ select option {
 
 #score_input {
     margin-top: 1em;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #history [id*='match'] {
@@ -55,6 +52,11 @@ select {
 
 #history_container {
     padding-bottom: 1.5em;
+}
+
+#players_container, #add_players_container, #history_card {
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 /* .nopadding {
