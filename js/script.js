@@ -83,9 +83,11 @@ function reportMatch(P1, P2, P3, P4, S1, S2) {
     if (parseInt(match_template.querySelector("#team1score").innerHTML) > parseInt(match_template.querySelector("#team2score").innerHTML)) {
         node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-success\" disabled>Victoire</button>");
         node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-danger\" disabled>Défaite</button>");
-    } else {
+    } else if (parseInt(match_template.querySelector("#team1score").innerHTML) < parseInt(match_template.querySelector("#team2score").innerHTML)) {
         node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-danger\" disabled>Défaite</button>");
         node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-success\" disabled>Victoire</button>");
+    } else {
+        node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-warning\" disabled>Erreur</button>");
     }
 
     if (history.firstChild != null) {
@@ -109,7 +111,6 @@ db.collection("matches")
             var data = doc.data();
             console.log(doc.id, " => ", data);
             reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
-            // match_number = data.id
             match_number = parseInt(doc.id.split("match")[1]);
         });
     })
@@ -132,13 +133,37 @@ document.getElementById("validate_button").addEventListener("click", function() 
         document.getElementById("score2_input")
     ];
 
-    // Check for errors (ex: name not specified)
+    // Clear color for all inputs
     for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].options[inputs[i].selectedIndex].text == "") {
-            console.log("ERREUR INPUTS");
-            return;
-        }
+        $("#" + inputs[i].id).removeClass("is-invalid");
     }
+
+    // Check for errors
+    if ((inputs[0].options[inputs[0].selectedIndex].text == "" && inputs[1].options[inputs[1].selectedIndex].text == "") ||
+        inputs[4].options[inputs[4].selectedIndex].text == "" ||
+        inputs[5].options[inputs[5].selectedIndex].text == "" ||
+        (inputs[2].options[inputs[2].selectedIndex].text == "" && inputs[3].options[inputs[3].selectedIndex].text == "")) {
+
+        if ((inputs[0].options[inputs[0].selectedIndex].text == "" && inputs[1].options[inputs[1].selectedIndex].text == "")) {
+            $("#player1_input").addClass("is-invalid");
+            $("#player2_input").addClass("is-invalid");
+        }
+        if (inputs[4].options[inputs[4].selectedIndex].text == "")
+            $("#score1_input").addClass("is-invalid");
+        if (inputs[5].options[inputs[5].selectedIndex].text == "")
+            $("#score2_input").addClass("is-invalid");
+        if ((inputs[2].options[inputs[2].selectedIndex].text == "" && inputs[3].options[inputs[3].selectedIndex].text == "")) {
+            $("#player3_input").addClass("is-invalid");
+            $("#player4_input").addClass("is-invalid");
+        }
+
+        // Exit method if error(s)
+        return;
+    }
+
+    // Disable button while match not added
+    document.getElementById("validate_button").disabled = true;
+    document.getElementById("validate_button").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i>";
 
     // Create match object
     var reported_match = {
@@ -151,25 +176,22 @@ document.getElementById("validate_button").addEventListener("click", function() 
     };
 
     // Publish to Database
-    // TODO : Check if exists, if not ADD document
     db.collection("matches")
         .get()
         .then(function(documentSnapshots) {
             // Get the last visible document
             var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
 
-            console.log("match" + (parseInt(lastVisible.id.split("match")[1])+1));
+            console.log("match" + (parseInt(lastVisible.id.split("match")[1]) + 1));
             console.log(reported_match);
 
             db.collection("matches")
-                .doc("match" + (parseInt(lastVisible.id.split("match")[1])+1))
+                .doc("match" + (parseInt(lastVisible.id.split("match")[1]) + 1))
                 .set(reported_match)
                 .then(function(docRef) {
-                    // console.log("Document written with ID: ", docRef.id);
-
                     setTimeout(function() {
                         // Get this match and display it
-                        db.collection("matches").doc("match" + (parseInt(lastVisible.id.split("match")[1])+1)).get().then(function(doc) {
+                        db.collection("matches").doc("match" + (parseInt(lastVisible.id.split("match")[1]) + 1)).get().then(function(doc) {
                             if (doc.exists) {
                                 data = doc.data();
                                 reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
@@ -180,54 +202,60 @@ document.getElementById("validate_button").addEventListener("click", function() 
                         }).catch(function(error) {
                             console.log("Error getting document:", error);
                         });
+
+                        document.getElementById("validate_button").disabled = false;
+                        document.getElementById("validate_button").innerHTML = "Valider";
                     }, 500);
                 })
 
+            for (var i = 0; i < inputs.length; i++) {
+                $("#" + inputs[i].id).removeClass("is-invalid");
+                inputs[i].value = "";
+            }
+
 
         });
-
-
-    //     db.collection("matches").doc("match" + ++match_number).set(reported_match)
-    //         .then(function(docRef) {
-    //             console.log("Document written with ID: ", docRef.id);
-    //
-    //                 // Get this match and display it
-    //                 db.collection("matches").doc("match" + (parseInt(match_number)).toString()).get().then(function(doc) {
-    //                     if (doc.exists) {
-    //                         data = doc.data();
-    //                         reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
-    //                     } else {
-    //                         console.log("match" + match_number);
-    //                         console.log("No such document!");
-    //                     }
-    //                 }).catch(function(error) {
-    //                     console.log("Error getting document:", error);
-    //                 });
-    //
-    //         })
-    //         .catch(function(error) {
-    //             console.error("Error adding document: ", error);
-    //
-    //             console.log(match_number);
-    //
-    //             // Get this match and display it
-    //             db.collection("matches").doc("match" + (parseInt(match_number)).toString())
-    //                 .get()
-    //                 .then(function(doc) {
-    //                     if (doc.exists) {
-    //                         data = doc.data();
-    //                         reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
-    //                     } else {
-    //                         console.log("match" + match_number);
-    //                         console.log("No such document!");
-    //                     }
-    //                 }).catch(function(error) {
-    //                     console.log("Error getting document:", error);
-    //                 });
 });
 
+//     db.collection("matches").doc("match" + ++match_number).set(reported_match)
+//         .then(function(docRef) {
+//             console.log("Document written with ID: ", docRef.id);
+//
+//                 // Get this match and display it
+//                 db.collection("matches").doc("match" + (parseInt(match_number)).toString()).get().then(function(doc) {
+//                     if (doc.exists) {
+//                         data = doc.data();
+//                         reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
+//                     } else {
+//                         console.log("match" + match_number);
+//                         console.log("No such document!");
+//                     }
+//                 }).catch(function(error) {
+//                     console.log("Error getting document:", error);
+//                 });
+//
+//         })
+//         .catch(function(error) {
+//             console.error("Error adding document: ", error);
+//
+//             console.log(match_number);
+//
+//             // Get this match and display it
+//             db.collection("matches").doc("match" + (parseInt(match_number)).toString())
+//                 .get()
+//                 .then(function(doc) {
+//                     if (doc.exists) {
+//                         data = doc.data();
+//                         reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
+//                     } else {
+//                         console.log("match" + match_number);
+//                         console.log("No such document!");
+//                     }
+//                 }).catch(function(error) {
+//                     console.log("Error getting document:", error);
+//                 });
 
 
-// TODO : clean inputs when validate
-// TODO : Add error messages when wrong thing happens when validate
-// TODO : Limit history match number to display
+
+// TODO : Limit history match number in main page
+// TODO : Add history page to see all matches

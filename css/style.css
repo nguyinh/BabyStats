@@ -69,3 +69,7 @@ select {
 #players_list h2 {
     padding-top: 0.6em;
 }
+
+#player1_input, #player3_input {
+    margin-bottom: 0.5em;
+}
