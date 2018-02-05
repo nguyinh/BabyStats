@@ -88,6 +88,10 @@ function reportMatch(P1, P2, P3, P4, S1, S2) {
         node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-success\" disabled>Victoire</button>");
     }
 
+    if (history.firstChild != null) {
+        match_template.insertAdjacentHTML('beforeend', "<hr/>");
+    }
+
     // add match to history
     history.insertBefore(match_template, history.firstChild);
 }
@@ -115,7 +119,7 @@ db.collection("matches")
 
 
 
-// --------------- Button listener ---------------
+// --------------- Validate button listener ---------------
 document.getElementById("validate_button").addEventListener("click", function() {
 
     // Get all inputs
