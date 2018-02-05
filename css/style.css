@@ -1,0 +1,71 @@
+body {
+    background-color: rgb(235, 240, 240);
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+div {
+    /* border-size: 1px;
+    border-style: solid;
+    border-color: black; */
+    text-align: center;
+    /* padding: 0px;
+    margin: 0px; */
+}
+
+select option {
+    text-align: center;
+}
+
+#validate_button {
+    font-size: 2em;
+}
+
+#validate_container {
+    margin-top: 1.5em;
+}
+
+#score_input {
+    margin-top: 1em;
+}
+
+#history [id*='match'] {
+    margin-top: 1.5em;
+}
+
+#template {
+    display: none;
+}
+
+select {
+    -webkit-appearance: none;
+    text-align: center;
+    text-align-last: center;
+}
+
+#title {
+    margin-top: 1.5em;
+}
+
+#title p {
+    margin-bottom: 0px;
+}
+
+#history_container {
+    padding-bottom: 1.5em;
+}
+
+/* .nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+} */
+
+#players_list p {
+    font-size: 1.25em;
+}
+
+#players_list h2 {
+    padding-top: 0.6em;
+}
