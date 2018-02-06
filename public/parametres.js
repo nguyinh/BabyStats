@@ -54,7 +54,8 @@ document.getElementById("add_player").addEventListener("click", function() {
         db.collection("players").doc(team)  // get document depending on team tag
             .get()
             .then(docSnapshot => {
-                if (docSnapshot.exists) {       // if document with team tag exists
+                // If document with team tag exists
+                if (docSnapshot.exists) {
                     db.collection("players")
                         .doc(team)
                         .get()
@@ -78,7 +79,8 @@ document.getElementById("add_player").addEventListener("click", function() {
                             console.log("Error getting document:", error);
                         });
 
-                } else {    // if document doesn't exist
+                // If document doesn't exist
+                } else {
                     // Create player object
                     var data = {
                         "player1": name

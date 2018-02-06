@@ -14,7 +14,6 @@ var selectsElements = [player1select, player2select, player3select, player4selec
 db.collection("players").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             data = doc.data();
-            console.log(doc.id);
 
             for (var i = 0; i < selectsElements.length; i++) {
                 selectsElements[i].insertAdjacentHTML('beforeend', "<optgroup label=\"" + doc.id + "\">"); // insert PSA team name as title
@@ -62,8 +61,6 @@ for (var i = 10; i >= -10; i--) {
 
 
 // --------------- Report match ---------------
-var match_number = 1;
-
 function reportMatch(P1, P2, P3, P4, S1, S2) {
 
     var match_template = document.getElementById("template").cloneNode(true); // copy template node
@@ -103,20 +100,20 @@ function reportMatch(P1, P2, P3, P4, S1, S2) {
 
 
 // --------------- History ---------------
-// Get all matches and display them
-db.collection("matches")
+// Get all matches, order from oldest to most recent and display them
+var test = db.collection("matches")
+    .orderBy("number")
     .get()
     .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             var data = doc.data();
-            console.log(doc.id, " => ", data);
             reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
-            match_number = parseInt(doc.id.split("match")[1]);
         });
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
+
 
 
 
@@ -172,18 +169,22 @@ document.getElementById("validate_button").addEventListener("click", function() 
         player3: inputs[2].options[inputs[2].selectedIndex].text,
         player4: inputs[3].options[inputs[3].selectedIndex].text,
         score1: parseInt(inputs[4].options[inputs[4].selectedIndex].text),
-        score2: parseInt(inputs[5].options[inputs[5].selectedIndex].text)
+        score2: parseInt(inputs[5].options[inputs[5].selectedIndex].text),
+        number: 0,              // number and invert_number are used to sort data from database
+        invert_number: 0,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
 
     // Publish to Database
     db.collection("matches")
+        .orderBy("number")
         .get()
         .then(function(documentSnapshots) {
-            // Get the last visible document
+            // Get the last visible document (= last match played)
             var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
 
-            console.log("match" + (parseInt(lastVisible.id.split("match")[1]) + 1));
-            console.log(reported_match);
+            reported_match["number"] = (parseInt(lastVisible.id.split("match")[1]) + 1);
+            reported_match["invert_number"] = -(parseInt(lastVisible.id.split("match")[1]) + 1);
 
             db.collection("matches")
                 .doc("match" + (parseInt(lastVisible.id.split("match")[1]) + 1))
@@ -196,8 +197,7 @@ document.getElementById("validate_button").addEventListener("click", function() 
                                 data = doc.data();
                                 reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
                             } else {
-                                console.log("match" + match_number);
-                                console.log("No such document!");
+                                console.log("match" + (parseInt(lastVisible.id.split("match")[1]) + 1) + "doesn't exist");
                             }
                         }).catch(function(error) {
                             console.log("Error getting document:", error);
@@ -212,50 +212,15 @@ document.getElementById("validate_button").addEventListener("click", function() 
                 $("#" + inputs[i].id).removeClass("is-invalid");
                 inputs[i].value = "";
             }
-
-
         });
 });
-
-//     db.collection("matches").doc("match" + ++match_number).set(reported_match)
-//         .then(function(docRef) {
-//             console.log("Document written with ID: ", docRef.id);
-//
-//                 // Get this match and display it
-//                 db.collection("matches").doc("match" + (parseInt(match_number)).toString()).get().then(function(doc) {
-//                     if (doc.exists) {
-//                         data = doc.data();
-//                         reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
-//                     } else {
-//                         console.log("match" + match_number);
-//                         console.log("No such document!");
-//                     }
-//                 }).catch(function(error) {
-//                     console.log("Error getting document:", error);
-//                 });
-//
-//         })
-//         .catch(function(error) {
-//             console.error("Error adding document: ", error);
-//
-//             console.log(match_number);
-//
-//             // Get this match and display it
-//             db.collection("matches").doc("match" + (parseInt(match_number)).toString())
-//                 .get()
-//                 .then(function(doc) {
-//                     if (doc.exists) {
-//                         data = doc.data();
-//                         reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2);
-//                     } else {
-//                         console.log("match" + match_number);
-//                         console.log("No such document!");
-//                     }
-//                 }).catch(function(error) {
-//                     console.log("Error getting document:", error);
-//                 });
-
 
 
 // TODO : Limit history match number in main page
 // TODO : Add history page to see all matches
+// TODO : Display timestamp in history
+// TODO : replace db.collection("matches").orderBy("number").get().then(function(documentSnapshots) { var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1]; })
+//          by db.collection("matches").orderBy("invert_number").limit(1).get().then( ....
+// TODO : Add a match/player delete function
+// TODO : Add advanced mode to write in database player mood or "gamelle" number
+// TODO : Maybe change player database hierarchy to allow other properties like "timestamp", "mood" ...
