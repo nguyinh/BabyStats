@@ -15,21 +15,25 @@ select option {
 }
 
 #validate_button {
-    font-size: 2em;
+    font-size: 2rem;
 }
 
 #validate_container {
-    margin-top: 1.5em;
+    margin-top: 1.5rem;
 }
 
 #score_input {
-    margin-top: 1em;
+    margin-top: 1rem;
     padding-left: 5px;
     padding-right: 5px;
 }
 
 #history [id*='match'] {
-    margin-top: 1.5em;
+    padding-top: 1.5rem;
+}
+
+hr {
+    margin: 0px;
 }
 
 #template {
@@ -40,18 +44,21 @@ select {
     -webkit-appearance: none;
     text-align: center;
     text-align-last: center;
+    padding: 0 !important;
+}
+
+.default_value {
+    color: rgba(130, 130, 130, 0.8);
+      font-size: 1.1em;
+
 }
 
 #title {
-    margin-top: 1.5em;
+    margin-top: 1.5rem;
 }
 
 #title p {
     margin-bottom: 0px;
-}
-
-#history_container {
-    padding-bottom: 1.5em;
 }
 
 #players_container, #add_players_container, #history_card {
@@ -59,19 +66,24 @@ select {
     margin-right: 2px;
 }
 
-/* .nopadding {
-   padding: 0 !important;
-   margin: 0 !important;
-} */
+#players_list {
+    padding-bottom: 1.5rem;
+}
 
 #players_list p {
-    font-size: 1.25em;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
 }
 
 #players_list h2 {
-    padding-top: 0.6em;
+    padding-top: 0.6rem;
 }
 
 #player1_input, #player3_input {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.5rem;
+}
+
+#status_div {
+    z-index: 1;
 }

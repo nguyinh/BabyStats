@@ -108,7 +108,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                             querySnapshot.forEach(function(doc) {
                                 data = doc.data();
                                 var list = document.getElementById("players_list");
-                                list.insertAdjacentHTML('beforeend', "<h2>" + doc.id + "</h2><hr />");
+                                list.insertAdjacentHTML('beforeend', "<h2>" + doc.id + "</h2><hr/>");
                                 for (var propertyName in data) {
                                     list.insertAdjacentHTML('beforeend', "<p>" + data[propertyName] + "</p>");
                                 }

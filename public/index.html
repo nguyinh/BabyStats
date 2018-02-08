@@ -57,28 +57,32 @@
                 <div class="col-4 col-xl-4">
                     <div>
                         <select id="player1_input" class="form-control">
-                            <option value=""></option>
+                            <option value="" selected class="default_value">Joueur 1</option>
                         </select>
                     </div>
                     <div>
                         <select id="player2_input" class="form-control">
-                            <option value=""></option>
+                            <option value="" selected class="default_value">Joueur 2</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="col-2 col-xl-2" style="padding-left: 0 !important;">
+                <div class="col-2 col-xl-2" style="padding-left: 0 !important; padding-right: 5px !important;">
                     <div class="row">
                         <div class="col-12">
-                            <select id="score1_input" class="form-control"></select>
+                            <select id="score1_input" class="form-control">
+                                <option value="" selected class="default_value">Score 1</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-2 col-xl-2" style="padding-right: 0 !important;">
+                <div class="col-2 col-xl-2" style="padding-right: 0 !important; padding-left: 5px !important;">
                     <div class="row">
                         <div class="col-12">
-                            <select id="score2_input" class="form-control"></select>
+                            <select id="score2_input" class="form-control">
+                                <option value="" selected class="default_value">Score 2</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -86,12 +90,12 @@
                 <div class="col-4 col-xl-4">
                     <div>
                         <select id="player3_input" class="form-control">
-                            <option value=""></option>
+                            <option value="" selected class="default_value">Joueur 3</option>
                         </select>
                     </div>
                     <div>
                         <select id="player4_input" class="form-control">
-                            <option value=""></option>
+                            <option value="" selected class="default_value">Joueur 4</option>
                         </select>
                     </div>
                 </div>
@@ -112,7 +116,7 @@
     <!--  HISTORY  -->
     <div class="row" style="margin-top: 1.5em;" id="history_card">
         <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
-            <div class="card" id="history_container">
+            <div class="card" id="history_container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
                 <h3 class="card-header">Historique</h3>
                 <div id="history"></div>
             </div>
@@ -122,35 +126,37 @@
 
 
     <!--  TEMPLATE  -->
-    <div class="test" id="template">
-        <div>
-            <div class="row">
-                <div class="col-4" style="padding-right: 0 !important;">
-                    <div><strong id="player1"></strong></div>
-                    <div><strong id="player2"></strong></div>
+    <div id="template" class="match_container">
+        <div class="row" style="padding-bottom: 1em;">
+            <div class="col-4" style="padding-right: 0 !important;">
+                <div><strong id="player1"></strong></div>
+                <div><strong id="player2"></strong></div>
+            </div>
+
+            <div class="col-4" style="padding-left: 0 !important; padding-right: 0 !important;">
+                <div id="status">
+                    <div id="status_div" style="background-color: transparent;"></div>
                 </div>
 
-                <div class="col-4" style="padding-left: 0 !important; padding-right: 0 !important;">
-                    <div id="status"></div>
-                    <div class="row">
-                        <div class="col-3 offset-2 col-xl-2 offset-xl-3" style="padding-left: 0 !important; padding-right: 0 !important;">
-                            <strong id="team1score"></strong>
-                        </div>
-                        <div class="col-2" style="padding-left: 0 !important; padding-right: 0 !important;">
-                            <strong> | </strong>
-                        </div>
-                        <div class="col-3 offset--2 col-xl-2 offset-xl--3" style="padding-left: 0 !important; padding-right: 0 !important;">
-                            <strong id="team2score"></strong>
-                        </div>
+                <div class="row">
+                    <div class="col-3 offset-2 col-xl-2 offset-xl-3" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <strong id="team1score"></strong>
+                    </div>
+                    <div class="col-2" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <strong> | </strong>
+                    </div>
+                    <div class="col-3 offset--2 col-xl-2 offset-xl--3" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <strong id="team2score"></strong>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-4" style="padding-left: 0 !important;">
-                    <div><strong id="player3"></strong></div>
-                    <div><strong id="player4"></strong></div>
-                </div>
+            <div class="col-4" style="padding-left: 0 !important;">
+                <div><strong id="player3"></strong></div>
+                <div><strong id="player4"></strong></div>
             </div>
         </div>
+        <!-- <hr/> separator will appear here -->
     </div>
 
 
@@ -169,7 +175,9 @@
         };
         firebase.initializeApp(config);
     </script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="script.js"></script>
