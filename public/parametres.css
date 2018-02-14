@@ -1,6 +1,6 @@
 body {
     background-color: rgb(235, 240, 240);
-    padding-bottom: 0.2rem;
+    padding-bottom: 1rem;
 }
 
 html, body {
@@ -61,8 +61,23 @@ select {
     margin-bottom: 0px;
 }
 
-#player1_input, #player3_input {
-    margin-bottom: 0.5rem;
+#players_container, #add_players_container, #history_card {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#players_list {
+    padding-bottom: 1.5rem;
+}
+
+#players_list p {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+}
+
+#players_list h2 {
+    padding-top: 0.6rem;
 }
 
 #status_div {

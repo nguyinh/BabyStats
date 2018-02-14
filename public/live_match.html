@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="live_match_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Live match | BabyStats</title>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <!-- <div class="container"> -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">BabyStats</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="index.html">Matchs</a>
+                <a class="nav-item nav-link active" href="#">Live match<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="statistiques.html">Statistiques</a>
+                <a class="nav-item nav-link" href="parametres.html">Paramètres</a>
+            </div>
+        </div>
+    </nav>
+    <!-- </div> -->
+
+    <div class="container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+        <div class="row no-gutters" id="main_container">
+            <div class="col-12">
+
+                <!-- HEADER -->
+                <div class="container sticky-top">
+                    <div class="row no-gutters">
+                        <div class="offset-xl-3 col-xl-6 col-12" id="score_header">
+
+                            <!-- SCORES -->
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-4 offset-1">
+                                        <div class="score_border">
+                                            <h1 id="score1" class="score_indicator">0</h1>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4 offset-2">
+                                        <div class="score_border">
+                                            <h1 id="score2" class="score_indicator">0</h1>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PLAYERS -->
+                            <div class="container">
+                                <div class="row no-gutters" style="margin-top: 1rem;">
+                                    <div class="col-3 column-container-left">
+                                        <select id="player1_input" class="form-control">
+                                <option value="" selected class="default_value">Joueur 1</option>
+                            </select>
+                                    </div>
+
+                                    <div class="col-3 column-container-right">
+                                        <select id="player2_input" class="form-control">
+                                <option value="" selected class="default_value">Joueur 2</option>
+                            </select>
+                                    </div>
+
+                                    <div class="col-3 column-container-left">
+                                        <select id="player3_input" class="form-control">
+                                <option value="" selected class="default_value">Joueur 3</option>
+                            </select>
+                                    </div>
+
+                                    <div class="col-3 column-container-right">
+                                        <select id="player4_input" class="form-control">
+                                <option value="" selected class="default_value">Joueur 4</option>
+                            </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <hr/>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="row no-gutters" id="players_scores">
+                        <div class="offset-xl-3 col-xl-6">
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <h2>Buts</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|goal|+"><h3>+</h3></button>
+                                        <h3 id="goalJ1score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|goal|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|goal|+"><h3>+</h3></button>
+                                        <h3 id="goalJ2score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|goal|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|goal|+"><h3>+</h3></button>
+                                        <h3 id="goalJ3score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|goal|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|goal|+"><h3>+</h3></button>
+                                        <h3 id="goalJ4score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|goal|-"><h3>-</h3></button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr/>
+
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <h2>Gamelles</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|gamelle|+"><h3>+</h3></button>
+                                        <h3 id="gamelleJ1score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|gamelle|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|gamelle|+"><h3>+</h3></button>
+                                        <h3 id="gamelleJ2score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|gamelle|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|gamelle|+"><h3>+</h3></button>
+                                        <h3 id="gamelleJ3score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|gamelle|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|gamelle|+"><h3>+</h3></button>
+                                        <h3 id="gamelleJ4score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|gamelle|-"><h3>-</h3></button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr/>
+
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <h2>Buts contre son camp</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <div class="row no-gutters">
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|betray|+"><h3>+</h3></button>
+                                        <h3 id="betrayJ1score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|betray|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|betray|+"><h3>+</h3></button>
+                                        <h3 id="betrayJ2score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|betray|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|betray|+"><h3>+</h3></button>
+                                        <h3 id="betrayJ3score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|betray|-"><h3>-</h3></button>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|betray|+"><h3>+</h3></button>
+                                        <h3 id="betrayJ4score" class="score_indicator">0</h3>
+                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|betray|-"><h3>-</h3></button>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  BUTTON  -->
+    <div class="container">
+        <div class="row no-gutters" id="validate_container">
+            <div class="col-xl-2 offset-xl-5 col-8 offset-2">
+                <button type="button" class="btn btn-success btn-block" id="validate_button">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC9YNHO1_eQOfgSQp5IifQj2fzrf5u3Hik",
+            authDomain: "babystats-df22b.firebaseapp.com",
+            databaseURL: "https://babystats-df22b.firebaseio.com",
+            projectId: "babystats-df22b",
+            storageBucket: "babystats-df22b.appspot.com",
+            messagingSenderId: "892281132936"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="live_match.js"></script>
+</body>
+
+</html>
