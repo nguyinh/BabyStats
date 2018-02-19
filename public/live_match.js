@@ -12,18 +12,28 @@ var player4select = document.getElementById('player4_input');
 var selectsElements = [player1select, player2select, player3select, player4select];
 
 // Get all players from database and PSA teams then fill 'select' elements with it
-db.collection("players").get().then(function(querySnapshot) {
+db.collection("players")
+    .orderBy("team")
+    .get()
+    .then(function(querySnapshot) {
+        // Query players list
+        var team_id = null;
         querySnapshot.forEach(function(doc) {
             data = doc.data();
 
-            for (var i = 0; i < selectsElements.length; i++) {
-                selectsElements[i].insertAdjacentHTML('beforeend', "<optgroup label=\"" + doc.id + "\">"); // insert PSA team name as title
-                for (var propertyName in data) {
-                    var opt = document.createElement('option');
-                    opt.value = data[propertyName];
-                    opt.innerHTML = data[propertyName];
-                    selectsElements[i].appendChild(opt);
+            // If new docSnapshot of if new team in doc
+            if ((team_id == null) || (team_id != data.team)) {
+                team_id = data.team;
+                for (var i = 0; i < selectsElements.length; i++) {
+                    selectsElements[i].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_id + "\">"); // insert PSA team name as title
                 }
+            }
+            // If same team as before, do nothing particular
+            for (var i = 0; i < selectsElements.length; i++) {
+                var opt = document.createElement('option');
+                opt.value = data.name;
+                opt.innerHTML = data.name;
+                selectsElements[i].appendChild(opt);
             }
         });
     })
