@@ -4,24 +4,20 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="parametres.css">
+    <link rel="stylesheet" type="text/css" href="live_match_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- https://afeld.github.io/emoji-css/ -->
-    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
-
-
-    <title>Paramètres | BabyStats</title>
+    <title>Live match | BabyStats</title>
 </head>
 
 <body>
 
-
     <!-- NAVBAR -->
+    <!-- <div class="container"> -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">BabyStats</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,62 +27,40 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link" href="index.html">Matchs</a>
                 <a class="nav-item nav-link" href="live_match.html">Live match</a>
-                <a class="nav-item nav-link" href="profil.html">Profil</a>
+                <a class="nav-item nav-link active" href="#">Profil<span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link" href="statistiques.html">Statistiques</a>
-                <a class="nav-item nav-link active" href="#">Paramètres<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="parametres.html">Paramètres</a>
             </div>
         </div>
     </nav>
-
-
-
-    <!--  PLAYERS_LIST  -->
-    <div class="row" style="margin-top: 1.5em;" id="players_container">
-        <div class="col-xl-4 offset-xl-4">
-            <div class="card">
-                <h3 class="card-header">Joueurs</h3>
-
-
-                <div class="row">
-                    <div class="col-10 offset-1" id="players_list">
-                        <!-- Player list here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
 
     <!--  ADD_PLAYER  -->
     <div class="row" style="margin-top: 1.5em;" id="add_players_container">
         <div class="col-xl-4 offset-xl-4">
             <div class="card">
-                <h3 class="card-header">Ajouter un joueur</h3>
+                <h3 class="card-header">Se connecter</h3>
                 <div class="row">
                     <div class="col-10 offset-1" style="padding-top: 1em;">
                         <div class="row">
                             <div class="input-group col-6">
-                                <input type="text" class="form-control" placeholder="Prénom N." aria-describedby="basic-addon1" id="name_input">
+                                <input type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1" id="ID_input">
                             </div>
                             <div class="input-group col-6">
-                                <input type="text" class="form-control" placeholder="Service" aria-describedby="basic-addon1" id="team_input">
+                                <input type="text" class="form-control" placeholder="password" aria-describedby="basic-addon1" id="password_input">
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-primary btn-lg btn-block" style="margin-bottom: 1em; margin-top: 1em;" id="add_player">Ajouter un joueur</button>
+                        <button type="button" class="btn btn-primary btn-lg btn-block" style="margin-bottom: 1em; margin-top: 1em;" id="log_in">log in</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-    <!-- SCRIPTS -->
+    <!-- </div> -->
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
     <script>
         // Initialize Firebase
@@ -100,10 +74,11 @@
         };
         firebase.initializeApp(config);
     </script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="parametres.js"></script>
+    <script src="profil.js"></script>
 </body>
 
 </html>
