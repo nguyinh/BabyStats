@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="live_match_style.css">
+    <link rel="stylesheet" type="text/css" href="profil.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>Profil | BabyStats</title>
@@ -35,19 +35,19 @@
     </nav>
 
     <!--  ADD_PLAYER  -->
-    <div class="row" style="margin-top: 1.5em;" id="add_players_container">
+    <div class="row" style="margin-top: 1.5em;" id="log_user_container">
         <div class="col-xl-4 offset-xl-4">
             <div class="card" id="affiche_connect">
                 <h3 class="card-header">Se connecter</h3>
                 <div class="row">
                     <div class="col-10 offset-1" style="padding-top: 1em;">
                         <div class="row">
-                          <div class="col-sm-6">
-                            <input type="radio" name="sign" value="in" id= "signin" value ="0" checked><span>   Sign In</span>
-                          </div>
-                          <div class="col-sm-6">
-                            <input type="radio" name="sign" value="up" id= "signup" value ="1"><span>   Sign Up</span>
-                          </div>
+                            <div class="col-sm-6">
+                                <input type="radio" name="sign" value="in" id="signin" value="0" checked><span>   Sign In</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="radio" name="sign" value="up" id="signup" value="1"><span>   Sign Up</span>
+                            </div>
                         </div>
                         <div class="row">
                             <p> </p>
@@ -72,7 +72,7 @@
                             <p> </p>
                         </div>
                         <div class="row" id="error_info" style="display:none">
-                            <p class="text-danger" id="error_message" style="display:none">  Classe danger - Rouge</p>
+                            <p class="text-danger" id="error_message" style="display:none"> Classe danger - Rouge</p>
                         </div>
 
                         <button type="button" class="btn btn-primary btn-lg btn-block" style="margin-bottom: 1em; margin-top: 1em;" id="log_in">log in</button>
