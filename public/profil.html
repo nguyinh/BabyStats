@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="live_match_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <title>Live match | BabyStats</title>
+    <title>Profil | BabyStats</title>
 </head>
 
 <body>
@@ -37,17 +37,42 @@
     <!--  ADD_PLAYER  -->
     <div class="row" style="margin-top: 1.5em;" id="add_players_container">
         <div class="col-xl-4 offset-xl-4">
-            <div class="card">
+            <div class="card" id="affiche_connect">
                 <h3 class="card-header">Se connecter</h3>
                 <div class="row">
                     <div class="col-10 offset-1" style="padding-top: 1em;">
                         <div class="row">
-                            <div class="input-group col-6">
-                                <input type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1" id="ID_input">
-                            </div>
-                            <div class="input-group col-6">
-                                <input type="text" class="form-control" placeholder="password" aria-describedby="basic-addon1" id="password_input">
-                            </div>
+                          <div class="col-sm-6">
+                            <input type="radio" name="sign" value="in" id= "signin" value ="0" checked><span>   Sign In</span>
+                          </div>
+                          <div class="col-sm-6">
+                            <input type="radio" name="sign" value="up" id= "signup" value ="1"><span>   Sign Up</span>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <p> </p>
+                        </div>
+                        <div class="row">
+                            <input type="text" class="form-control" placeholder=" username" aria-describedby="basic-addon1" id="ID_input">
+                        </div>
+                        <div class="row">
+                            <p> </p>
+                        </div>
+                        <div class="row">
+                            <input type="text" class="form-control" placeholder=" password" aria-describedby="basic-addon1" id="password_input">
+                        </div>
+                        <div class="row">
+                            <p> </p>
+                        </div>
+                        <div class="row" id="affiche_confirm" style="display:none">
+                            <!-- visibility ="hidden" when Signin in-->
+                            <input type="text" class="form-control" placeholder=" password confimation" aria-describedby="basic-addon1" id="password_confirm_input">
+                        </div>
+                        <div class="row">
+                            <p> </p>
+                        </div>
+                        <div class="row" id="error_info" style="display:none">
+                            <p class="text-danger" id="error_message" style="display:none">  Classe danger - Rouge</p>
                         </div>
 
                         <button type="button" class="btn btn-primary btn-lg btn-block" style="margin-bottom: 1em; margin-top: 1em;" id="log_in">log in</button>

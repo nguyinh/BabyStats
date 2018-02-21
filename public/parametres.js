@@ -28,7 +28,7 @@ db.collection("players")
                     list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ambulance\"></i>  " + data.name + "</p>");
                     break;
                 case "Mitsuaki V.":
-                    list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-rage\"></i>  " + data.name + "  <i class=\"em em-anger\"></i></p>");
+                    list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-anger\"></i>  " + data.name + "  </p>");
                     break;
                 case "Jérémy D.":
                     list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ice_hockey_stick_and_puck\"></i>  " + data.name + "</p>");
