@@ -65,6 +65,8 @@ var betrayJ2 = document.getElementById("betrayJ2score");
 var betrayJ3 = document.getElementById("betrayJ3score");
 var betrayJ4 = document.getElementById("betrayJ4score");
 
+
+// Cast string number to integer
 function int(element) {
     return parseInt(element.innerHTML);
 }
@@ -104,7 +106,7 @@ function minus(element) {
 }
 
 
-
+// Contains all logic for score changes conditions
 function updateScore(team, type, change) {
     switch (team) {
         // ----------------- PLAYER 1 -----------------
