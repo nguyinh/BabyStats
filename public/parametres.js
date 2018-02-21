@@ -23,6 +23,7 @@ db.collection("players")
             }
             // If same team as before, do nothing particular
 
+            // Emoji tag
             switch (data.name) {
                 case "Claire L.":
                     list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ambulance\"></i>  " + data.name + "</p>");
@@ -61,14 +62,14 @@ document.getElementById("add_player").addEventListener("click", function() {
     var name = document.getElementById("name_input").value;
     var team = document.getElementById("team_input").value.toUpperCase();
 
-    if (name != "" && team != "") { // if inputs are not empty
+    // If inputs are not empty (=valid)
+    if (name != "" && team != "") {
         // Change to loading button
         document.getElementById("add_player").disabled = true;
         document.getElementById("add_player").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i>";
 
 
-
-
+        // Add player to database
         db.collection("players")
             .orderBy("number")
             .get()
@@ -121,6 +122,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                                         }
                                         // If same team as before, do nothing particular
 
+                                        // Emoji tag
                                         switch (data.name) {
                                             case "Claire L.":
                                                 list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ambulance\"></i>  " + data.name + "</p>");
@@ -163,9 +165,6 @@ document.getElementById("add_player").addEventListener("click", function() {
             .catch(function(error) {
                 console.log("Error getting document:", error);
             });
-
-
-
 
     } else {
         // Put inputs in red if missing

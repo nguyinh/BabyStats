@@ -325,14 +325,3 @@ document.getElementById("validate_button").addEventListener("click", function() 
             }
         });
 });
-
-
-
-// TODO : Limit history match number in main page
-// TODO : Add history page to see all matches
-// TODO : Display timestamp in history
-// TODO : replace db.collection("matches").orderBy("number").get().then(function(documentSnapshots) { var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1]; })
-//          by db.collection("matches").orderBy("invert_number").limit(1).get().then( ....
-// TODO : Correct multitap on matches
-// TODO : Add advanced mode to write in database player mood or "gamelle" number
-// TODO : Maybe change player database hierarchy to allow other properties like "timestamp", "mood" ...
