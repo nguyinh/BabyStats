@@ -154,10 +154,11 @@ function inputDown(e) {
             .parent().attr('id'))
         .animate({
                 opacity: 0.6,
-                backgroundColor: "rgba(251, 0, 0)"
+                color: "rgb(240, 242, 217)",
+                backgroundColor: "rgb(173, 59, 59)"
             },
             1000,
-            'linear');
+            'swing');
 
     // If timeout, restore background color
     setTimeout(function() {
@@ -167,17 +168,26 @@ function inputDown(e) {
                 .attr('id'))
             .animate({
                     opacity: 1,
+                    color: "rgb(0, 0, 0)",
                     backgroundColor: "#FFFFFFFF"
                 },
                 100,
-                'linear')
+                'swing')
     }, 1250);
 
     pressTimer = window.setTimeout(function() {
         var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');
-        console.log(match_id);
+
         if (new RegExp('match').test(match_id))
             if (confirm("Supprimer ce match ?")) {
+                // Add loading icon
+                var thisMatch = $("#" + $(e.target)
+                    .parentsUntil(".match_container")
+                    .parent().attr('id')).find("#status");
+                thisMatch[0].innerHTML = "";
+                thisMatch.addClass('fa fa-circle-o-notch fa-spin');
+                thisMatch.css("font-size", "1.75rem");
+
                 db.collection("matches")
                     .doc(match_id)
                     .get()
@@ -214,10 +224,11 @@ function inputUp(e) {
             .attr('id'))
         .animate({
                 opacity: 1,
+                color: "rgb(0, 0, 0)",
                 backgroundColor: "#FFFFFFFF"
             },
             100,
-            'linear');
+            'swing');
 
     clearTimeout(pressTimer);
 }
