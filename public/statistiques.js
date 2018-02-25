@@ -36,7 +36,9 @@ var betray_per_play = []
 var betray_last_play = []
 var total_wins = []
 var total_losses = []
-
+var ratio_win = []
+var ratio_loss = []
+var test = []
 
 
 
@@ -47,7 +49,7 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
   return documentSnapshot.data();
 });
 
-// Avoir le nombre de buts totaux par joueur
+// Avoir les statistiques descriptives à partir du match nº18 par joueur
 for(i=18; i<data.length; i++){
 
 if (players.hasOwnProperty(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))){
@@ -70,6 +72,8 @@ if (players.hasOwnProperty(String(data[i].player1.replace(/ /g,"_").replace(/\./
     goals_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_goals[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
     gamelles_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_gamelles[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
     betray_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_betray[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
+    ratio_win[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
+    ratio_loss[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
 
 }
 
@@ -96,6 +100,8 @@ if (players.hasOwnProperty(String(data[i].player1.replace(/ /g,"_").replace(/\./
         total_wins[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = 0
         total_losses[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = 1
         }
+        ratio_win[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
+        ratio_loss[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))]
 
     }
 
@@ -117,6 +123,9 @@ if (players.hasOwnProperty(String(data[i].player2.replace(/ /g,"_").replace(/\./
     else {
     total_losses[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] += 1
     }
+
+    ratio_win[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]
+    ratio_loss[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]
 
 }
     else {
@@ -142,6 +151,9 @@ if (players.hasOwnProperty(String(data[i].player2.replace(/ /g,"_").replace(/\./
         total_wins[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = 0
         }
 
+        ratio_win[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]
+        ratio_loss[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))]
+
     }
 
 if (players.hasOwnProperty(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))){
@@ -162,6 +174,9 @@ if (players.hasOwnProperty(String(data[i].player3.replace(/ /g,"_").replace(/\./
     else {
     total_wins[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] += 1
     }
+
+    ratio_win[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]
+    ratio_loss[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]
 
 }
     else {
@@ -187,6 +202,9 @@ if (players.hasOwnProperty(String(data[i].player3.replace(/ /g,"_").replace(/\./
         total_losses[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = 0
         }
 
+        ratio_win[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]
+        ratio_loss[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))]
+
     }
 
 if (players.hasOwnProperty(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))){
@@ -207,6 +225,9 @@ if (players.hasOwnProperty(String(data[i].player4.replace(/ /g,"_").replace(/\./
     else {
     total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] += 1
     }
+
+    ratio_win[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]
+    ratio_loss[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]
 
 }
     else {
@@ -232,6 +253,9 @@ if (players.hasOwnProperty(String(data[i].player4.replace(/ /g,"_").replace(/\./
         total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = 1
         }
 
+        ratio_win[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]
+        ratio_loss[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = total_losses[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]/number_of_plays[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))]
+
     }
 
     if (i==data.length-1){
@@ -255,12 +279,118 @@ if (players.hasOwnProperty(String(data[i].player4.replace(/ /g,"_").replace(/\./
         betray_last_play[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_betray
     }
 
+
 }
 // console.log(goals_last_play)
 // console.log(total_goals)
 // console.log(names)
 // console.log(number_of_plays)
 // console.log(goals_per_play)
+
+
+// Trois meilleurs joueurs sur le plan du ratio
+var sort_ratio_win = []
+for (j = 0; j<names.length; j++){
+    var temp = []
+    temp.push(ratio_win[j])
+    temp.push(names[j])
+    sort_ratio_win.push(temp)
+    temp = []
+}
+sort_ratio_win.sort().reverse()
+// console.log(sort_ratio_win)
+var three_best_players = []
+var three_best_ratios = []
+for (j = 0; j<3; j++){
+    three_best_players.push(sort_ratio_win[j][1])
+    three_best_ratios.push(sort_ratio_win[j][0])
+}
+// console.log(three_best_players)
+var best_player_html = document.getElementById("best_player")
+var second_best_player_html = document.getElementById("second_best_player")
+var third_best_player_html = document.getElementById("third_best_player")
+best_player_html.innerHTML = three_best_players[0] + "\r" + three_best_ratios[0].toPrecision(2)
+best_player_html.style.fontWeight = 'bold';
+best_player_html.insertAdjacentHTML('beforeend', "<p><i class=\"em em-first_place_medal\"></i> </p>");
+second_best_player_html.innerHTML = three_best_players[1]  + "\r" + three_best_ratios[1].toPrecision(2)
+second_best_player_html.style.fontWeight = 'bold';
+second_best_player_html.insertAdjacentHTML('beforeend', "<p><i class=\"em em-second_place_medal\"></i> </p>");
+third_best_player_html.innerHTML = three_best_players[2] + "\r" + three_best_ratios[2].toPrecision(2)
+third_best_player_html.style.fontWeight = 'bold';
+third_best_player_html.insertAdjacentHTML('beforeend', "<p><i class=\"em em-third_place_medal\"></i> </p>");
+
+
+
+
+// Trois meilleurs joueurs sur le plan du nombre de victoires
+var sort_number_win = []
+for (j = 0; j<names.length; j++){
+    var temp = []
+    temp.push(('0' + total_wins[j]).slice(-2))
+    temp.push(names[j])
+    sort_number_win.push(temp)
+    temp = []
+}
+console.log(sort_number_win)
+sort_number_win.sort().reverse()
+console.log(sort_number_win)
+// console.log(sort_ratio_win)
+var three_best_players_wins = []
+var three_best_number_wins = []
+for (j = 0; j<3; j++){
+    three_best_players_wins.push(sort_number_win[j][1])
+    three_best_number_wins.push(sort_number_win[j][0])
+}
+
+var best_player_html_wins = document.getElementById("best_player_wins")
+var second_best_player_html_wins = document.getElementById("second_best_player_wins")
+var third_best_player_html_wins = document.getElementById("third_best_player_wins")
+best_player_html_wins.innerHTML = three_best_players_wins[0] + "\r" + three_best_number_wins[0]
+best_player_html_wins.style.fontWeight = 'bold';
+best_player_html_wins.insertAdjacentHTML('beforeend', "<p><i class=\"em em-first_place_medal\"></i> </p>");
+second_best_player_html_wins.innerHTML = three_best_players_wins[1]  + "\r" + three_best_number_wins[1]
+second_best_player_html_wins.style.fontWeight = 'bold';
+second_best_player_html_wins.insertAdjacentHTML('beforeend', "<p><i class=\"em em-second_place_medal\"></i> </p>");
+third_best_player_html_wins.innerHTML = three_best_players_wins[2]  + "\r" + three_best_number_wins[2]
+third_best_player_html_wins.style.fontWeight = 'bold';
+third_best_player_html_wins.insertAdjacentHTML('beforeend', "<p><i class=\"em em-third_place_medal\"></i> </p>");
+
+// Trois meilleurs joueurs sur le plan du nombre de buts
+var sort_number_goals = []
+for (j = 0; j<names.length; j++){
+    var temp = []
+    temp.push(('0' + total_goals[j]).slice(-2))
+    temp.push(names[j])
+    sort_number_goals.push(temp)
+    temp = []
+}
+console.log(sort_number_goals)
+sort_number_win.sort().reverse()
+// console.log(sort_number_goals)
+// console.log(sort_ratio_win)
+var three_best_players_goals = []
+var three_best_number_goals = []
+for (j = 0; j<3; j++){
+    three_best_players_goals.push(sort_number_goals[j][1])
+    three_best_number_goals.push(sort_number_goals[j][0])
+
+}
+
+var best_player_html_goals = document.getElementById("best_player_goals")
+var second_best_player_html_goals = document.getElementById("second_best_player_goals")
+var third_best_player_html_goals = document.getElementById("third_best_player_goals")
+best_player_html_goals.innerHTML = three_best_players_goals[0]   + "\r" + three_best_number_goals[0]
+best_player_html_goals.style.fontWeight = 'bold';
+best_player_html_goals.insertAdjacentHTML('beforeend', "<p><i class=\"em em-first_place_medal\"></i> </p>");
+second_best_player_html_goals.innerHTML = three_best_players_goals[1] + "\r" + three_best_number_goals[1]
+second_best_player_html_goals.style.fontWeight = 'bold';
+second_best_player_html_goals.insertAdjacentHTML('beforeend', "<p><i class=\"em em-second_place_medal\"></i> </p>");
+third_best_player_html_goals.innerHTML = three_best_players_wins[2] + "\r" + three_best_number_goals[2]
+third_best_player_html_goals.style.fontWeight = 'bold';
+third_best_player_html_goals.insertAdjacentHTML('beforeend', "<p><i class=\"em em-third_place_medal\"></i> </p>");
+
+
+
 
 
 
@@ -328,7 +458,7 @@ var chartNumberofPlays = new Chart(ctx_number_of_plays, {
     data: {
         labels: names,
         datasets: [{
-            label : names,
+            label : 'Nombre de matches joués',
             data: number_of_plays,
             borderWidth: 1
         }]
@@ -338,7 +468,7 @@ var chartNumberofPlays = new Chart(ctx_number_of_plays, {
             display: false
          },
          tooltips: {
-            enabled: false
+            enabled: true
         },
         scales: {
             yAxes: [{
@@ -515,6 +645,49 @@ var chartNumberofWins = new Chart(ctx_number_of_wins, {
         title: {
             display: true,
             text: 'Victoires et Défaites'
+        }
+    },
+});
+
+
+// Diagramme du ratio gagné/perdu
+var ctx_ratio_win_loss = document.getElementById("chartRatioWinLoss").getContext('2d');
+var chartRatioWinLoss = new Chart(ctx_ratio_win_loss, {
+    type: 'bar',
+    data: {
+        labels: names,
+        datasets: [{
+            label : 'Ratio Victoires-Défaites',
+            data: ratio_win,
+            borderWidth: 1,
+            backgroundColor:'rgba(255, 99, 132, 0.2)'
+        }]
+    },
+    options: {
+        legend: {
+            display: false
+         },
+         tooltips: {
+            enabled: true
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+            xAxes: [{
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 90,
+                        minRotation: 0
+                    }
+                }]
+        },
+
+        title: {
+            display: true,
+            text: 'Ratio Victoires-Défaites'
         }
     },
 });

@@ -14,11 +14,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
     <script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
     <title>Statistiques | BabyStats</title>
 </head>
 
 <body>
+
+
+
+
+
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">BabyStats</a>
@@ -38,6 +45,49 @@
 
 
 
+    <!-- Palmarès nombre de victoires -->
+    <div style="margin-top:20px"></div>
+    <p class="text-center" text-align:center><b><font color="#4169E1">Palmarès Nombre de Victoires</font></b></p>
+    <div class="podium">
+
+        <div class="col-12" id = "best_player_wins"><span>
+        </span></div>
+
+        <div class="col-12" id = "second_best_player_wins"><span></span></div>
+        <div class="col-12" id = "third_best_player_wins"><span></span></div>
+        </div>
+    </div>
+
+    <!-- Palmarès ratio victoires/défaites -->
+    <div style="margin-top:20px"></div>
+    <p class="text-center" text-align:center><b><font color="#4169E1">Palmarès Ratio Victoires/Défaites</font></b></p>
+    <div class="podium">
+
+        <div class="col-12" id = "best_player"><span></span></div>
+        <div class="col-12" id = "second_best_player"><span></span></div>
+        <div class="col-12" id = "third_best_player"><span></span></div>
+        </div>
+    </div>
+
+
+
+    <!-- Palmarès meilleur buteur -->
+    <div style="margin-top:20px"></div>
+    <p class="text-center" text-align:center><b><font color="#4169E1">Palmarès Meilleur Buteur</font></b></p>
+    <div class="podium">
+
+        <div class="col-12" id = "best_player_goals"><span></span></div>
+        <div class="col-12" id = "second_best_player_goals"><span></span></div>
+        <div class="col-12" id = "third_best_player_goals"><span></span></div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <canvas id="chartGoalslastPlay"></canvas>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <canvas id="chartNumberofWins"></canvas>
@@ -45,18 +95,17 @@
     </div>
     <div class="row">
         <div class="col-12">
+            <canvas id="chartRatioWinLoss"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
             <canvas id="chartTotalGoals"></canvas>
         </div>
     </div>
-
     <div class="row">
         <div class="col-12">
             <canvas id="chartGoalsperPlay"></canvas>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <canvas id="chartGoalslastPlay"></canvas>
         </div>
     </div>
     <div class="row">

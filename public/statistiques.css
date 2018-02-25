@@ -1,3 +1,28 @@
 body {
+
     background-color: rgb(255, 255, 255);
+
+
+}
+
+.podium {
+text-align: center;
+}
+.podium div {
+width:100px;
+display:inline-block;
+}
+.top:before {
+    content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      background: red;
+}
+.left:before {
+  background: red;
+}
+.right:before {
+  background: green;
 }
