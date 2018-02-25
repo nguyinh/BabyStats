@@ -260,25 +260,29 @@ if (players.hasOwnProperty(String(data[i].player4.replace(/ /g,"_").replace(/\./
 
     if (i==data.length-1){
         names_last_play.push(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')));
+        goals_last_play[names_last_play.indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player1_goals
+        gamelles_last_play[names_last_play.indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player1_gamelles
+        betray_last_play[names_last_play.indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player1_betray
+
         names_last_play.push(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')));
+        goals_last_play[names_last_play.indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player2_goals
+        gamelles_last_play[names_last_play.indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player2_gamelles
+        betray_last_play[names_last_play.indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player2_betray
+
+
+
         names_last_play.push(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')));
+        goals_last_play[names_last_play.indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player3_goals
+        gamelles_last_play[names_last_play.indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player3_gamelles
+        betray_last_play[names_last_play.indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player3_betray
+
         names_last_play.push(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')));
-        goals_last_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player1_goals
-        goals_last_play[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player2_goals
-        goals_last_play[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player3_goals
-        goals_last_play[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_goals
-
-        gamelles_last_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player1_gamelles
-        gamelles_last_play[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player2_gamelles
-        gamelles_last_play[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player3_gamelles
-        gamelles_last_play[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_gamelles
-
-        betray_last_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player1_betray
-        betray_last_play[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player2_betray
-        betray_last_play[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player3_betray
-        betray_last_play[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_betray
+        goals_last_play[names_last_play.indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_goals
+        gamelles_last_play[names_last_play.indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_gamelles
+        betray_last_play[names_last_play.indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_betray
     }
-
+console.log(names_last_play)
+console.log(goals_last_play)
 
 }
 // console.log(goals_last_play)
