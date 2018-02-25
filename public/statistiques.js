@@ -363,7 +363,7 @@ third_best_player_html_wins.insertAdjacentHTML('beforeend', "<p><i class=\"em em
 var sort_number_goals = []
 for (j = 0; j<names.length; j++){
     var temp = []
-    temp.push(('0' + total_goals[j]).slice(-2))
+    temp.push(total_goals[j])
     temp.push(names[j])
     sort_number_goals.push(temp)
     temp = []
@@ -377,7 +377,6 @@ var three_best_number_goals = []
 for (j = 0; j<3; j++){
     three_best_players_goals.push(sort_number_goals[j][1])
     three_best_number_goals.push(sort_number_goals[j][0])
-
 }
 
 var best_player_html_goals = document.getElementById("best_player_goals")
