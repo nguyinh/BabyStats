@@ -1,12 +1,7 @@
 // Initialize Cloud Firestore through Firebase
 // Script.js avec set : ajouter à la base de données
-var display
 if(window.innerHeight > window.innerWidth){
-    alert("Please use Landscape!");
-    display = false;
-}
-else {
-    display = true
+    alert("Passez en mode paysage!");
 }
 
 // window.addEventListener("orientationchange", function() {
@@ -398,7 +393,6 @@ third_best_player_html_goals.insertAdjacentHTML('beforeend', "<p><i class=\"em e
 
 
 
-if (display == true){
 // Diagramme en bâton des buts totaux
 var ctx_total_goals = document.getElementById("chartTotalGoals").getContext('2d');
 ctx_total_goals.height = 1;
@@ -410,19 +404,19 @@ var chartTotalGoals = new Chart(ctx_total_goals, {
             label : 'Total Buts',
             data: total_goals,
             borderWidth: 1,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)'
+            backgroundColor: 'rgb(255, 99, 132)'
         },
         {
             label : 'Total Gamelles',
             data: total_gamelles,
             borderWidth: 1,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)'
+            backgroundColor: 'rgb(54, 162, 235)'
         },
         {
             label : 'Total Contre Son Camp',
             data: total_betray,
             borderWidth: 1,
-            backgroundColor: 'rgba(54, 80, 235, 0.2)'
+            backgroundColor: 'rgb(54, 80, 235)'
         }]
     },
     options: {
@@ -463,7 +457,8 @@ var chartNumberofPlays = new Chart(ctx_number_of_plays, {
         datasets: [{
             label : 'Nombre de matches joués',
             data: number_of_plays,
-            borderWidth: 1
+            borderWidth: 1,
+            backgroundColor: 'rgb(255, 99, 132)'
         }]
     },
     options: {
@@ -505,19 +500,19 @@ var chartGoalsperPlay = new Chart(ctx_goals_per_play, {
             label : 'Buts/Match',
             data: goals_per_play,
             borderWidth: 1,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)'
+            backgroundColor: 'rgb(255, 99, 132)'
         },
         {
             label : 'Gamelles/Match',
             data: gamelles_per_play,
             borderWidth: 1,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)'
+            backgroundColor: 'rgb(54, 162, 235)'
         },
         {
             label : 'Contre Son Camp/Match',
             data: betray_per_play,
             borderWidth: 1,
-            backgroundColor: 'rgba(54, 80, 235, 0.2)'
+            backgroundColor: 'rgb(54, 80, 235)'
         }]
     },
     options: {
@@ -559,19 +554,19 @@ var chartGoalslastPlay = new Chart(ctx_goals_last_play, {
             label : 'Buts',
             data: goals_last_play,
             borderWidth: 1,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)'
+            backgroundColor: 'rgb(255, 99, 132)'
         },
         {
             label : 'Gamelles',
             data: gamelles_last_play,
             borderWidth: 1,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)'
+            backgroundColor: 'rgb(54, 162, 235)'
         },
         {
             label : 'Contre Son Camp',
             data: betray_last_play,
             borderWidth: 1,
-            backgroundColor: 'rgba(54, 80, 235, 0.2)'
+            backgroundColor: 'rgb(54, 80, 235)'
         }]
     },
     options: {
@@ -614,13 +609,13 @@ var chartNumberofWins = new Chart(ctx_number_of_wins, {
             label : 'Victoires',
             data: total_wins,
             borderWidth: 1,
-            backgroundColor:'rgba(255, 99, 132, 0.2)'
+            backgroundColor:'rgb(255, 99, 132'
         },
         {
             label : 'Défaites',
             data: total_losses,
             borderWidth: 1,
-            backgroundColor:'rgba(54, 80, 235, 0.2)'
+            backgroundColor:'rgb(54, 80, 235)'
         }]
     },
     options: {
@@ -663,7 +658,7 @@ var chartRatioWinLoss = new Chart(ctx_ratio_win_loss, {
             label : 'Ratio Victoires-Défaites',
             data: ratio_win,
             borderWidth: 1,
-            backgroundColor:'rgba(255, 99, 132, 0.2)'
+            backgroundColor:'rgb(255, 99, 132)'
         }]
     },
     options: {
@@ -694,7 +689,6 @@ var chartRatioWinLoss = new Chart(ctx_ratio_win_loss, {
         }
     },
 });
-}
 
 
 
@@ -712,19 +706,19 @@ var chartRatioWinLoss = new Chart(ctx_ratio_win_loss, {
 //     .set({username: "test"});
 
 // Comment faire rentrer des variables dans le code R ?
-ocpu.seturl("//public.opencpu.org/ocpu/library/base/R")
-var code_R = $("#code_R").load("test.txt", function() {
-  // console.log(code_R.innerHTML);
-})[0];
-
-var mysnippet = new ocpu.Snippet("");
-var req = ocpu.call("identity", {
-  "x": mysnippet
-}, function(session) {
-  session.getConsole(function(outtxt) {
-    $("#output").text(outtxt);
-  });
-});
+// ocpu.seturl("//public.opencpu.org/ocpu/library/base/R")
+// var code_R = $("#code_R").load("test.txt", function() {
+//   // console.log(code_R.innerHTML);
+// })[0];
+//
+// var mysnippet = new ocpu.Snippet("");
+// var req = ocpu.call("identity", {
+//   "x": mysnippet
+// }, function(session) {
+//   session.getConsole(function(outtxt) {
+//     $("#output").text(outtxt);
+//   });
+// });
 
 
 //because identity is in base

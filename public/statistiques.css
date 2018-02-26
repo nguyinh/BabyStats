@@ -11,7 +11,7 @@ body {
     display: inline-block;
 }
 
-#third_best_player_wins {
+.top {
     content: "";
     display: inline-block;
     width: 15px;
