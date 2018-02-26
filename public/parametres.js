@@ -144,6 +144,11 @@ document.getElementById("add_player").addEventListener("click", function() {
                                 })
                                 .catch(function(error) {
                                     console.log("Error getting documents: ", error);
+                                    swal({
+                                        type: 'error',
+                                        title: 'Erreur',
+                                        text: 'Il semble que l\'ajout du joueur a échoué <i class=\"em em-confused\"></i>'
+                                    });
                                 });
 
                             // Clear inputs
@@ -153,10 +158,21 @@ document.getElementById("add_player").addEventListener("click", function() {
                             // Remove loading button
                             document.getElementById("add_player").disabled = false;
                             document.getElementById("add_player").innerHTML = "Valider";
+
+                            swal(
+                                'Succès',
+                                'On dirait qu\'on a un nouveau joueur <i class=\"em em-wink\"></i>',
+                                'success'
+                            );
                         }, 200);
                     })
                     .catch(function(error) {
                         console.error("Error writing document: ", error);
+                        swal({
+                            type: 'error',
+                            title: 'Erreur',
+                            text: 'Il semble que l\'ajout du joueur a échoué <i class=\"em em-confused\"></i>'
+                        });
                     });
 
 

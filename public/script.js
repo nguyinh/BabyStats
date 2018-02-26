@@ -178,41 +178,64 @@ function inputDown(e) {
     pressTimer = window.setTimeout(function() {
         var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');
 
-        if (new RegExp('match').test(match_id))
-            if (confirm("Supprimer ce match ?")) {
-                // Add loading icon
-                var thisMatch = $("#" + $(e.target)
-                    .parentsUntil(".match_container")
-                    .parent().attr('id')).find("#status");
-                thisMatch[0].innerHTML = "";
-                thisMatch.addClass('fa fa-circle-o-notch fa-spin');
-                thisMatch.css("font-size", "1.75rem");
+        if (new RegExp('match').test(match_id)) {
+            swal({
+                title: 'Confirmation',
+                text: "Êtes vous sûr de vouloir supprimer ce match ?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui !',
+                cancelButtonText: 'How about no.',
+                confirmButtonClass: 'btn btn-success mr-1',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.value) {
+                    // Add loading icon
+                    var thisMatch = $("#" + $(e.target)
+                        .parentsUntil(".match_container")
+                        .parent().attr('id')).find("#status");
+                    thisMatch[0].innerHTML = "";
+                    thisMatch.addClass('fa fa-circle-o-notch fa-spin');
+                    thisMatch.css("font-size", "1.75rem");
 
-                db.collection("matches")
-                    .doc(match_id)
-                    .get()
-                    .then(function(doc) {
-                        if (doc.exists) {
-                            db.collection("matches")
-                                .doc(match_id)
-                                .delete()
-                                .then(function() {
-                                    console.log(match_id + " successfully deleted!");
+                    db.collection("matches")
+                        .doc(match_id)
+                        .get()
+                        .then(function(doc) {
+                            if (doc.exists) {
+                                db.collection("matches")
+                                    .doc(match_id)
+                                    .delete()
+                                    .then(function() {
+                                        console.log(match_id + " successfully deleted!");
 
-                                    var match = document.getElementById(match_id);
-                                    match.parentNode.removeChild(match);
-                                }).catch(function(error) {
-                                    console.error("Error removing " + match_id + ": ", error);
-                                });
-                        } else {
-                            console.log("No such document!");
-                        }
-                    }).catch(function(error) {
-                        console.log("Error getting document:", error);
-                    });
-            } else {
-                // Do nothing
-            }
+                                        var match = document.getElementById(match_id);
+                                        match.parentNode.removeChild(match);
+
+                                        swal(
+                                            'Succès',
+                                            'Le match a bien été supprimé !',
+                                            'success'
+                                        );
+                                    }).catch(function(error) {
+                                        swal({
+                                            type: 'error',
+                                            title: 'Erreur',
+                                            text: 'Il y a eu un problème lors de la suppression du match'
+                                        });
+                                    });
+                            } else {
+                                console.log("No such document!");
+                            }
+                        }).catch(function(error) {
+                            console.log("Error getting document:", error);
+                        });
+                }
+            })
+        }
     }, 1000);
 }
 
@@ -320,13 +343,27 @@ document.getElementById("validate_button").addEventListener("click", function() 
                                 reportMatch(data.player1, data.player2, data.player3, data.player4, data.score1, data.score2, doc.id);
                             } else {
                                 console.log("match" + (parseInt(lastVisible.id.split("match")[1]) + 1) + "doesn't exist");
+                                swal({
+                                    type: 'error',
+                                    title: 'Erreur',
+                                    text: 'Il y a eu un problème lors de l\'ajout du match'
+                                });
                             }
                         }).catch(function(error) {
-                            console.log("Error getting document:", error);
+                            swal({
+                                type: 'error',
+                                title: 'Erreur',
+                                text: 'Il y a eu un problème lors de l\'ajout du match'
+                            });
                         });
 
                         document.getElementById("validate_button").disabled = false;
                         document.getElementById("validate_button").innerHTML = "Valider";
+                        swal(
+                            'Succès',
+                            'Le match a bien été ajouté !',
+                            'success'
+                        );
                     }, 500);
                 })
 
