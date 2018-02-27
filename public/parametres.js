@@ -16,13 +16,16 @@ db.collection("players")
             var list = document.getElementById("players_list");
             data = doc.data();
 
-            // If new docSnapshot or if new team in doc
-            if ((team_id == null) || (team_id != data.team)) {
+            // If new docSnapshot
+            if (team_id == null) {
                 team_id = data.team;
                 list.insertAdjacentHTML('beforeend', "<h2>" + team_id + "</h2><hr/>");
             }
-            // If same team as before, do nothing particular
-
+            // If new team, add some margin
+            else if (team_id != data.team) {
+                team_id = data.team;
+                list.insertAdjacentHTML('beforeend', "<h2 class=\"mt-3\">" + team_id + "</h2><hr/>");
+            }
             // Emoji tag
             switch (data.name) {
                 case "Claire L.":
