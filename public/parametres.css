@@ -1,6 +1,5 @@
 body {
     background-color: rgb(235, 240, 240);
-    padding-bottom: 1rem;
 }
 
 html, body {
@@ -11,63 +10,13 @@ div {
     text-align: center;
 }
 
-select option {
-    text-align: center;
-}
-
-#validate_button {
-    font-size: 2rem;
-}
-
-#validate_container {
-    margin-top: 1.5rem;
-}
-
-#score_input {
-    margin-top: 1rem;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-#history [id*='match'] {
-    padding-top: 1.5rem;
-}
-
 hr {
     margin: 0px;
 }
 
-#template {
-    display: none;
-}
-
-select {
-    -webkit-appearance: none;
-    text-align: center;
-    text-align-last: center;
-    padding: 0 !important;
-}
-
-.default_value {
-    color: rgba(130, 130, 130, 0.8);
-    font-size: 1.1em;
-}
-
-#title {
-    margin-top: 1.5rem;
-}
-
-#title p {
-    margin-bottom: 0px;
-}
-
-#players_container, #add_players_container, #history_card {
+#players_container, #add_players_container {
     margin-left: 2px;
     margin-right: 2px;
-}
-
-#players_list {
-    padding-bottom: 1.5rem;
 }
 
 #players_list p {
@@ -77,9 +26,5 @@ select {
 }
 
 #players_list h2 {
-    padding-top: 0.6rem;
-}
-
-#status_div {
-    z-index: 1;
+    padding-top: 0.75rem;
 }

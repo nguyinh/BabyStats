@@ -1,6 +1,5 @@
 body {
     background-color: rgb(235, 240, 240);
-    padding-bottom: 0.2rem;
 }
 
 html, body {
@@ -17,16 +16,6 @@ select option {
 
 #validate_button {
     font-size: 2rem;
-}
-
-#validate_container {
-    margin-top: 1.5rem;
-}
-
-#score_input {
-    margin-top: 1rem;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 #history [id*='match'] {
@@ -51,10 +40,6 @@ select {
 .default_value {
     color: rgba(130, 130, 130, 0.8);
     font-size: 1.1em;
-}
-
-#title {
-    margin-top: 1.5rem;
 }
 
 #title p {

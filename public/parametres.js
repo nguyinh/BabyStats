@@ -16,13 +16,16 @@ db.collection("players")
             var list = document.getElementById("players_list");
             data = doc.data();
 
-            // If new docSnapshot or if new team in doc
-            if ((team_id == null) || (team_id != data.team)) {
+            // If new docSnapshot
+            if (team_id == null) {
                 team_id = data.team;
                 list.insertAdjacentHTML('beforeend', "<h2>" + team_id + "</h2><hr/>");
             }
-            // If same team as before, do nothing particular
-
+            // If new team, add some margin
+            else if (team_id != data.team) {
+                team_id = data.team;
+                list.insertAdjacentHTML('beforeend', "<h2 class=\"mt-3\">" + team_id + "</h2><hr/>");
+            }
             // Emoji tag
             switch (data.name) {
                 case "Claire L.":
@@ -144,6 +147,11 @@ document.getElementById("add_player").addEventListener("click", function() {
                                 })
                                 .catch(function(error) {
                                     console.log("Error getting documents: ", error);
+                                    swal({
+                                        type: 'error',
+                                        title: 'Erreur',
+                                        text: 'Il semble que l\'ajout du joueur a échoué <i class=\"em em-confused\"></i>'
+                                    });
                                 });
 
                             // Clear inputs
@@ -153,10 +161,21 @@ document.getElementById("add_player").addEventListener("click", function() {
                             // Remove loading button
                             document.getElementById("add_player").disabled = false;
                             document.getElementById("add_player").innerHTML = "Valider";
+
+                            swal(
+                                'Succès',
+                                'On dirait qu\'on a un nouveau joueur <i class=\"em em-wink\"></i>',
+                                'success'
+                            );
                         }, 200);
                     })
                     .catch(function(error) {
                         console.error("Error writing document: ", error);
+                        swal({
+                            type: 'error',
+                            title: 'Erreur',
+                            text: 'Il semble que l\'ajout du joueur a échoué <i class=\"em em-confused\"></i>'
+                        });
                     });
 
 

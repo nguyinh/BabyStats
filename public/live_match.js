@@ -519,6 +519,12 @@ function validate() {
                 .doc("match" + (parseInt(lastVisible.id.split("match")[1]) + 1))
                 .set(reported_match)
                 .then(function(docRef) {
+                    swal(
+                        'Succès',
+                        'Le match a bien été ajouté !',
+                        'success'
+                    );
+
                     setTimeout(function() {
                         document.getElementById("validate_button").disabled = false;
                         document.getElementById("validate_button").innerHTML = "Valider";

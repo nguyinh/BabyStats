@@ -1,28 +1,29 @@
 body {
-
     background-color: rgb(255, 255, 255);
-
-
 }
 
 .podium {
-text-align: center;
+    text-align: center;
 }
+
 .podium div {
-width:100px;
-display:inline-block;
+    width: 100px;
+    display: inline-block;
 }
-.top:before {
+
+.top {
     content: "";
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      margin-right: 5px;
-      background: red;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    background: red;
 }
-.left:before {
-  background: red;
+
+.left {
+    background-color: red;
 }
-.right:before {
-  background: green;
+
+.right {
+    background: green;
 }
