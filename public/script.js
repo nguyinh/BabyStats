@@ -373,3 +373,63 @@ document.getElementById("validate_button").addEventListener("click", function() 
             }
         });
 });
+
+
+var names = ["Florent", "Pierre", "Jeremy", "Claire", "Florent", "Pierre", "Jeremy", "Claire", "Florent", "Pierre"]
+var check = '<div><span class="switch">' +
+'<input type="checkbox" class="switch" id="' + i + '">' +
+'<label for="' + i + '">' + names[0] + '</label></div>';
+for (var i=1; i<10 ; i++) {
+    check += '<div><span class="switch">' +
+    '<input type="checkbox" class="switch" id="' + i + '">' +
+    '<label for="' + i + '">' + names[i] + '</label></div>';
+}
+var check2 = '<div><span class="switch">' +
+'<input type="checkbox" class="switch" id="${i}">' +
+'<label for="${i}">jean-Chirstophe C.</label></div>';
+// var test = check.cloneNode(true);
+
+// console.log($(test).find("#switch-id")[0].id = "bonjour");
+
+$("input.switch").click(function() {
+    // $(this).prop( "checked", true );
+    // this.parentElement.innerHTML = '<input type="checkbox" class="switch" id="switch-id" checked><label for="switch-id">jean-Christophe C.</label>';
+    // console.log(this);
+})
+
+
+// --------------- Shuffle button listener ---------------
+document.getElementById("shuffle_button").addEventListener("click", function() {
+    test.id = "lol";
+    swal({
+        title: 'Selectionnez les joueurs',
+        html: check,
+        showCloseButton: true,
+        showCancelButton: true,
+        // focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui !',
+        cancelButtonText: 'How about no.',
+        confirmButtonClass: 'btn btn-success mr-1',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false,
+        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+        confirmButtonAriaLabel: 'Thumbs up, great!',
+        cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+        cancelButtonAriaLabel: 'Thumbs down'
+    })
+
+})
+// -------------------------------------------------------
+
+
+
+// document.getElementById("switch-id2").addEventListener('change', function() {
+//     if (this.checked) {
+//         alert("checked");
+//     } else {
+//         alert("unchecked");
+//     }
+// });

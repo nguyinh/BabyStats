@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="switch.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -14,7 +15,7 @@
     <title>Matchs | BabyStats</title>
 </head>
 
-<body class="pb-2">
+<body class="p-0 pb-2">
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -107,11 +108,51 @@
 
 
     <!--  BUTTON  -->
+    <div class="row mt-3" id="shuffle_container">
+        <div class="col-xl-2 offset-xl-5 col-8 offset-2">
+            <button type="button" class="btn btn-warning btn-block" id="shuffle_button">Aléatoire</button>
+        </div>
+    </div>
+
+
+    <!--  BUTTON  -->
     <div class="row mt-3" id="validate_container">
         <div class="col-xl-2 offset-xl-5 col-8 offset-2">
             <button type="button" class="btn btn-success btn-block" id="validate_button">Valider</button>
         </div>
     </div>
+
+
+
+    <div class="container" id="check" >
+        <div class="row">
+            <div class="col-xl-6 offset-xl-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="">
+                            <span class="switch">
+                            <input type="checkbox" class="switch" id="switch-id">
+                            <label for="switch-id">jean-Chirstophe C.</label>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="">
+                        <span class="switch">
+                        <input type="checkbox" class="switch" id="switch-id2">
+                        <label for="switch-id2">Florent D.</label>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 
 
@@ -160,6 +201,10 @@
         </div>
         <!-- <hr/> separator will appear here -->
     </div>
+
+
+
+
 
 
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
