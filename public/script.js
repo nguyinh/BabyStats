@@ -437,26 +437,26 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
                 });
         },
         preConfirm: () => {
-            var players_total = 0;
+            var names = [];
             // PUT HERE ALL CONDITIONS
             $('[id*="sw_id"]').each(function() {
                 if (!this.checked) {
                     console.log($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML);
-
                 } else {
-                    players_total++;
+                    names.push($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML);
                 }
             })
-            if (players_total < 2)
+            if (names.length < 2)
                 swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
-            if (players_total == 2) {
+            if (names.length == 2) {
                 // Place both players
             }
             else {
                 // Request to Statistiques
+                console.log(names);
             }
 
-            console.log(players_total);
+            console.log(names.length);
         }
     })
 })

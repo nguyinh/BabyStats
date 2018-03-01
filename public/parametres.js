@@ -2,6 +2,31 @@
 var db = firebase.firestore();
 
 
+function emojization(from, to) {
+    console.log(from);
+    switch (from) {
+        case "Elise G.":
+            to.insertAdjacentHTML('beforeend', "<p><i class=\"em em-cheese_wedge\"></i>  " + from + "</p>");
+            break;
+        case "Claire L.":
+            to.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ambulance\"></i>  " + from + "</p>");
+            break;
+        case "Mitsuaki V.":
+            to.insertAdjacentHTML('beforeend', "<p><i class=\"em em-anger\"></i>  " + from + "  </p>");
+            break;
+        case "Jérémy D.":
+            to.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ice_hockey_stick_and_puck\"></i>  " + from + "</p>");
+            break;
+        case "Nicolas E.":
+            to.insertAdjacentHTML('beforeend', "<p><i class=\"em em-lying_face\"></i>  " + from + "</p>");
+            break;
+        default:
+            to.insertAdjacentHTML('beforeend', "<p>" + from + "</p>");
+            break;
+    }
+}
+
+
 // Get all players from database and PSA teams then fill 'select' elements with it
 db.collection("players")
     .orderBy("team")
@@ -27,23 +52,7 @@ db.collection("players")
                 list.insertAdjacentHTML('beforeend', "<h2 class=\"mt-3\">" + team_id + "</h2><hr/>");
             }
             // Emoji tag
-            switch (data.name) {
-                case "Claire L.":
-                    list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ambulance\"></i>  " + data.name + "</p>");
-                    break;
-                case "Mitsuaki V.":
-                    list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-anger\"></i>  " + data.name + "  </p>");
-                    break;
-                case "Jérémy D.":
-                    list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ice_hockey_stick_and_puck\"></i>  " + data.name + "</p>");
-                    break;
-                case "Nicolas E.":
-                    list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-lying_face\"></i>  " + data.name + "</p>");
-                    break;
-                default:
-                    list.insertAdjacentHTML('beforeend', "<p>" + data.name + "</p>");
-                    break;
-            }
+            emojization(data.name, list);
         });
     })
     .catch(function(error) {
@@ -126,23 +135,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                                         // If same team as before, do nothing particular
 
                                         // Emoji tag
-                                        switch (data.name) {
-                                            case "Claire L.":
-                                                list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ambulance\"></i>  " + data.name + "</p>");
-                                                break;
-                                            case "Mitsuaki V.":
-                                                list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-rage\"></i>  " + data.name + "  <i class=\"em em-anger\"></i></p>");
-                                                break;
-                                            case "Jérémy D.":
-                                                list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-ice_hockey_stick_and_puck\"></i>  " + data.name + "</p>");
-                                                break;
-                                            case "Nicolas E.":
-                                                list.insertAdjacentHTML('beforeend', "<p><i class=\"em em-lying_face\"></i>  " + data.name + "</p>");
-                                                break;
-                                            default:
-                                                list.insertAdjacentHTML('beforeend', "<p>" + data.name + "</p>");
-                                                break;
-                                        }
+                                        emojization(data.name, list);
                                     });
                                 })
                                 .catch(function(error) {
