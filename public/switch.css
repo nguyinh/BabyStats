@@ -52,7 +52,7 @@
   transition: 0.2s all;
 }
 .switch input:checked + label::before {
-  background-color: #08d;
+  background-color: #0eaf58;
 }
 .switch input:checked + label::after {
   margin-left: calc(2.375rem * .8);
@@ -117,4 +117,4 @@ body {
 .dropdown-menu {
   margin-top: .75rem;
 }
-VIEW SCSS CODE
+/* VIEW SCSS CODE */

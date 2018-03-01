@@ -22,8 +22,6 @@ select option {
     font-size: 1.5rem;
 }
 
-
-
 #history [id*='match'] {
     padding-top: 1.5rem;
 }
@@ -33,10 +31,6 @@ hr {
 }
 
 #template {
-    display: none;
-}
-
-#check {
     display: none;
 }
 

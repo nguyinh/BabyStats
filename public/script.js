@@ -375,61 +375,89 @@ document.getElementById("validate_button").addEventListener("click", function() 
 });
 
 
-var names = ["Florent", "Pierre", "Jeremy", "Claire", "Florent", "Pierre", "Jeremy", "Claire", "Florent", "Pierre"]
-var check = '<div><span class="switch">' +
-'<input type="checkbox" class="switch" id="' + i + '">' +
-'<label for="' + i + '">' + names[0] + '</label></div>';
-for (var i=1; i<10 ; i++) {
-    check += '<div><span class="switch">' +
-    '<input type="checkbox" class="switch" id="' + i + '">' +
-    '<label for="' + i + '">' + names[i] + '</label></div>';
+
+
+
+var begin_template = '<div class="container">' +
+    '<div class="row align-items-center">' +
+    '<div class="col-12 col-xl-10 offset-xl-1" id="sw_container">';
+
+function addPlayerCheckbox(name, n) {
+    return '<div class="container mt-2">' +
+        '<div class="row">' +
+        '<span class="switch switch-lg">' +
+        '<input type="checkbox" class="switch" id="sw_id' + n + '"></input>' +
+        '<label for="sw_id' + n + '" id="sw_name_id' + n + '">' + name + '</label>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
 }
-var check2 = '<div><span class="switch">' +
-'<input type="checkbox" class="switch" id="${i}">' +
-'<label for="${i}">jean-Chirstophe C.</label></div>';
-// var test = check.cloneNode(true);
 
-// console.log($(test).find("#switch-id")[0].id = "bonjour");
+var end_template = '</div>' +
+    '</div>' +
+    '</div>'
 
-$("input.switch").click(function() {
-    // $(this).prop( "checked", true );
-    // this.parentElement.innerHTML = '<input type="checkbox" class="switch" id="switch-id" checked><label for="switch-id">jean-Christophe C.</label>';
-    // console.log(this);
-})
+var borders_template = begin_template + end_template;
+
 
 
 // --------------- Shuffle button listener ---------------
 document.getElementById("shuffle_button").addEventListener("click", function() {
-    test.id = "lol";
     swal({
         title: 'Selectionnez les joueurs',
-        html: check,
+        html: '<div id="swal_container_custom"></div>',
         showCloseButton: true,
         showCancelButton: true,
         // focusConfirm: false,
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Oui !',
-        cancelButtonText: 'How about no.',
         confirmButtonClass: 'btn btn-success mr-1',
         cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false,
-        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
-        confirmButtonAriaLabel: 'Thumbs up, great!',
-        cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
-        cancelButtonAriaLabel: 'Thumbs down'
-    })
+        confirmButtonText: 'Valider',
+        cancelButtonText: 'Annuler',
+        onOpen: () => {
+            $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
 
+            // Get players from database and display it when ready
+            db.collection("players")
+                .orderBy("team")
+                .get()
+                .then(function(querySnapshot) {
+                    var n = 0;
+                    $("#swal_container_custom")[0].innerHTML = borders_template;
+                    querySnapshot.forEach(function(doc) {
+                        $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(doc.data().name, n++));
+                    })
+                })
+                .catch(function(error) {
+                    console.log("Error getting documents: ", error);
+                    swal.showValidationError('Il semblerait qu\'on ait perdu les joueurs ... Veuillez réessayer plus tard !');
+                });
+        },
+        preConfirm: () => {
+            var players_total = 0;
+            // PUT HERE ALL CONDITIONS
+            $('[id*="sw_id"]').each(function() {
+                if (!this.checked) {
+                    console.log($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML);
+
+                } else {
+                    players_total++;
+                }
+            })
+            if (players_total < 2)
+                swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
+            if (players_total == 2) {
+                // Place both players
+            }
+            else {
+                // Request to Statistiques
+            }
+
+            console.log(players_total);
+        }
+    })
 })
 // -------------------------------------------------------
-
-
-
-// document.getElementById("switch-id2").addEventListener('change', function() {
-//     if (this.checked) {
-//         alert("checked");
-//     } else {
-//         alert("unchecked");
-//     }
-// });
