@@ -439,25 +439,60 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
         preConfirm: () => {
             var names = [];
             // PUT HERE ALL CONDITIONS
+            
+            // Get all names from swal
             $('[id*="sw_id"]').each(function() {
                 if (!this.checked) {
-                    console.log($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML);
+
                 } else {
                     names.push($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML);
                 }
             })
+
+            // If less than 2 players are selected
             if (names.length < 2)
                 swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
-            if (names.length == 2) {
-                // Place both players
+            // If only 2 players are selected
+            else if (names.length == 2) {
+                $("#player1_input")[0].value = names[0];
+                $("#player3_input")[0].value = names[1];
+                document.getElementById("shuffle_container").style.display = "none";
+                document.getElementById("validate_container").style.display = "block";
             }
+            // If 3 or more players are selected
             else {
-                // Request to Statistiques
-                console.log(names);
+                // Request to Statistiques HERE
+                $('select[id*="_input"][id*="player"]').each(function() {
+                    if (names.length == 0)
+                        return;     // if only 3 players have been selected, exit function if names array is empty
+                    var rand_nb = Math.floor(Math.random() * names.length);
+                    this.value = names[rand_nb];    // place random name in select element
+                    names.splice(rand_nb, 1);       // remove name from array
+                });
+                document.getElementById("shuffle_container").style.display = "none";
+                document.getElementById("validate_container").style.display = "block";
             }
-
-            console.log(names.length);
         }
     })
-})
+});
 // -------------------------------------------------------
+
+
+
+// Listener if players have been added
+$("select").change(function() {
+    var sel_player = 0;
+    $('select[id*="_input"][id*="player"]').each(function() {
+        if (this.value != "")
+            sel_player++;
+    });
+    console.log(sel_player);
+    if (sel_player < 2) {
+        document.getElementById("shuffle_container").style.display = "block";
+        document.getElementById("validate_container").style.display = "none";
+    }
+    else {
+        document.getElementById("shuffle_container").style.display = "none";
+        document.getElementById("validate_container").style.display = "block";
+    }
+});

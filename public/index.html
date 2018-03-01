@@ -6,8 +6,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 
-    <!-- Bootstrap CSS -->
+    <!-- https://www.abeautifulsite.net/bootstrap-4-switches -->
     <link rel="stylesheet" type="text/css" href="switch.css">
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -40,16 +41,12 @@
     <div class="row mt-3" id="title">
         <div class="offset-xl-4 col-xl-4">
             <div class="row">
-                <div class="col-4 col-xl-4">
-                    <p>Team 1</p>
+                <div class="col-6 col-xl-6">
+                    <h3>Team 1</h3>
                 </div>
 
-                <div class="col-4 col-xl-4">
-                    <p>Scores</p>
-                </div>
-
-                <div class="col-4 col-xl-4">
-                    <p>Team 2</p>
+                <div class="col-6 col-xl-6">
+                    <h3>Team 2</h3>
                 </div>
             </div>
         </div>
@@ -71,19 +68,14 @@
                     </div>
                 </div>
 
-                <div class="col-2 col-xl-2" style="padding-left: 0 !important; padding-right: 5px !important;">
+                <div class="col-4 col-xl-4" style="padding-left: 0 !important; padding-right: 5px !important;">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-6 pl-1">
                             <select id="score1_input" class="form-control">
                                 <option value="" selected class="default_value">Score 1</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-2 col-xl-2" style="padding-right: 0 !important; padding-left: 5px !important;">
-                    <div class="row">
-                        <div class="col-12">
+                        <div class="col-6 pr-1">
                             <select id="score2_input" class="form-control">
                                 <option value="" selected class="default_value">Score 2</option>
                             </select>
@@ -108,16 +100,18 @@
     </div>
 
 
-    <!--  BUTTON  -->
+
+    <!--  SHUFFLE BUTTON  -->
     <div class="row mt-3" id="shuffle_container">
         <div class="col-xl-2 offset-xl-5 col-8 offset-2">
-            <button type="button" class="btn btn-warning btn-block" id="shuffle_button">Aléatoire</button>
+            <button type="button" class="btn btn-primary btn-block pb-2" id="shuffle_button"><i class="fa fa-play fa-lg" aria-hidden="true"></i></span></button>
         </div>
     </div>
 
 
-    <!--  BUTTON  -->
-    <div class="row mt-3" id="validate_container">
+
+    <!--  VALIDATE BUTTON  -->
+    <div class="row mt-3" id="validate_container" style="display: none;">
         <div class="col-xl-2 offset-xl-5 col-8 offset-2">
             <button type="button" class="btn btn-success btn-block" id="validate_button">Valider</button>
         </div>
