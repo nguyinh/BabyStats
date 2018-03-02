@@ -3,7 +3,6 @@ var db = firebase.firestore();
 
 
 function emojization(from, to) {
-    console.log(from);
     switch (from) {
         case "Elise G.":
             to.insertAdjacentHTML('beforeend', "<p><i class=\"em em-cheese_wedge\"></i>  " + from + "</p>");
@@ -69,17 +68,21 @@ document.getElementById("add_player").addEventListener("click", function() {
 
     // Clear color inputs
     $("#name_input").removeClass("is-invalid");
+    $("#lastname_input").removeClass("is-invalid");
     $("#team_input").removeClass("is-invalid");
 
-    var name = document.getElementById("name_input").value;
-    var team = document.getElementById("team_input").value.toUpperCase();
+    var name = document.getElementById("name_input").value.trim();
+    var lastname = document.getElementById("lastname_input").value.trim();
+    var team = document.getElementById("team_input").value.toUpperCase().trim();
 
     // If inputs are not empty (=valid)
-    if (name != "" && team != "") {
+    if (name != "" && lastname != "" && team != "") {
         // Change to loading button
         document.getElementById("add_player").disabled = true;
         document.getElementById("add_player").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i>";
 
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        var fullname = name + " " + lastname.charAt(0).toUpperCase() + ".";
 
         // Add player to database
         db.collection("players")
@@ -87,11 +90,46 @@ document.getElementById("add_player").addEventListener("click", function() {
             .get()
             .then(docSnapshot => {
 
+                // Change name if already present
+                sorted_names = [];
+                for (i = 0; i < docSnapshot.docs.length; i++) {
+                    sorted_names.push(docSnapshot.docs[i].data().name); // get all names
+                }
+                sorted_names = sorted_names.sort(); // sort alphabetically
+
+                var past_names = [];
+                var n = lastname.length - 2;
+                for (i = 0; i < sorted_names.length; i++) {
+                    if (!past_names.includes(sorted_names[i])) { // if name has already been compared, pass
+                        while (sorted_names[i] == fullname) {
+                            // Add a letter to the last name until it is different from others
+                            if (lastname.slice(lastname.length - n - 1, lastname.length - n) == " ")
+                                n--;
+                            fullname = name.charAt(0).toUpperCase() + name.slice(1) + " " + lastname.charAt(0).toUpperCase() + lastname.slice(1, lastname.length - n--) + ".";
+                            if (n < 0) { // if all letters failed, return error
+                                swal(
+                                    'Erreur',
+                                    'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                    'error'
+                                );
+
+                                // Remove loading button
+                                document.getElementById("add_player").disabled = false;
+                                document.getElementById("add_player").innerHTML = "Valider";
+                                return;
+                            }
+                        }
+                        past_names.push(sorted_names[i]);
+                    }
+                }
+
                 // New player object
                 var added_player = {
                     number: 1, // used to sort data when is get
                     invert_number: -1,
-                    name: name,
+                    name: fullname,
+                    last_name: lastname,
+                    first_name: name,
                     team: team,
                     goals: 0,
                     gamelles: 0,
@@ -140,35 +178,42 @@ document.getElementById("add_player").addEventListener("click", function() {
                                 })
                                 .catch(function(error) {
                                     console.log("Error getting documents: ", error);
-                                    swal({
-                                        type: 'error',
-                                        title: 'Erreur',
-                                        text: 'Il semble que l\'ajout du joueur a échoué <i class=\"em em-confused\"></i>'
-                                    });
+                                    swal(
+                                        'Erreur',
+                                        'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                        'error'
+                                    );
                                 });
 
                             // Clear inputs
                             document.getElementById("name_input").value = "";
+                            document.getElementById("lastname_input").value = "";
                             document.getElementById("team_input").value = "";
 
                             // Remove loading button
                             document.getElementById("add_player").disabled = false;
                             document.getElementById("add_player").innerHTML = "Valider";
 
+                            var pitchs = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
+                                "Salut " + name + ", que la force soit avec toi <i class=\"em em-pray\"></i>",
+                                "Ah " + name + " ! On t'attendait <i class=\"em em-wink\"></i>",
+                                "Penses à bien t'échauffer les poignets " + name + " <i class=\"em em-raised_hands\"></i>"
+                            ]
+
                             swal(
                                 'Succès',
-                                'On dirait qu\'on a un nouveau joueur <i class=\"em em-wink\"></i>',
+                                pitchs[Math.floor(Math.random() * pitchs.length)],
                                 'success'
                             );
                         }, 200);
                     })
                     .catch(function(error) {
                         console.error("Error writing document: ", error);
-                        swal({
-                            type: 'error',
-                            title: 'Erreur',
-                            text: 'Il semble que l\'ajout du joueur a échoué <i class=\"em em-confused\"></i>'
-                        });
+                        swal(
+                            'Erreur',
+                            'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                            'error'
+                        );
                     });
 
 
@@ -176,12 +221,19 @@ document.getElementById("add_player").addEventListener("click", function() {
             })
             .catch(function(error) {
                 console.log("Error getting document:", error);
+                swal(
+                    'Erreur',
+                    'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                    'error'
+                );
             });
 
     } else {
         // Put inputs in red if missing
         if (name == "")
             $("#name_input").addClass("is-invalid");
+        if (name == "")
+            $("#lastname_input").addClass("is-invalid");
         if (team == "")
             $("#team_input").addClass("is-invalid");
     }
