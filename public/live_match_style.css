@@ -1,13 +1,17 @@
 body {
     background-color: rgb(235, 240, 240);
     /* Fixes right white space on mobile (probably only iOS) */
-    /* overflow-x: hidden; */
+
     touch-action: pan-y;
+}
+
+html, body {
+    overflow-x: hidden;
 }
 
 .form-control {
     padding: 0 !important;
-    padding-right: 5px;
+    /* padding-right: 5px; */
 }
 
 .default_value {
@@ -84,8 +88,8 @@ hr {
 
 @media only screen and (min-width: 401px) {
     #players_scores {
-        padding-right: 2px;
-        padding-left: 2px;
+        /* padding-right: 2px;
+        padding-left: 2px; */
     }
 }
 
