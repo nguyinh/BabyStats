@@ -415,7 +415,7 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
         confirmButtonClass: 'btn btn-success mr-1',
         cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false,
-        confirmButtonText: 'Valider',
+        confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
         cancelButtonText: 'Annuler',
         onOpen: () => {
             $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
@@ -439,7 +439,7 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
         preConfirm: () => {
             var names = [];
             // PUT HERE ALL CONDITIONS
-            
+
             // Get all names from swal
             $('[id*="sw_id"]').each(function() {
                 if (!this.checked) {

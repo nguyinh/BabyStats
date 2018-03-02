@@ -6,11 +6,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
     <link rel="stylesheet" type="text/css" href="live_match_style.css">
+    <!-- https://www.abeautifulsite.net/bootstrap-4-switches -->
+    <link rel="stylesheet" type="text/css" href="switch.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- https://afeld.github.io/emoji-css/ -->
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
     <title>Live match | BabyStats</title>
 </head>
@@ -36,17 +41,17 @@
     </nav>
     <!-- </div> -->
 
-    <div class="container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+    <div class="container pr-0 pl-0" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
         <div class="row no-gutters" id="main_container">
             <div class="col-12">
 
                 <!-- HEADER -->
-                <div class="container sticky-top">
+                <div class="container sticky-top pr-0 pl-0">
                     <div class="row no-gutters">
                         <div class="offset-xl-3 col-xl-6 col-12 pt-3 pb-1 mb-2" id="score_header">
 
                             <!-- SCORES -->
-                            <div class="container">
+                            <div class="container pr-0 pl-0" id="score_indicators">
                                 <div class="row no-gutters">
                                     <div class="col-4 offset-1">
                                         <div class="score_border">
@@ -58,13 +63,21 @@
                                         <div class="score_border">
                                             <h1 id="score2" class="score_indicator">0</h1>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <!--  SHUFFLE BUTTON  -->
+                            <div class="container pr-0 pl-0" id="shuffle_container">
+                                <div class="row">
+                                    <div class="col-xl-6 offset-xl-3 col-8 offset-2">
+                                        <button type="button" class="btn btn-primary btn-block pb-2" id="shuffle_button"><i class="fa fa-play fa-lg" aria-hidden="true"></i></span></button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- PLAYERS -->
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters" style="margin-top: 1rem;">
                                     <div class="col-3 pl-1">
                                         <select id="player1_input" class="form-control">
@@ -94,41 +107,41 @@
                         </div>
 
 
-                        <hr/>
+                        <hr class="scores_separator" />
                     </div>
                 </div>
 
-                <div class="container">
+                <div class="container pr-0 pl-0">
                     <div class="row no-gutters" id="players_scores">
                         <div class="offset-xl-3 col-xl-6">
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters">
                                     <div class="col-12">
                                         <h2>Buts</h2>
                                     </div>
                                 </div>
                             </div>
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters">
-                                    <div class="col-3 pl-1">
+                                    <div class="col-3 pl-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|goal|+"><h3>+</h3></button>
                                         <h3 id="goalJ1score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|goal|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pr-1">
+                                    <div class="col-3 pr-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|goal|+"><h3>+</h3></button>
                                         <h3 id="goalJ2score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|goal|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pl-1">
+                                    <div class="col-3 pl-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|goal|+"><h3>+</h3></button>
                                         <h3 id="goalJ3score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|goal|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pr-1">
+                                    <div class="col-3 pr-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|goal|+"><h3>+</h3></button>
                                         <h3 id="goalJ4score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|goal|-"><h3>-</h3></button>
@@ -137,9 +150,9 @@
                             </div>
 
 
-                            <hr/>
+                            <hr class="scores_separator" />
 
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters">
                                     <div class="col-12">
                                         <h2>Gamelles</h2>
@@ -147,27 +160,27 @@
                                 </div>
                             </div>
 
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters">
-                                    <div class="col-3 pl-1">
+                                    <div class="col-3 pl-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|gamelle|+"><h3>+</h3></button>
                                         <h3 id="gamelleJ1score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|gamelle|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pr-1">
+                                    <div class="col-3 pr-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|gamelle|+"><h3>+</h3></button>
                                         <h3 id="gamelleJ2score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|gamelle|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pl-1">
+                                    <div class="col-3 pl-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|gamelle|+"><h3>+</h3></button>
                                         <h3 id="gamelleJ3score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|gamelle|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pr-1">
+                                    <div class="col-3 pr-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|gamelle|+"><h3>+</h3></button>
                                         <h3 id="gamelleJ4score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|gamelle|-"><h3>-</h3></button>
@@ -176,9 +189,9 @@
                             </div>
 
 
-                            <hr/>
+                            <hr class="scores_separator" />
 
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters">
                                     <div class="col-12">
                                         <h2>Buts contre son camp</h2>
@@ -186,27 +199,27 @@
                                 </div>
                             </div>
 
-                            <div class="container">
+                            <div class="container pr-0 pl-0">
                                 <div class="row no-gutters">
-                                    <div class="col-3 pl-1">
+                                    <div class="col-3 pl-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|betray|+"><h3>+</h3></button>
                                         <h3 id="betrayJ1score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|betray|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pr-1">
+                                    <div class="col-3 pr-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|betray|+"><h3>+</h3></button>
                                         <h3 id="betrayJ2score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|betray|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pl-1">
+                                    <div class="col-3 pl-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|betray|+"><h3>+</h3></button>
                                         <h3 id="betrayJ3score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|betray|-"><h3>-</h3></button>
                                     </div>
 
-                                    <div class="col-3 pr-1">
+                                    <div class="col-3 pr-2">
                                         <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|betray|+"><h3>+</h3></button>
                                         <h3 id="betrayJ4score" class="score_indicator">0</h3>
                                         <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|betray|-"><h3>-</h3></button>
@@ -215,7 +228,7 @@
 
                                 </div>
                             </div>
-                            <hr/>
+                            <!-- <hr class="scores_separator"/> -->
                         </div>
                     </div>
                 </div>
@@ -224,7 +237,7 @@
     </div>
 
     <!--  BUTTON  -->
-    <div class="container">
+    <div class="container pr-0 pl-0 mt-4">
         <div class="row no-gutters mt-1" id="validate_container">
             <div class="col-xl-2 offset-xl-5 col-8 offset-2">
                 <button type="button" class="btn btn-success btn-block" id="validate_button">Valider</button>
