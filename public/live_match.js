@@ -547,7 +547,7 @@ function validate() {
 
 
 var begin_template = '<div class="container">' +
-    '<div class="row align-items-center">' +
+    '<div class="row align-items-center" id="container_row">' +
     '<div class="col-12 col-xl-10 offset-xl-1" id="sw_container">';
 
 function addPlayerCheckbox(name, n) {

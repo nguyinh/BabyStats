@@ -2,11 +2,22 @@ body {
     background-color: rgb(235, 240, 240);
     /* Fixes right white space on mobile (probably only iOS) */
 
-    touch-action: pan-y;
+    /* touch-action: pan-y; */
 }
 
-html, body {
+html, main_container {
     overflow-x: hidden;
+}
+
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#container_row, #container_row .row {
+    margin-left: -15px;
+    margin-right: -15px;
 }
 
 .form-control {
