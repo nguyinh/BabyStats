@@ -451,15 +451,17 @@ function validate() {
     // Check for errors
     if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "") ||
         (inputs[2].options[inputs[2].selectedIndex].value == "" && inputs[3].options[inputs[3].selectedIndex].value == "") ||
-        ((int(score1) == 10) && (int(score2) == 10)) ||
-        ((int(score1) != 10) && (int(score2) != 10))) {
+        ((int(score1) == 0) && (int(score2) == 0))) {
+        // ((int(score1) == 10) && (int(score2) == 10)) ||
+        // ((int(score1) != 10) && (int(score2) != 10))) {
 
         if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "")) {
             $("#player1_input").addClass("is-invalid");
             $("#player2_input").addClass("is-invalid");
         }
-        if (((int(score1) == 10) && (int(score2) == 10)) ||
-            ((int(score1) != 10) && (int(score2) != 10))) {
+        // if (((int(score1) == 10) && (int(score2) == 10)) ||
+        //     ((int(score1) != 10) && (int(score2) != 10))) {
+        if ((int(score1) == 0) && (int(score2) == 0)) {
             document.getElementsByClassName("score_border").item(0).style.borderColor = "rgb(194, 57, 57)";
             document.getElementsByClassName("score_border").item(1).style.borderColor = "rgb(194, 57, 57)";
         }
