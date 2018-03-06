@@ -521,9 +521,98 @@ function validate() {
                 .doc("match" + (parseInt(lastVisible.id.split("match")[1]) + 1))
                 .set(reported_match)
                 .then(function(docRef) {
+
+                    // Choose a quote
+                    var goal_type = Math.floor(Math.random() * 3);
+                    var high_low = Math.random() >= 0.5; // true = max, false = min
+
+                    // Get all players scores
+                    var players = [];
+                    for (var i = 0; i < inputs.length; i++) {
+                        var nb = inputs[i].id.split("player")[1].split("_")[0];
+                        if (inputs[i].value != "")
+                            players.push([
+                                inputs[i],
+                                parseInt($("#goalJ" + nb + "score")[0].innerHTML),
+                                parseInt($("#gamelleJ" + nb + "score")[0].innerHTML),
+                                parseInt($("#betrayJ" + nb + "score")[0].innerHTML)
+                            ]);
+                    }
+
+                    quote = "Le match a bien été validé !";
+
+                    switch (goal_type) {
+                        case 0: // sort with goals
+                            players.sort(function(a, b) {
+                                if (a[1] === b[1]) {
+                                    return 0;
+                                } else {
+                                    return (a[1] < b[1]) ? (high_low ? 1 : -1) : (high_low ? -1 : 1);
+                                }
+                            });
+
+                            if (high_low)
+                                quote = "Woah ! " + players[0][0].value.split(" ")[0] +
+                                " est en grande forme aujourd'hui avec ses " +
+                                players[0][1] +
+                                " points <i class=\"em em-open_mouth\"></i>";
+                            else
+                                quote = players[0][0].value.split(" ")[0] +
+                                ", faut dormir plus la nuit <i class=\"em em-smiling_face_with_smiling_eyes_and_hand_covering_mouth\"></i>";
+                            break;
+                        case 1: // sort with gamelles
+                            players.sort(function(a, b) {
+                                if (a[2] === b[2]) {
+                                    return 0;
+                                } else {
+                                    return (a[2] < b[2]) ? (high_low ? 1 : -1) : (high_low ? -1 : 1);
+                                }
+                            });
+
+                            if (players[0][2] != 0)
+                                quote = players[0][0].value.split(" ")[0] +
+                                " a le poignet en feu avec ses " +
+                                players[0][2] +
+                                " gamelles <i class=\"em em-clap\"></i>";
+                            else {
+                                if (high_low)
+                                    quote = "Pas de gamelle aujourd'hui ? <i class=\"em em-cry\"></i>";
+                                else
+                                    quote = players[players.length - 1][0].value.split(" ")[0] +
+                                    " a le poignet en feu avec ses " +
+                                    players[players.length - 1][2] +
+                                    " gamelles <i class=\"em em-clap\"></i>";
+                            }
+                            break;
+                        case 2: // sort with betrays
+                            players.sort(function(a, b) {
+                                if (a[3] === b[3]) {
+                                    return 0;
+                                } else {
+                                    return (a[3] < b[3]) ? (high_low ? 1 : -1) : (high_low ? -1 : 1);
+                                }
+                            });
+
+
+                            if (players[0][3] != 0)
+                                quote = "Une ovation pour " +
+                                players[0][0].value.split(" ")[0] +
+                                " et ses " +
+                                players[0][3] +
+                                " buts contre son camp <i class=\"em em-upside_down_face\"></i>";
+                            else
+                                quote = "L'avant-bras de " +
+                                players[0][0].value.split(" ")[0] +
+                                " est plus gros qu'hier non ? <i class=\"em em-fist\"></i><i class=\"em em-smirk\"></i>";
+                            break;
+                        default:
+                            break;
+                    }
+
+
                     swal(
                         'Succès',
-                        'Le match a bien été ajouté !',
+                        quote,
                         'success'
                     );
 
@@ -533,13 +622,18 @@ function validate() {
                         var indicators = document.getElementsByClassName("score_indicator");
                         for (i = 0; i < indicators.length; i++)
                             indicators[i].innerHTML = 0;
+
+                        for (var i = 0; i < inputs.length; i++) {
+                            $("#" + inputs[i].id).removeClass("is-invalid");
+                            inputs[i].value = "";
+                        }
+
+                        document.getElementById("shuffle_container").style.display = "block";
+                        document.getElementById("score_indicators").style.display = "none";
                     }, 500);
                 })
 
-            for (var i = 0; i < inputs.length; i++) {
-                $("#" + inputs[i].id).removeClass("is-invalid");
-                inputs[i].value = "";
-            }
+
         });
 }
 
@@ -634,10 +728,10 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
                 // Request to Statistiques HERE
                 $('select[id*="_input"][id*="player"]').each(function() {
                     if (names.length == 0)
-                        return;     // if only 3 players have been selected, exit function if names array is empty
+                        return; // if only 3 players have been selected, exit function if names array is empty
                     var rand_nb = Math.floor(Math.random() * names.length);
-                    this.value = names[rand_nb];    // place random name in select element
-                    names.splice(rand_nb, 1);       // remove name from array
+                    this.value = names[rand_nb]; // place random name in select element
+                    names.splice(rand_nb, 1); // remove name from array
                 });
                 document.getElementById("shuffle_container").style.display = "none";
                 document.getElementById("score_indicators").style.display = "block";
@@ -660,8 +754,7 @@ $("select").change(function() {
     if (sel_player < 2) {
         document.getElementById("shuffle_container").style.display = "block";
         document.getElementById("score_indicators").style.display = "none";
-    }
-    else {
+    } else {
         document.getElementById("shuffle_container").style.display = "none";
         document.getElementById("score_indicators").style.display = "block";
     }

@@ -194,7 +194,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                             document.getElementById("add_player").disabled = false;
                             document.getElementById("add_player").innerHTML = "Valider";
 
-                            var pitchs = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
+                            var quotes = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
                                 "Salut " + name + ", que la force soit avec toi <i class=\"em em-pray\"></i>",
                                 "Ah " + name + " ! On t'attendait <i class=\"em em-wink\"></i>",
                                 "Penses à bien t'échauffer les poignets " + name + " <i class=\"em em-raised_hands\"></i>"
@@ -202,7 +202,7 @@ document.getElementById("add_player").addEventListener("click", function() {
 
                             swal(
                                 'Succès',
-                                pitchs[Math.floor(Math.random() * pitchs.length)],
+                                quotes[Math.floor(Math.random() * quotes.length)],
                                 'success'
                             );
                         }, 200);
