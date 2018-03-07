@@ -35,6 +35,10 @@ var ratio_win = []
 var ratio_loss = []
 var test = []
 
+function compareNombres(a, b){
+  return a[0] - b[0]
+}
+
 
 
 
@@ -296,7 +300,7 @@ for (j = 0; j<names.length; j++){
     sort_ratio_win.push(temp)
     temp = []
 }
-sort_ratio_win.sort().reverse()
+sort_ratio_win.sort(compareNombres).reverse()
 // console.log(sort_ratio_win)
 var three_best_players = []
 var three_best_ratios = []
@@ -331,7 +335,7 @@ for (j = 0; j<names.length; j++){
     temp = []
 }
 console.log(sort_number_win)
-sort_number_win.sort().reverse()
+sort_number_win.sort(compareNombres).reverse()
 console.log(sort_number_win)
 // console.log(sort_ratio_win)
 var three_best_players_wins = []
@@ -355,17 +359,21 @@ third_best_player_html_wins.style.fontWeight = 'bold';
 third_best_player_html_wins.insertAdjacentHTML('beforeend', "<p><i class=\"em em-third_place_medal\"></i> </p>");
 
 // Trois meilleurs joueurs sur le plan du nombre de buts
+
+
+
 var sort_number_goals = []
 for (j = 0; j<names.length; j++){
     var temp = []
+    var char
     temp.push(total_goals[j])
     temp.push(names[j])
     sort_number_goals.push(temp)
     temp = []
 }
-console.log(sort_number_goals)
-sort_number_win.sort().reverse()
+sort_number_goals.sort(compareNombres).reverse()
 // console.log(sort_number_goals)
+console.log(sort_number_goals)
 // console.log(sort_ratio_win)
 var three_best_players_goals = []
 var three_best_number_goals = []
@@ -729,12 +737,12 @@ var chartRatioWinLoss = new Chart(ctx_ratio_win_loss, {
 
 
   //if R returns an error, alert the error message
-  req.fail(function() {
-    alert("Server error: " + req.responseText);
-  });
-
-  req.always(function() {
-    $("button").removeAttr("disabled");
-  });
+  // req.fail(function() {
+  //   alert("Server error: " + req.responseText);
+  // });
+  //
+  // req.always(function() {
+  //   $("button").removeAttr("disabled");
+  // });
 
   // setTimeout(function(){  }, 5000);
