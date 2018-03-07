@@ -23,6 +23,8 @@ hr {
     font-size: 1.25rem;
     margin-top: 1rem;
     margin-bottom: 0rem;
+    /* border-style: solid; */
+    border-radius: 10px;
 }
 
 #players_list h2 {
