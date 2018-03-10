@@ -6,10 +6,6 @@ html, body {
     overflow-x: hidden;
 }
 
-.chartAreaWrapper {
-  width: 600px;
-  overflow-x: scroll;
-}
 
 .podium div {
     width: 100px;
