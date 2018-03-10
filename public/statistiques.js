@@ -4,6 +4,10 @@ if(window.innerHeight > window.innerWidth){
     alert("Passez en mode paysage!");
 }
 
+function compareNombres(a, b) {
+  return a[0] - b[0];
+}
+
 // window.addEventListener("orientationchange", function() {
 //     console.log("the orientation of the device is now " + screen.orientation.angle);
 //     if(screen.orientation.angle==90){
@@ -276,8 +280,8 @@ if (players.hasOwnProperty(String(data[i].player4.replace(/ /g,"_").replace(/\./
         gamelles_last_play[names_last_play.indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_gamelles
         betray_last_play[names_last_play.indexOf(String(data[i].player4.replace(/ /g,"_").replace(/\./g,'')))] = data[i].player4_betray
     }
-console.log(names_last_play)
-console.log(goals_last_play)
+// console.log(names_last_play)
+// console.log(goals_last_play)
 
 }
 // console.log(goals_last_play)
@@ -296,7 +300,7 @@ for (j = 0; j<names.length; j++){
     sort_ratio_win.push(temp)
     temp = []
 }
-sort_ratio_win.sort().reverse()
+sort_ratio_win.sort(compareNombres).reverse()
 // console.log(sort_ratio_win)
 var three_best_players = []
 var three_best_ratios = []
@@ -330,9 +334,9 @@ for (j = 0; j<names.length; j++){
     sort_number_win.push(temp)
     temp = []
 }
-console.log(sort_number_win)
-sort_number_win.sort().reverse()
-console.log(sort_number_win)
+// console.log(sort_number_win)
+sort_number_win.sort(compareNombres).reverse()
+// console.log(sort_number_win)
 // console.log(sort_ratio_win)
 var three_best_players_wins = []
 var three_best_number_wins = []
@@ -364,9 +368,9 @@ for (j = 0; j<names.length; j++){
     temp = []
 }
 console.log(sort_number_goals)
-sort_number_win.sort().reverse()
-// console.log(sort_number_goals)
-// console.log(sort_ratio_win)
+sort_number_goals.sort(compareNombres).reverse()
+console.log(sort_number_goals)
+
 var three_best_players_goals = []
 var three_best_number_goals = []
 for (j = 0; j<3; j++){
@@ -729,12 +733,12 @@ var chartRatioWinLoss = new Chart(ctx_ratio_win_loss, {
 
 
   //if R returns an error, alert the error message
-  req.fail(function() {
-    alert("Server error: " + req.responseText);
-  });
-
-  req.always(function() {
-    $("button").removeAttr("disabled");
-  });
+  // req.fail(function() {
+  //   alert("Server error: " + req.responseText);
+  // });
+  //
+  // req.always(function() {
+  //   $("button").removeAttr("disabled");
+  // });
 
   // setTimeout(function(){  }, 5000);
