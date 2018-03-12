@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -20,12 +21,6 @@
 </head>
 
 <body>
-
-
-
-
-
-
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">BabyStats</a>
@@ -43,73 +38,111 @@
         </div>
     </nav>
 
+    <!-- Vertical NavBar -->
 
+<div class="row">
+    <ul>
+    <li><a id="classement">Classement</a></li>
+    <li><a id="palmares">Palmarès</a></li>
+    <li><a id="graphs">Graphiques</a></li>
+    </ul>
 
-    <!-- Palmarès nombre de victoires -->
-    <div style="margin-top:20px"></div>
-    <p class="text-center" text-align:center><b><font color="#4169E1">Palmarès Nombre de Victoires</font></b></p>
-    <div class="podium">
-
-        <div id = "best_player_wins"><span></span></div>
-        <div id = "second_best_player_wins"><span></span></div>
-        <div id = "third_best_player_wins"><span></span></div>
+    <!-- ELO RANKING -->
+<div class="col-12 col-xl-8 offset-xl-2">
+    <div class="container" id="ranking" style="display: none">
+        <header>
+    <h1>Classement</h1>
+        </header>
+        <div class="wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Joueur</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody id="classification">
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Palmarès ratio victoires/défaites -->
+
+
+
+    <!-- Palmarès nombre de victoires -->
+    <div class="col-12 col-xl-8 offset-xl-2">
     <div style="margin-top:20px"></div>
-    <p class="text-center" text-align:center><b><font color="#4169E1">Palmarès Ratio Victoires/Défaites</font></b></p>
+    <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_number_wins" style="display: none">Palmarès Nombre de Victoires</font></b></p>
     <div class="podium">
 
-        <div id = "best_player"><span></span></div>
-        <div id = "second_best_player"><span></span></div>
-        <div id = "third_best_player"><span></span></div>
+        <div id = "best_player_wins"  style="display: none"><span></span></div>
+        <div id = "second_best_player_wins" style="display: none"><span></span></div>
+        <div id = "third_best_player_wins" style="display: none"><span></span></div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-8 offset-xl-2">
+    <!-- Palmarès ratio victoires/défaites -->
+    <div style="margin-top:20px"></div>
+    <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_ratio_wins" style="display: none">Palmarès Ratio Victoires/Défaites</font></b></p>
+    <div class="podium">
+
+        <div id = "best_player" style="display: none"><span></span></div>
+        <div id = "second_best_player" style="display: none"><span></span></div>
+        <div id = "third_best_player" style="display: none"><span></span></div>
         </div>
     </div>
 
 
 
     <!-- Palmarès meilleur buteur -->
+    <div class="col-12 col-xl-8 offset-xl-2">
     <div style="margin-top:20px"></div>
-    <p class="text-center" text-align:center><b><font color="#4169E1">Palmarès Meilleur Buteur</font></b></p>
+    <p class="text-center" text-align:center id="palmares_meilleur_buteur" style="display: none"><b><font color="#4169E1">Palmarès Meilleur Buteur</font></b></p>
     <div class="podium">
 
-        <div id="best_player_goals"><span></span></div>
-        <div id="second_best_player_goals"><span></span></div>
-        <div id="third_best_player_goals"><span></span></div>
+        <div id="best_player_goals" style="display: none"><span></span></div>
+        <div id="second_best_player_goals" style="display: none"><span></span></div>
+        <div id="third_best_player_goals" style="display: none"><span></span></div>
         </div>
     </div>
 
 
+    <!-- Graphiques -->
     <div class="row">
         <div class="col-12 col-xl-8 offset-xl-2">
-            <canvas id="chartGoalslastPlay"></canvas>
+            <canvas id="chartGoalslastPlay"  style="display: none"></canvas>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xl-8 offset-xl-2">
-            <canvas id="chartNumberofWins"></canvas>
+                <canvas id="chartNumberofWins" style="display: none"></canvas>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xl-8 offset-xl-2">
-            <canvas id="chartRatioWinLoss"></canvas>
+                <canvas id="chartRatioWinLoss" style="display: none"></canvas>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xl-8 offset-xl-2">
-            <canvas id="chartTotalGoals"></canvas>
+                <canvas id="chartTotalGoals" style="display: none"></canvas>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xl-8 offset-xl-2">
-            <canvas id="chartGoalsperPlay"></canvas>
+                <canvas id="chartGoalsperPlay" style="display: none"></canvas>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xl-8 offset-xl-2">
-            <canvas id="chartNumberofPlays"></canvas>
+            <div class="chartAreaWrapper">
+                <canvas id="chartNumberofPlays" style="display: none"></canvas>
+            </div>
         </div>
+    </div>
     </div>
 
     <!-- Boîte de texte pour code R -->
@@ -144,6 +177,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="statistiques.js"></script>
+    <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
 
 
 
