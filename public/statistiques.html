@@ -13,6 +13,7 @@
 
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+    <!-- <script src="https://npmcdn.com/Chart.Zoom.js@latest/Chart.Zoom.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
     <script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
@@ -40,144 +41,169 @@
 
     <!-- Vertical NavBar -->
 
-    <div class="row">
-        <ul>
-            <li><a id="classement">Classement</a></li>
-            <li><a id="palmares">Palmarès</a></li>
-            <li><a id="graphs">Graphiques</a></li>
-        </ul>
 
-        <!-- ELO RANKING -->
-        <div class="col-12 col-xl-8 offset-xl-2">
-            <div class="container" id="ranking" style="display: none">
-                <header>
-                    <h1>Classement</h1>
-                </header>
-                <div class="wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Rang</th>
-                                <th>Joueur</th>
-                                <th>Points</th>
-                            </tr>
-                        </thead>
-                        <tbody id="classification">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-
-
-            <!-- Palmarès nombre de victoires -->
+    <div id="container">
+        <div class="row">
             <div class="col-12 col-xl-8 offset-xl-2">
-                <div style="margin-top:20px"></div>
-                <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_number_wins" style="display: none">Palmarès Nombre de Victoires</font></b></p>
-                <div class="podium">
+                <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Classement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Top 3</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Graphiques</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <!-- RANKING -->
+                    <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="wrapper">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Rang</th>
+                                        <th>Joueur</th>
+                                        <th>Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classification">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                    <div id="best_player_wins" style="display: none"><span></span></div>
-                    <div id="second_best_player_wins" style="display: none"><span></span></div>
-                    <div id="third_best_player_wins" style="display: none"><span></span></div>
-                </div>
-            </div>
+                    <!-- TOP 3 -->
+                    <div class="tab-pane fade mt-3" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <!-- Palmarès nombre de victoires -->
+                        <div class="col-12 col-xl-8 offset-xl-2">
+                            <div style="margin-top:20px"></div>
+                            <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_number_wins">Palmarès Nombre de Victoires</font></b></p>
+                            <div class="podium">
 
-            <div class="col-12 col-xl-8 offset-xl-2">
-                <!-- Palmarès ratio victoires/défaites -->
-                <div style="margin-top:20px"></div>
-                <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_ratio_wins" style="display: none">Palmarès Ratio Victoires/Défaites</font></b></p>
-                <div class="podium">
+                                <div id="best_player_wins"><span></span></div>
+                                <div id="second_best_player_wins"><span></span></div>
+                                <div id="third_best_player_wins"><span></span></div>
+                            </div>
+                        </div>
 
-                    <div id="best_player" style="display: none"><span></span></div>
-                    <div id="second_best_player" style="display: none"><span></span></div>
-                    <div id="third_best_player" style="display: none"><span></span></div>
-                </div>
-            </div>
+                        <div class="col-12 col-xl-8 offset-xl-2">
+                            <!-- Palmarès ratio victoires/défaites -->
+                            <div style="margin-top:20px"></div>
+                            <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_ratio_wins">Palmarès Ratio Victoires/Défaites</font></b></p>
+                            <div class="podium">
 
-
-
-            <!-- Palmarès meilleur buteur -->
-            <div class="col-12 col-xl-8 offset-xl-2">
-                <div style="margin-top:20px"></div>
-                <p class="text-center" text-align:center id="palmares_meilleur_buteur" style="display: none"><b><font color="#4169E1">Palmarès Meilleur Buteur</font></b></p>
-                <div class="podium">
-
-                    <div id="best_player_goals" style="display: none"><span></span></div>
-                    <div id="second_best_player_goals" style="display: none"><span></span></div>
-                    <div id="third_best_player_goals" style="display: none"><span></span></div>
-                </div>
-            </div>
+                                <div id="best_player"><span></span></div>
+                                <div id="second_best_player"><span></span></div>
+                                <div id="third_best_player"><span></span></div>
+                            </div>
+                        </div>
 
 
-            <!-- Graphiques -->
-            <div class="row">
-                <div class="col-12 col-xl-8 offset-xl-2">
-                    <canvas id="chartGoalslastPlay" style="display: none"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-xl-8 offset-xl-2">
-                    <canvas id="chartNumberofWins" style="display: none"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-xl-8 offset-xl-2">
-                    <canvas id="chartRatioWinLoss" style="display: none"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-xl-8 offset-xl-2">
-                    <canvas id="chartTotalGoals" style="display: none"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-xl-8 offset-xl-2">
-                    <canvas id="chartGoalsperPlay" style="display: none"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-xl-8 offset-xl-2">
-                    <div class="chartAreaWrapper">
-                        <canvas id="chartNumberofPlays" style="display: none"></canvas>
+
+                        <!-- Palmarès meilleur buteur -->
+                        <div class="col-12 col-xl-8 offset-xl-2">
+                            <div style="margin-top:20px"></div>
+                            <p class="text-center" text-align:center id="palmares_meilleur_buteur"><b><font color="#4169E1">Palmarès Meilleur Buteur</font></b></p>
+                            <div class="podium">
+
+                                <div id="best_player_goals"><span></span></div>
+                                <div id="second_best_player_goals"><span></span></div>
+                                <div id="third_best_player_goals"><span></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRAPHS -->
+                    <div class="tab-pane fade mt-3" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        <!-- Graphiques -->
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12 col-xl-8 offset-xl-2">
+                                <canvas id="chartGoalslastPlay"></canvas>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12 col-xl-8 offset-xl-2">
+                                <canvas id="chartNumberofWins"></canvas>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12 col-xl-8 offset-xl-2">
+                                <canvas id="chartRatioWinLoss"></canvas>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12 col-xl-8 offset-xl-2">
+                                <canvas id="chartTotalGoals"></canvas>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12 col-xl-8 offset-xl-2">
+                                <canvas id="chartGoalsperPlay"></canvas>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row mt-2">
+                            <div class="col-12 col-xl-8 offset-xl-2">
+                                <!-- <div class="chartAreaWrapper"> -->
+                                <canvas id="chartNumberofPlays"></canvas>
+                                <!-- </div> -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Boîte de texte pour code R -->
-        <!-- <textarea id="input" rows="4" cols="50"> -->
-        <!-- </textarea> -->
+    <!-- Boîte de texte pour code R -->
+    <!-- <textarea id="input" rows="4" cols="50"> -->
+    <!-- </textarea> -->
 
-        <!-- Bouton pour soumettre le code R -->
-        <!-- <br /> <button id="submitbutton" type="button">Call R</button> -->
+    <!-- Bouton pour soumettre le code R -->
+    <!-- <br /> <button id="submitbutton" type="button">Call R</button> -->
 
-        <!-- <pre><code id="output"></code></pre> -->
+    <!-- <pre><code id="output"></code></pre> -->
 
 
-        <!-- <code id="code_R" style="display: none;"></code> -->
+    <!-- <code id="code_R" style="display: none;"></code> -->
 
-        <!-- SCRIPTS -->
-        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
-        <script>
-            // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyC9YNHO1_eQOfgSQp5IifQj2fzrf5u3Hik",
-                authDomain: "babystats-df22b.firebaseapp.com",
-                databaseURL: "https://babystats-df22b.firebaseio.com",
-                projectId: "babystats-df22b",
-                storageBucket: "babystats-df22b.appspot.com",
-                messagingSenderId: "892281132936"
-            };
-            firebase.initializeApp(config);
-        </script>
+    <!-- SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC9YNHO1_eQOfgSQp5IifQj2fzrf5u3Hik",
+            authDomain: "babystats-df22b.firebaseapp.com",
+            databaseURL: "https://babystats-df22b.firebaseio.com",
+            projectId: "babystats-df22b",
+            storageBucket: "babystats-df22b.appspot.com",
+            messagingSenderId: "892281132936"
+        };
+        firebase.initializeApp(config);
+    </script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script src="statistiques.js"></script>
-        <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="statistiques.js"></script>
+    <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
 
 
 

@@ -29,8 +29,11 @@ html, body {
 }
 
 body {
-    font-family: 'Century Gothic';
     color: #989c9b;
+}
+
+.main_container {
+    font-family: 'Century Gothic';
 }
 
 .container>header {
@@ -69,7 +72,7 @@ th {
 }
 
 td, th {
-    padding: 1em 1.5em;
+    padding: 1em 0em 1em 1em;
     text-align: left;
     font-family: "Century Gothic";
 }
@@ -93,26 +96,32 @@ td.rank {
 
 /* Vertical NavBar */
 
-ul {
-    list-style-type: none;
+/* ul {
     margin: 0;
     padding: 0;
-    width: 200px;
-    background-color: #f1f1f1;
-}
+    /* background-color: #f1f1f1;
+} */
 
-li a {
+/* li a {
     text-align: center;
     display: block;
     color: #000;
     padding: 8px 16px;
     text-decoration: none;
     cursor: pointer;
-}
+} */
 
 /* Change the link color on hover */
-
+/*
 li a:hover {
     background-color: #555;
     color: white;
-}
+} */
+
+/* #chartNumberofWinsContainer {
+    height: 500px;
+} */
+
+/* #chartNumberofWins {
+    height: 500px;
+} */
