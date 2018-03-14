@@ -483,13 +483,13 @@ function validate() {
     for (a = 0; a < inputsValues.length; a++) {
         for (b = a + 1; b < inputsValues.length; b++) {
             if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
-                $("#player" + (a+1) + "_input").addClass("is-invalid");
-                $("#player" + (b+1) + "_input").addClass("is-invalid");
+                $("#player" + (a + 1) + "_input").addClass("is-invalid");
+                $("#player" + (b + 1) + "_input").addClass("is-invalid");
                 errorFlag = true;
             }
         }
     }
-    if(errorFlag)
+    if (errorFlag)
         return;
 
 
@@ -768,7 +768,7 @@ $("select").change(function() {
         if (this.value != "")
             sel_player++;
     });
-    console.log(sel_player);
+
     if (sel_player < 2) {
         document.getElementById("shuffle_container").style.display = "block";
         document.getElementById("score_indicators").style.display = "none";
@@ -776,4 +776,16 @@ $("select").change(function() {
         document.getElementById("shuffle_container").style.display = "none";
         document.getElementById("score_indicators").style.display = "block";
     }
+
+    // if(this.value)
+    var nb = this.id.split("player")[1].split("_")[0];
+    var buttons = $('[id*="J' + nb + '|"]');
+
+    for (i = 0; i < buttons.length; i++) {
+        if (this.value == "")
+            buttons[i].disabled = true;
+        else
+            buttons[i].disabled = false;
+    }
+
 });
