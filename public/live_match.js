@@ -449,6 +449,7 @@ function validate() {
     }
 
     // Check for errors
+    var errorFlag = false;
     if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "") ||
         (inputs[2].options[inputs[2].selectedIndex].value == "" && inputs[3].options[inputs[3].selectedIndex].value == "") ||
         ((int(score1) == 0) && (int(score2) == 0))) {
@@ -471,8 +472,25 @@ function validate() {
         }
 
         // Exit method if error(s)
-        return;
+        errorFlag = true;
     }
+
+    inputsValues = [];
+    for (var i = 0; i < inputs.length; i++) {
+        inputsValues.push(inputs[i].options[inputs[i].selectedIndex].value);
+    }
+
+    for (a = 0; a < inputsValues.length; a++) {
+        for (b = a + 1; b < inputsValues.length; b++) {
+            if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
+                $("#player" + (a+1) + "_input").addClass("is-invalid");
+                $("#player" + (b+1) + "_input").addClass("is-invalid");
+                errorFlag = true;
+            }
+        }
+    }
+    if(errorFlag)
+        return;
 
 
 

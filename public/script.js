@@ -281,6 +281,7 @@ document.getElementById("validate_button").addEventListener("click", function() 
     }
 
     // Check for errors
+    var errorFlag = false;
     if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "") ||
         inputs[4].options[inputs[4].selectedIndex].value == "" ||
         inputs[5].options[inputs[5].selectedIndex].value == "" ||
@@ -300,8 +301,25 @@ document.getElementById("validate_button").addEventListener("click", function() 
         }
 
         // Exit method if error(s)
-        return;
+        errorFlag = true;
     }
+
+    inputsValues = [];
+    for (var i = 0; i < inputs.length; i++) {
+        inputsValues.push(inputs[i].options[inputs[i].selectedIndex].value);
+    }
+
+    for (a = 0; a < inputsValues.length; a++) {
+        for (b = a + 1; b < inputsValues.length; b++) {
+            if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
+                $("#player" + (a+1) + "_input").addClass("is-invalid");
+                $("#player" + (b+1) + "_input").addClass("is-invalid");
+                errorFlag = true;
+            }
+        }
+    }
+    if(errorFlag)
+        return;
 
     // Disable button while match not added
     document.getElementById("validate_button").disabled = true;
