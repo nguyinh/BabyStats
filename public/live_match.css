@@ -117,7 +117,6 @@ hr {
 } */
 
 #goal_section {
-    /* background-color: blue; */
     padding-bottom: 1rem;
 }
 
@@ -128,11 +127,5 @@ hr {
 }
 
 #betray_section {
-    /* background-color: green; */
     padding-top: 0.5rem;
-}
-
-.score_section {
-    /* padding-top: 1rem;
-    padding-bottom: 0.5rem; */
 }

@@ -1,9 +1,13 @@
 body {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(246, 246, 246);
 }
 
 html, body {
     overflow-x: hidden;
+}
+
+hr {
+    margin: 0;
 }
 
 .podium div {
@@ -29,11 +33,20 @@ html, body {
 }
 
 body {
-    color: #989c9b;
+    /* color: #989c9b; */
 }
 
 .main_container {
     font-family: 'Century Gothic';
+}
+
+.odd-graph {
+    background-color: rgb(231, 234, 231);
+}
+
+ul .nav-link.active {
+    background-color: rgb(221, 226, 221) !important;
+    border-color: #dee2e6 #dee2e6 rgb(187, 187, 187) !important;
 }
 
 .container>header {
@@ -112,6 +125,7 @@ td.rank {
 } */
 
 /* Change the link color on hover */
+
 /*
 li a:hover {
     background-color: #555;
