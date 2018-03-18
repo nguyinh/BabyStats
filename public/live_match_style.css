@@ -1,14 +1,12 @@
 body {
     background-color: rgb(235, 240, 240);
     /* Fixes right white space on mobile (probably only iOS) */
-
     /* touch-action: pan-y; */
 }
 
 html, main_container {
     overflow-x: hidden;
 }
-
 
 .row {
     margin-left: 0;
@@ -42,14 +40,12 @@ h1 {
     color: rgb(235, 240, 240);
 }
 
-h2
-{
+h2 {
     text-align: center;
     margin-bottom: 1rem;
 }
 
-h3
-{
+h3 {
     text-align: center;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -60,8 +56,6 @@ hr {
 }
 
 .scores_separator {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
 }
 
 .col-3.pl-2 {
@@ -76,9 +70,7 @@ hr {
     font-size: 2rem;
 }
 
-#shuffle_container {
-
-}
+#shuffle_container {}
 
 #shuffle_button {
     /* height: 60px; */
@@ -91,10 +83,9 @@ hr {
 
 #score_header {
     background-color: rgb(235, 240, 240);
-   -webkit-box-shadow: 0px 15px 25px -17px #111;
-       -moz-box-shadow: 0px 15px 25px -17px #111;
-            box-shadow: 0px 15px 25px -17px #111;
-
+    -webkit-box-shadow: 0px 15px 25px -17px #111;
+    -moz-box-shadow: 0px 15px 25px -17px #111;
+    box-shadow: 0px 15px 25px -17px #111;
 }
 
 @media only screen and (min-width: 401px) {
@@ -110,7 +101,38 @@ hr {
     border-radius: 10px;
 }
 
+.btn-outline-success:disabled {
+    color: grey;
+    border-color: grey;
+}
+
+.btn-outline-danger:disabled {
+    color: grey;
+    border-color: grey;
+}
+
 /* .container {
     padding-left: 0px !important;
     padding-right: 0px !important;
 } */
+
+#goal_section {
+    /* background-color: blue; */
+    padding-bottom: 1rem;
+}
+
+#gamelle_section {
+    background-color: rgb(229, 232, 229);
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+}
+
+#betray_section {
+    /* background-color: green; */
+    padding-top: 0.5rem;
+}
+
+.score_section {
+    /* padding-top: 1rem;
+    padding-bottom: 0.5rem; */
+}

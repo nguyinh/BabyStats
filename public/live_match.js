@@ -754,6 +754,7 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
                 document.getElementById("shuffle_container").style.display = "none";
                 document.getElementById("score_indicators").style.display = "block";
             }
+            updateButtons();
         }
     })
 });
@@ -777,15 +778,32 @@ $("select").change(function() {
         document.getElementById("score_indicators").style.display = "block";
     }
 
-    // if(this.value)
-    var nb = this.id.split("player")[1].split("_")[0];
-    var buttons = $('[id*="J' + nb + '|"]');
-
-    for (i = 0; i < buttons.length; i++) {
-        if (this.value == "")
-            buttons[i].disabled = true;
-        else
-            buttons[i].disabled = false;
-    }
-
+    updateButtons();
 });
+
+
+
+function updateButtons() {
+    // Get all players selected
+    var inputs = [
+        document.getElementById("player1_input").value,
+        document.getElementById("player2_input").value,
+        document.getElementById("player3_input").value,
+        document.getElementById("player4_input").value
+    ];
+
+    for (j = 0; j < inputs.length; j++) {
+        // For each one, check if there is one
+        var nb = j + 1;
+        var buttons = $('[id*="J' + nb + '|"]');
+
+        // Activate or disable buttons
+        for (i = 0; i < buttons.length; i++) {
+            if (inputs[j] != "") {
+                buttons[i].disabled = false;
+            } else {
+                buttons[i].disabled = true;
+            }
+        }
+    }
+}

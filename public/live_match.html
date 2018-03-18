@@ -114,121 +114,132 @@
                 <div class="container pr-0 pl-0">
                     <div class="row no-gutters" id="players_scores">
                         <div class="offset-xl-3 col-xl-6">
-                            <div class="container pr-0 pl-0">
-                                <div class="row no-gutters">
-                                    <div class="col-12">
-                                        <h2>Buts</h2>
+
+                            <div id="goal_section" class="score_section">
+                                <div class="container pr-0 pl-0">
+                                    <div class="row no-gutters">
+                                        <div class="col-12">
+                                            <h2>Buts</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container pr-0 pl-0">
+                                    <div class="row no-gutters">
+                                        <div class="col-3 pl-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|goal|+" disabled><h3>+</h3></button>
+                                            <h3 id="goalJ1score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|goal|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pr-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|goal|+" disabled><h3>+</h3></button>
+                                            <h3 id="goalJ2score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|goal|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pl-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|goal|+" disabled><h3>+</h3></button>
+                                            <h3 id="goalJ3score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|goal|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pr-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|goal|+" disabled><h3>+</h3></button>
+                                            <h3 id="goalJ4score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|goal|-" disabled><h3>-</h3></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="container pr-0 pl-0">
-                                <div class="row no-gutters">
-                                    <div class="col-3 pl-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|goal|+" disabled><h3>+</h3></button>
-                                        <h3 id="goalJ1score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|goal|-" disabled><h3>-</h3></button>
-                                    </div>
 
-                                    <div class="col-3 pr-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|goal|+" disabled><h3>+</h3></button>
-                                        <h3 id="goalJ2score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|goal|-" disabled><h3>-</h3></button>
-                                    </div>
+                            <hr class="scores_separator" />
 
-                                    <div class="col-3 pl-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|goal|+" disabled><h3>+</h3></button>
-                                        <h3 id="goalJ3score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|goal|-" disabled><h3>-</h3></button>
-                                    </div>
 
-                                    <div class="col-3 pr-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|goal|+" disabled><h3>+</h3></button>
-                                        <h3 id="goalJ4score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|goal|-" disabled><h3>-</h3></button>
+
+
+                            <div id="gamelle_section" class="score_section">
+                                <div class="container pr-0 pl-0">
+                                    <div class="row no-gutters">
+                                        <div class="col-12">
+                                            <h2>Gamelles</h2>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container pr-0 pl-0">
+                                    <div class="row no-gutters">
+                                        <div class="col-3 pl-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|gamelle|+" disabled><h3>+</h3></button>
+                                            <h3 id="gamelleJ1score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|gamelle|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pr-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|gamelle|+" disabled><h3>+</h3></button>
+                                            <h3 id="gamelleJ2score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|gamelle|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pl-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|gamelle|+" disabled><h3>+</h3></button>
+                                            <h3 id="gamelleJ3score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|gamelle|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pr-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|gamelle|+" disabled><h3>+</h3></button>
+                                            <h3 id="gamelleJ4score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|gamelle|-" disabled><h3>-</h3></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+
 
 
                             <hr class="scores_separator" />
 
-                            <div class="container pr-0 pl-0">
-                                <div class="row no-gutters">
-                                    <div class="col-12">
-                                        <h2>Gamelles</h2>
+                            <div id="betray_section" class="score_section">
+                                <div class="container pr-0 pl-0">
+                                    <div class="row no-gutters">
+                                        <div class="col-12">
+                                            <h2>Buts contre son camp</h2>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container pr-0 pl-0">
+                                    <div class="row no-gutters">
+                                        <div class="col-3 pl-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|betray|+" disabled><h3>+</h3></button>
+                                            <h3 id="betrayJ1score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|betray|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pr-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|betray|+" disabled><h3>+</h3></button>
+                                            <h3 id="betrayJ2score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|betray|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pl-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|betray|+" disabled><h3>+</h3></button>
+                                            <h3 id="betrayJ3score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|betray|-" disabled><h3>-</h3></button>
+                                        </div>
+
+                                        <div class="col-3 pr-2">
+                                            <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|betray|+" disabled><h3>+</h3></button>
+                                            <h3 id="betrayJ4score" class="score_indicator">0</h3>
+                                            <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|betray|-" disabled><h3>-</h3></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="container pr-0 pl-0">
-                                <div class="row no-gutters">
-                                    <div class="col-3 pl-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|gamelle|+" disabled><h3>+</h3></button>
-                                        <h3 id="gamelleJ1score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|gamelle|-" disabled><h3>-</h3></button>
-                                    </div>
-
-                                    <div class="col-3 pr-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|gamelle|+" disabled><h3>+</h3></button>
-                                        <h3 id="gamelleJ2score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|gamelle|-" disabled><h3>-</h3></button>
-                                    </div>
-
-                                    <div class="col-3 pl-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|gamelle|+" disabled><h3>+</h3></button>
-                                        <h3 id="gamelleJ3score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|gamelle|-" disabled><h3>-</h3></button>
-                                    </div>
-
-                                    <div class="col-3 pr-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|gamelle|+" disabled><h3>+</h3></button>
-                                        <h3 id="gamelleJ4score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|gamelle|-" disabled><h3>-</h3></button>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <hr class="scores_separator" />
-
-                            <div class="container pr-0 pl-0">
-                                <div class="row no-gutters">
-                                    <div class="col-12">
-                                        <h2>Buts contre son camp</h2>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="container pr-0 pl-0">
-                                <div class="row no-gutters">
-                                    <div class="col-3 pl-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J1|betray|+" disabled><h3>+</h3></button>
-                                        <h3 id="betrayJ1score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J1|betray|-" disabled><h3>-</h3></button>
-                                    </div>
-
-                                    <div class="col-3 pr-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J2|betray|+" disabled><h3>+</h3></button>
-                                        <h3 id="betrayJ2score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J2|betray|-" disabled><h3>-</h3></button>
-                                    </div>
-
-                                    <div class="col-3 pl-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J3|betray|+" disabled><h3>+</h3></button>
-                                        <h3 id="betrayJ3score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J3|betray|-" disabled><h3>-</h3></button>
-                                    </div>
-
-                                    <div class="col-3 pr-2">
-                                        <button type="button" class="btn btn-outline-success btn-lg btn-block" id="J4|betray|+" disabled><h3>+</h3></button>
-                                        <h3 id="betrayJ4score" class="score_indicator">0</h3>
-                                        <button type="button" class="btn btn-outline-danger btn-lg btn-block" id="J4|betray|-" disabled><h3>-</h3></button>
-                                    </div>
-
-
-                                </div>
-                            </div>
                             <!-- <hr class="scores_separator"/> -->
+
                         </div>
                     </div>
                 </div>
