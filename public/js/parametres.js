@@ -25,38 +25,41 @@ function emojization(from, to) {
     }
 }
 
+RefreshPlayerList();
 
 // Get all players from database and PSA teams then fill 'select' elements with it
-db.collection("players")
-    .orderBy("team")
-    .get()
-    .then(function(querySnapshot) {
-        // Clear list
-        document.getElementById("players_list").innerHTML = "";
+function RefreshPlayerList() {
+    db.collection("players")
+        .orderBy("team")
+        .get()
+        .then(function(querySnapshot) {
+            // Clear list
+            document.getElementById("players_list").innerHTML = "";
 
-        // Query players list
-        var team_id = null;
-        querySnapshot.forEach(function(doc) {
-            var list = document.getElementById("players_list");
-            data = doc.data();
+            // Query players list
+            var team_id = null;
+            querySnapshot.forEach(function(doc) {
+                var list = document.getElementById("players_list");
+                data = doc.data();
 
-            // If new docSnapshot
-            if (team_id == null) {
-                team_id = data.team;
-                list.insertAdjacentHTML('beforeend', "<h2>" + team_id + "</h2><hr/>");
-            }
-            // If new team, add some margin
-            else if (team_id != data.team) {
-                team_id = data.team;
-                list.insertAdjacentHTML('beforeend', "<h2 class=\"mt-3\">" + team_id + "</h2><hr/>");
-            }
-            // Emoji tag
-            emojization(data.name, list);
+                // If new docSnapshot
+                if (team_id == null) {
+                    team_id = data.team;
+                    list.insertAdjacentHTML('beforeend', "<h2>" + team_id + "</h2><hr/>");
+                }
+                // If new team, add some margin
+                else if (team_id != data.team) {
+                    team_id = data.team;
+                    list.insertAdjacentHTML('beforeend', "<h2 class=\"mt-3\">" + team_id + "</h2><hr/>");
+                }
+                // Emoji tag
+                emojization(data.name, list);
+            });
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
         });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+}
 
 
 
@@ -273,126 +276,78 @@ $("#players_list").on("touchend", function(e) {
     inputUp(e);
 });
 
+
 function inputDown(e) {
-    if (e.target.tagName == "P") {
-        setTimeout( function() {
-            $(e.target).stop();
-        console.log("coucou");},
-    1000);
+    pressTimer = window.setTimeout(function() {
+        // Check if element is a player name
+        var playerName;
+        if (e.target.tagName == "P")
+            if (e.target.innerHTML.includes("</i>"))
+                playerName = e.target.innerHTML.split("</i>")[1];
+            else
+                playerName = e.target.innerHTML;
+        else if (e.target.tagName == "I")
+            if (e.target.parentElement.innerHTML.includes("</i>"))
+                playerName = e.target.parentElement.innerHTML.split("</i>")[1];
+            else
+                playerName = e.target.parentElement.innerHTML;
+        else
+            return;
 
-        $({
-            blurRadius: 0
-        }).animate({
-            blurRadius: 10
-        }, {
-            duration: 2000,
-            easing: 'swing', // or "linear"
-            // use jQuery UI or Easing plugin for more options
-            step: function() {
-                $(e.target).css({
-                    "-webkit-filter": "blur(" + this.blurRadius + "px)",
-                    "filter": "blur(" + this.blurRadius + "px)"
-                });
-            }
-        });
+        // Display delete confirmation
+        swal({
+            title: 'Confirmation',
+            text: "Êtes vous sûr de vouloir supprimer " + playerName + " ?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Définitivement',
+            cancelButtonText: 'Non',
+            confirmButtonClass: 'btn btn-success mr-1',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.value) {
+                var playerId;
+                // Search for player document id
+                var ref = db.collection("players")
+                    .where("name", "==", playerName)
+                    .get()
+                    .then(function(querySnapshot) {
+                        querySnapshot.forEach(function(doc) {
+                            playerId = doc.id;
 
-    }
+                            // Delete player depending on its player Id
+                            if (playerId != "") {
+                                db.collection("players").doc(playerId).delete().then(function() {
+                                    swal(
+                                        'Succès',
+                                        'Adieu ' + doc.data().first_name + ' ' + doc.data().last_name + ' <i class="em em-wave"></i><i class="em em-cry"></i>',
+                                        'success'
+                                    );
 
 
-    // Change background color
-    // $("#" + $(e.target)
-    //         .parentsUntil(".match_container")
-    //         .parent().attr('id'))
-    //     .animate({
-    //             opacity: 0.6,
-    //             color: "rgb(240, 242, 217)",
-    //             backgroundColor: "rgb(173, 59, 59)"
-    //         },
-    //         1000,
-    //         'swing');
+                                    RefreshPlayerList();
 
-    // If timeout, restore background color
-    // setTimeout(function() {
-    // $("#" + $(e.target)
-    //         .parentsUntil(".match_container")
-    //         .parent()
-    //         .attr('id'))
-    //     .animate({
-    //             opacity: 1,
-    //             color: "rgb(0, 0, 0)",
-    //             backgroundColor: "#FFFFFFFF"
-    //         },
-    //         100,
-    //         'swing')
-    // }, 1250);
 
-    // pressTimer = window.setTimeout(function() {
-    //     var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');
-    //
-    //     if (new RegExp('match').test(match_id)) {
-    //         swal({
-    //             title: 'Confirmation',
-    //             text: "Êtes vous sûr de vouloir supprimer ce match ?",
-    //             type: 'warning',
-    //             showCancelButton: true,
-    //             confirmButtonColor: '#3085d6',
-    //             cancelButtonColor: '#d33',
-    //             confirmButtonText: 'Oui !',
-    //             cancelButtonText: 'How about no.',
-    //             confirmButtonClass: 'btn btn-success mr-1',
-    //             cancelButtonClass: 'btn btn-danger',
-    //             buttonsStyling: false
-    //         }).then((result) => {
-    //             if (result.value) {
-    //                 // Add loading icon
-    //                 var thisMatch = $("#" + $(e.target)
-    //                     .parentsUntil(".match_container")
-    //                     .parent().attr('id')).find("#status");
-    //                 thisMatch[0].innerHTML = "";
-    //                 thisMatch.addClass('fa fa-circle-o-notch fa-spin');
-    //                 thisMatch.css("font-size", "1.75rem");
-    //
-    //                 db.collection("matches")
-    //                     .doc(match_id)
-    //                     .get()
-    //                     .then(function(doc) {
-    //                         if (doc.exists) {
-    //                             db.collection("matches")
-    //                                 .doc(match_id)
-    //                                 .delete()
-    //                                 .then(function() {
-    //                                     console.log(match_id + " successfully deleted!");
-    //
-    //                                     var match = document.getElementById(match_id);
-    //                                     match.parentNode.removeChild(match);
-    //
-    //                                     swal(
-    //                                         'Succès',
-    //                                         'Le match a bien été supprimé !',
-    //                                         'success'
-    //                                     );
-    //                                 }).catch(function(error) {
-    //                                     swal({
-    //                                         type: 'error',
-    //                                         title: 'Erreur',
-    //                                         text: 'Il y a eu un problème lors de la suppression du match'
-    //                                     });
-    //                                 });
-    //                         } else {
-    //                             console.log("No such document!");
-    //                         }
-    //                     }).catch(function(error) {
-    //                         console.log("Error getting document:", error);
-    //                     });
-    //             }
-    //         })
-    //     }
-    // }, 1000);
+                                }).catch(function(error) {
+                                    swal({
+                                        type: 'error',
+                                        title: 'Erreur',
+                                        text: 'Erreur lors de la suppression du joueur ' + doc.data().first_name + ' ' + doc.data().last_name
+                                    });
+                                });
+                            }
+                        }) // querySnapshot.forEach(function(doc) {
+                    }); // .then(function(querySnapshot) {
+            } // if () {
+        }) //.then((result) => {
+    }, 1000);
 }
 
+
 function inputUp(e) {
-    console.log(e.target);
-    $(e.target).stop();
     // $({
     //     blurRadius: 0
     // }).animate({
@@ -408,4 +363,5 @@ function inputUp(e) {
     //         });
     //     }
     // });
+    clearTimeout(pressTimer);
 }
