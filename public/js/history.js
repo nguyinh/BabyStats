@@ -2,13 +2,13 @@
 var db = firebase.firestore();
 
 
+
 // --------------- Report match ---------------
-function reportMatch(P1, P2, P3, P4, S1, S2, match_number) {
+function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
 
     var match_template = document.getElementById("template").cloneNode(true); // copy template node
     var history = document.getElementById("history"); // get history div element (contains all matches)
     match_template.id = match_number; // give id depending on match number
-    console.log(match_number);
 
     // Add match informations
     match_template.querySelector("#player1").innerHTML = P1;
@@ -17,6 +17,7 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number) {
     match_template.querySelector("#player4").innerHTML = P4;
     match_template.querySelector("#team1score").innerHTML = S1;
     match_template.querySelector("#team2score").innerHTML = S2;
+    match_template.querySelector("#timestamp").innerHTML = date;
 
     // Give status to match depending on score
     node = match_template.querySelector("#status");
@@ -44,7 +45,7 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number) {
 
 // --------------- History ---------------
 var matchs_buffer = [];
-var DEFAULT_NUMBER = 10;
+var DEFAULT_NUMBER = 125;
 
 // Get all matches, order from oldest to most recent and display them
 db.collection("matches")
@@ -55,12 +56,20 @@ db.collection("matches")
         querySnapshot.forEach(function(doc) {
             var data = doc.data();
             data.id = doc.id;
+            data.date = moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+            // console.log(date);
+            // if ( == "Invalid date")
+            //     console.log("erreur");
+            // else {
+            //     console.log("touvabi1");
+            // }
+            console.log();
             matchs_buffer.push(data);
         });
 
         // Invert match order to display newest on top
         for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-            reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id);
+            reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
         }
     })
     .catch(function(error) {
@@ -160,8 +169,6 @@ function inputDown(e) {
                                     .doc(match_id)
                                     .delete()
                                     .then(function() {
-                                        console.log(match_id + " successfully deleted!");
-
                                         var match = document.getElementById(match_id);
                                         match.parentNode.removeChild(match);
 

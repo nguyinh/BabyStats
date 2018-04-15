@@ -38,7 +38,7 @@
 
 
     <!--  HISTORY  -->
-    <div class="row" style="margin-top: 1.5em;" id="history_card">
+    <div class="row" style="margin-top: 1.5em;  margin-right: 5px; margin-left: 5px;" id="history_card">
         <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
             <div class="card" id="history_container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
                 <h3 class="card-header">Historique</h3>
@@ -51,7 +51,8 @@
 
     <!--  TEMPLATE  -->
     <div id="template" class="match_container">
-        <div class="row" style="padding-bottom: 1em;">
+        <div class="row">
+            <!-- <div class="row" style="padding-bottom: 1em;"> -->
             <div class="col-4" style="padding-right: 0 !important;">
                 <div><strong id="player1"></strong></div>
                 <div><strong id="player2"></strong></div>
@@ -80,6 +81,12 @@
                 <div><strong id="player4"></strong></div>
             </div>
         </div>
+
+        <div class="row justify-content-end">
+            <div class="col-6 mr-2">
+                <p id="timestamp" class="m-0" style="text-align: right;"></p>
+            </div>
+        </div>
         <!-- <hr/> separator will appear here -->
     </div>
 
@@ -106,6 +113,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/fr.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="js/history.js"></script>
