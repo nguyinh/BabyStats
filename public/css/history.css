@@ -1,0 +1,36 @@
+body {
+    background-color: rgb(235, 240, 240);
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+div {
+    text-align: center;
+}
+
+#history [id*='match'] {
+    padding-top: 1.5rem;
+}
+
+#template {
+    display: none;
+}
+
+hr {
+    margin: 0px;
+}
+
+.default_value {
+    color: rgba(130, 130, 130, 0.8);
+    font-size: 1.1em;
+}
+
+#title p {
+    margin-bottom: 0px;
+}
+
+#status_div {
+    z-index: 1;
+}
