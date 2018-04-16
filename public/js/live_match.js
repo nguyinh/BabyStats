@@ -647,7 +647,7 @@ function validate() {
                         }
 
                         updateButtons();
-                        
+
                         document.getElementById("shuffle_container").style.display = "block";
                         document.getElementById("score_indicators").style.display = "none";
                     }, 500);
@@ -711,13 +711,34 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
                 .then(function(querySnapshot) {
                     var n = 0;
                     $("#swal_container_custom")[0].innerHTML = borders_template;
+                    var team_name = "";
+                    var player_buffer = [];
                     querySnapshot.forEach(function(doc) {
-                        $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(doc.data().name, n++));
+                        if (team_name == "") {
+                            team_name = doc.data().team;
+                            $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>'); // insert team name in swal
+                        } else if (team_name != doc.data().team) {
+                            // Sort and place sorted players in swal (1 team)
+                            player_buffer.sort();
+                            for (var i = 0; i < player_buffer.length; i++) {
+                                $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+                            }
+                            player_buffer = [];
+                            team_name = doc.data().team;
+                            $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>');
+                        }
+                        player_buffer.push(doc.data().name);
                     })
+
+                    // Sort and place sorted players in swal for the last team
+                    player_buffer.sort(); // sort players
+                    for (var i = 0; i < player_buffer.length; i++) {
+                        $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+                    }
                 })
                 .catch(function(error) {
                     console.log("Error getting documents: ", error);
-                    swal.showValidationError('Il semblerait qu\'on ait perdu les joueurs ... Veuillez réessayer plus tard !');
+                    swal.showValidationError('Un petit problème est survenu ... Nos meilleurs ingénieurs sont sur le coup !');
                 });
         },
         preConfirm: () => {
