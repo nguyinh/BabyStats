@@ -47,9 +47,9 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
 
 // --------------- History ---------------
 var matchs_buffer = [];
-var DEFAULT_NUMBER = 125;
+var DEFAULT_NUMBER = 10;
 
-// Get all matches, order from oldest to most recent and display them
+// Get all matches, order from oldest to newest and display them
 db.collection("matches")
     .orderBy("invert_number")
     .limit(DEFAULT_NUMBER)
@@ -75,6 +75,21 @@ db.collection("matches")
     });
 
 
+var REFRESH_INTERVAL = 10;
+// Refresh FromNow every REFRESH_INTERVAL seconds
+setInterval(function() {
+    for (var i = 0; i < matchs_buffer.length; i++) {
+        var tempDate = "• " + moment(matchs_buffer[i].timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
+        // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+        if (tempDate == "• Invalid date")
+            $('#' + matchs_buffer[i].id + ' #timestamp')[0].innerHTML = "•";
+        else
+            $('#' + matchs_buffer[i].id + ' #timestamp')[0].innerHTML = tempDate;
+    }
+}, REFRESH_INTERVAL*1000);
+
+
+
 // Delete functionnality on match element hold
 var pressTimer;
 
@@ -91,8 +106,6 @@ $("#history").mouseup(function(e) {
     }
     return false;
 });
-
-
 
 
 // Mobile navigation
@@ -153,7 +166,8 @@ function inputDown(e) {
                     // Add loading icon
                     var thisMatch = $("#" + $(e.target)
                         .parentsUntil(".match_container")
-                        .parent().attr('id')).find("#status");
+                        .parent().attr('id')).find("#scores");
+                    console.log();
                     thisMatch[0].innerHTML = "";
                     thisMatch.addClass('fa fa-circle-o-notch fa-spin');
                     thisMatch.css("font-size", "1.75rem");
