@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+
+    <!-- https://www.abeautifulsite.net/bootstrap-4-switches -->
+    <link rel="stylesheet" type="text/css" href="switch.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- https://afeld.github.io/emoji-css/ -->
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+
+    <title>Matchs | BabyStats</title>
+</head>
+
+<body class="p-0 pb-2">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">BabyStats</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#">Matchs<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="live_match.html">Live match</a>
+                <a class="nav-item nav-link" href="profil.html">Profil</a>
+                <a class="nav-item nav-link" href="statistiques.html">Statistiques</a>
+                <a class="nav-item nav-link" href="parametres.html">Paramètres</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <!--  MATCH REPORT  -->
+    <div class="row mt-3" id="title">
+        <div class="offset-xl-4 col-xl-4">
+            <div class="row">
+                <div class="col-6 col-xl-6">
+                    <h3>Team 1</h3>
+                </div>
+
+                <div class="col-6 col-xl-6">
+                    <h3>Team 2</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="offset-xl-4 col-xl-4">
+            <div class="row mt-3 pl-1 pr-1" id="score_input">
+                <div class="col-4 col-xl-4">
+                    <div>
+                        <select id="player1_input" class="form-control">
+                            <option value="" selected class="default_value">Joueur 1</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="player2_input" class="form-control">
+                            <option value="" selected class="default_value">Joueur 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-4 col-xl-4" style="padding-left: 0 !important; padding-right: 5px !important;">
+                    <div class="row">
+                        <div class="col-6 pl-1">
+                            <select id="score1_input" class="form-control">
+                                <option value="" selected class="default_value">Score 1</option>
+                            </select>
+                        </div>
+                        <div class="col-6 pr-1">
+                            <select id="score2_input" class="form-control">
+                                <option value="" selected class="default_value">Score 2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 col-xl-4">
+                    <div>
+                        <select id="player3_input" class="form-control">
+                            <option value="" selected class="default_value">Joueur 3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="player4_input" class="form-control">
+                            <option value="" selected class="default_value">Joueur 4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--  SHUFFLE BUTTON  -->
+    <div class="row mt-3" id="shuffle_container">
+        <div class="col-xl-2 offset-xl-5 col-8 offset-2">
+            <button type="button" class="btn btn-primary btn-block pb-2" id="shuffle_button"><i class="fa fa-play fa-lg" aria-hidden="true"></i></span></button>
+        </div>
+    </div>
+
+
+
+    <!--  VALIDATE BUTTON  -->
+    <div class="row mt-3" id="validate_container" style="display: none;">
+        <div class="col-xl-2 offset-xl-5 col-8 offset-2">
+            <button type="button" class="btn btn-success btn-block" id="validate_button">Valider</button>
+        </div>
+    </div>
+
+
+
+    <!--  HISTORY  -->
+    <div class="row" style="margin-top: 1.5em;" id="history_card">
+        <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
+            <div class="card" id="history_container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+                <h3 class="card-header">Historique</h3>
+                <div id="history"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--  TEMPLATE  -->
+    <div id="template" class="match_container">
+        <div class="row" style="padding-bottom: 1em;">
+            <div class="col-4" style="padding-right: 0 !important;">
+                <div><strong id="player1"></strong></div>
+                <div><strong id="player2"></strong></div>
+            </div>
+
+            <div class="col-4" style="padding-left: 0 !important; padding-right: 0 !important;">
+                <div id="status">
+                    <div id="status_div" style="background-color: transparent;"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 offset-2 col-xl-2 offset-xl-3" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <strong id="team1score"></strong>
+                    </div>
+                    <div class="col-2" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <strong> | </strong>
+                    </div>
+                    <div class="col-3 offset--2 col-xl-2 offset-xl--3" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <strong id="team2score"></strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4" style="padding-left: 0 !important;">
+                <div><strong id="player3"></strong></div>
+                <div><strong id="player4"></strong></div>
+            </div>
+        </div>
+        <!-- <hr/> separator will appear here -->
+    </div>
+
+
+
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC9YNHO1_eQOfgSQp5IifQj2fzrf5u3Hik",
+            authDomain: "babystats-df22b.firebaseapp.com",
+            databaseURL: "https://babystats-df22b.firebaseio.com",
+            projectId: "babystats-df22b",
+            storageBucket: "babystats-df22b.appspot.com",
+            messagingSenderId: "892281132936"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

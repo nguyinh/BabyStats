@@ -1,4 +1,4 @@
-// Initialize Cloud Firestore through Firebase
+<// Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
 
