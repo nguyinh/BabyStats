@@ -1,0 +1,45 @@
+body {
+    background-color: rgb(235, 240, 240);
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+div {
+    text-align: center;
+}
+
+#history [id*='match'] {
+    padding-top: 1.5rem;
+}
+
+#template {
+    display: none;
+}
+
+hr {
+    margin: 0px;
+}
+
+#timestamp {
+    color: rgb(164, 164, 164);
+    font-size: 0.85rem;
+}
+
+#scores p {
+    font-size: 2.2rem;
+    display: inline;
+}
+
+#team1score {
+    text-align: left;
+}
+
+#team2score {
+    text-align: right;
+}
+
+#history [id*='player'] {
+    margin: 0px;
+}

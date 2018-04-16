@@ -8,6 +8,10 @@ html, main_container {
     overflow-x: hidden;
 }
 
+div {
+    text-align: center;
+}
+
 .row {
     margin-left: 0;
     margin-right: 0;
