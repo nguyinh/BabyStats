@@ -646,6 +646,8 @@ function validate() {
                             inputs[i].value = "";
                         }
 
+                        updateButtons();
+                        
                         document.getElementById("shuffle_container").style.display = "block";
                         document.getElementById("score_indicators").style.display = "none";
                     }, 500);

@@ -47,7 +47,7 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
 
 // --------------- History ---------------
 var matchs_buffer = [];
-var DEFAULT_NUMBER = 10;
+var DEFAULT_NUMBER = 5;
 
 // Get all matches, order from oldest to newest and display them
 db.collection("matches")
@@ -86,7 +86,51 @@ setInterval(function() {
         else
             $('#' + matchs_buffer[i].id + ' #timestamp')[0].innerHTML = tempDate;
     }
-}, REFRESH_INTERVAL*1000);
+}, REFRESH_INTERVAL * 1000);
+
+
+document.getElementById("load_more_button").addEventListener("click", function() {
+    var button = this;
+    button.innerHTML = 'Un petit instant <i class="em em-hand"></i>';
+    this.disabled = true;
+    var previous_matchs_number = matchs_buffer.length;
+
+    db.collection("matches")
+        .orderBy("invert_number")
+        .limit(matchs_buffer.length + DEFAULT_NUMBER)
+        .get()
+        .then(function(querySnapshot) {
+            matchs_buffer = [];     // reset matchs buffer to re-import previous matchs and new ones
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+                data.id = doc.id;
+                data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
+                // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+                if (data.date == "• Invalid date")
+                    data.date = "•";
+                matchs_buffer.push(data);
+            });
+
+            document.getElementById("history").innerHTML = "";
+
+            // Invert match order to display newest on top
+            for (var i = matchs_buffer.length - 1; i >= 0; i--) {
+                reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+            }
+
+            if (previous_matchs_number == matchs_buffer.length) {
+                button.innerHTML = 'Y\'a plus <i class="em em-cry"></i>'
+            }
+            else {
+                button.innerHTML = 'Afficher plus <i class="em em-point_down">'
+                button.disabled = false;
+            }
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+});
+
 
 
 
