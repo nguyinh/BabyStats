@@ -34,3 +34,35 @@ hr {
 #status_div {
     z-index: 1;
 }
+
+#timestamp {
+    color: rgb(164, 164, 164);
+    font-size: 0.85rem;
+}
+
+/* .btn.btn-sm {
+    padding: 0.20rem 0.20rem;
+} */
+
+#scores p {
+    font-size: 2rem;
+    /* vertical-align: middle; */
+    display:inline
+}
+
+#team1score {
+    text-align: left;
+    align-content: flex-start;
+}
+
+#team2score {
+    text-align: right;
+    align-content: flex-end;
+}
+
+#history [id*='player'] {
+    margin: 0px;
+    font-size: 1rem;
+    /* width: 100px; */
+    text-align: center;
+}

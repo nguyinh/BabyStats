@@ -20,15 +20,17 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
     match_template.querySelector("#timestamp").innerHTML = date;
 
     // Give status to match depending on score
-    node = match_template.querySelector("#status");
+    node_team1 = match_template.querySelector("#status_team1");
+    node_team2 = match_template.querySelector("#status_team2");
     if (parseInt(match_template.querySelector("#team1score").innerHTML) > parseInt(match_template.querySelector("#team2score").innerHTML)) {
-        node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-success disabled\">Victoire</button>");
-        node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-danger disabled\">Défaite</button>");
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-success disabled\">Victoire</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-danger disabled\">Défaite</button>");
     } else if (parseInt(match_template.querySelector("#team1score").innerHTML) < parseInt(match_template.querySelector("#team2score").innerHTML)) {
-        node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-danger disabled\">Défaite</button>");
-        node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-success disabled\">Victoire</button>");
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-danger disabled\">Défaite</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-success disabled\">Victoire</button>");
     } else {
-        node.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-sm btn-warning disabled\">Erreur</button>");
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-warning disabled\">Erreur</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-warning disabled\">Erreur</button>");
     }
 
     if (history.firstChild != null) {
@@ -56,14 +58,10 @@ db.collection("matches")
         querySnapshot.forEach(function(doc) {
             var data = doc.data();
             data.id = doc.id;
-            data.date = moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
-            // console.log(date);
-            // if ( == "Invalid date")
-            //     console.log("erreur");
-            // else {
-            //     console.log("touvabi1");
-            // }
-            console.log();
+            data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
+            // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+            if (data.date == "• Invalid date")
+                data.date = "•";
             matchs_buffer.push(data);
         });
 
