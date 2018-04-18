@@ -19,6 +19,9 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
     match_template.querySelector("#team2score").innerHTML = S2;
     match_template.querySelector("#timestamp").innerHTML = date;
 
+    match_template.querySelector("#addHere").innerHTML = toAdd;
+    match_template.querySelector("#pld").innerHTML = playersLegendHTML;
+
     // Give status to match depending on score
     node_team1 = match_template.querySelector("#status_team1");
     node_team2 = match_template.querySelector("#status_team2");
@@ -41,6 +44,8 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
 
     // add match to history
     history.insertBefore(match_template, history.firstChild);
+
+    test();
 }
 
 
@@ -268,55 +273,127 @@ function inputUp(e) {
     clearTimeout(pressTimer);
 
     $('#collapseExample').collapse('toggle');
+    $('#collapseExample2').collapse('toggle');
+    $('#collapseExample3').collapse('toggle');
 }
 
 
 
 // document.getElementById("addhere").insertAdjacentHTML('beforeend', '<canvas id="doughnutChart"></canvas>')
 
-$('#collapseExample').collapse('toggle');
+// $('#collapseExample').collapse('toggle');
+var toAdd =
+    '<div class="collapse col-4" id="collapseExample">' +
+    '<div class="card card-body">' +
+    '<canvas id="doughnutChart"></canvas>' +
+    '</div>' +
+    '</div>' +
+    '<div class="collapse col-4" id="collapseExample2">' +
+    '<div class="card card-body">' +
+    '<canvas id="doughnutChart2"></canvas>' +
+    '</div>' +
+    '</div>'
 
-var ctx_goals_last_play = document.getElementById("doughnutChart").getContext("2d");;
-// ctx_goals_last_play.height = 500;
-var chartGoalslastPlay = new Chart(ctx_goals_last_play, {
-    type: 'doughnut',
-    data: {
-        datasets: [{
-            data: [
-                20,
-                30,
-                40,
-                50,
-                100,
-            ],
-            backgroundColor: [
-                'rgb(50, 205, 50)',
-                'rgb(50, 205, 50)',
-                'rgb(50, 205, 50)',
-                'rgb(50, 205, 50)',
-                'rgb(50, 205, 50)',
-            ],
-            label: 'Dataset 1'
-        }],
-        labels: [
-            'Red',
-            'Orange',
-            'Yellow',
-            'Green',
-            'Blue'
-        ]
-    },
-    options: {
-        legend: {
-            position: 'top',
-        },
-        title: {
-            display: true,
-            text: 'Chart.js Doughnut Chart'
-        },
-        animation: {
-            animateScale: true,
-            animateRotate: true
+var playersLegendHTML =
+    '<div class="col-12" id="collapseExample3">' +
+    '<div class="card card-body ">' +
+    '<canvas id="playersLegendDisplay"></canvas>' +
+    '</div>' +
+    '</div>'
+
+function test() {
+    var ctx_goals_last_play = document.getElementById("doughnutChart");
+    ctx_goals_last_play.height = 300;
+    var chartGoalslastPlay = new Chart(ctx_goals_last_play, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    20,
+                    30,
+                    50,
+                    30,
+                ],
+                backgroundColor: [
+                    'rgb(205, 50, 83)',
+                    'rgb(226, 93, 200)',
+                    'rgb(50, 112, 205)',
+                    'rgb(53, 50, 205)',
+                ],
+                label: 'Dataset 1'
+            }],
+
         }
-    }
-});
+        // ,
+        // options: {
+        //     title: {
+        //         display: true,
+        //         text: 'Buts'
+        //     }
+        // }
+    });
+
+
+    var ctx_goals_last_play2 = document.getElementById("doughnutChart2");
+    ctx_goals_last_play2.height = 300;
+    var chartGoalslastPlay2 = new Chart(ctx_goals_last_play2, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    20,
+                    30,
+                ],
+                backgroundColor: [
+                    'rgb(205, 50, 83)',
+                    'rgb(53, 50, 205)',
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                'Joueur 1',
+                'Joueur 2'
+            ]
+        }
+        // ,
+        // options: {
+        //     title: {
+        //         display: true,
+        //         text: 'Buts'
+        //     }
+        // }
+    });
+
+    var players_legend = document.getElementById("playersLegendDisplay");
+    // players_legend.height = 300;
+    var chartGoalslastPlay = new Chart(players_legend, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    20,
+                    30,
+                ],
+                backgroundColor: [
+                    'rgb(205, 50, 83)',
+                    'rgb(226, 93, 200)',
+                    'rgb(50, 112, 205)',
+                    'rgb(53, 50, 205)',
+                ],
+                labels: [
+                    'Joueur 1',
+                    'Joueur 2',
+                    'Joueur 3',
+                    'Joueur 4'
+                ]
+            }],
+        }
+        // ,
+        // options: {
+        //     title: {
+        //         display: true,
+        //         text: 'Buts'
+        //     }
+        // }
+    });
+}
