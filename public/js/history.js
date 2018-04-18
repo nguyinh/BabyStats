@@ -100,7 +100,7 @@ document.getElementById("load_more_button").addEventListener("click", function()
         .limit(matchs_buffer.length + DEFAULT_NUMBER)
         .get()
         .then(function(querySnapshot) {
-            matchs_buffer = [];     // reset matchs buffer to re-import previous matchs and new ones
+            matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {
                 var data = doc.data();
                 data.id = doc.id;
@@ -120,8 +120,7 @@ document.getElementById("load_more_button").addEventListener("click", function()
 
             if (previous_matchs_number == matchs_buffer.length) {
                 button.innerHTML = 'Y\'a plus <i class="em em-cry"></i>'
-            }
-            else {
+            } else {
                 button.innerHTML = 'Afficher plus <i class="em em-point_down">'
                 button.disabled = false;
             }
@@ -267,4 +266,57 @@ function inputUp(e) {
             'swing');
 
     clearTimeout(pressTimer);
+
+    $('#collapseExample').collapse('toggle');
 }
+
+
+
+// document.getElementById("addhere").insertAdjacentHTML('beforeend', '<canvas id="doughnutChart"></canvas>')
+
+$('#collapseExample').collapse('toggle');
+
+var ctx_goals_last_play = document.getElementById("doughnutChart").getContext("2d");;
+// ctx_goals_last_play.height = 500;
+var chartGoalslastPlay = new Chart(ctx_goals_last_play, {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [
+                20,
+                30,
+                40,
+                50,
+                100,
+            ],
+            backgroundColor: [
+                'rgb(50, 205, 50)',
+                'rgb(50, 205, 50)',
+                'rgb(50, 205, 50)',
+                'rgb(50, 205, 50)',
+                'rgb(50, 205, 50)',
+            ],
+            label: 'Dataset 1'
+        }],
+        labels: [
+            'Red',
+            'Orange',
+            'Yellow',
+            'Green',
+            'Blue'
+        ]
+    },
+    options: {
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Doughnut Chart'
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+});

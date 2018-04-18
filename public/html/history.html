@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/history.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- https://afeld.github.io/emoji-css/ -->
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
@@ -51,7 +52,11 @@
         </div>
     </nav> -->
 
-
+    <div class="collapse row" id="collapseExample">
+        <div class="card card-body col-6 offset-3" id="addhere" style="background-color: rgb(232, 232, 232)">
+            <canvas id="doughnutChart"></canvas>
+        </div>
+    </div>
 
     <!--  HISTORY  -->
     <div class="row" style="margin-top: 1.5em;  margin-right: 2px; margin-left: 2px;" id="history_card">
@@ -78,8 +83,12 @@
         <div class="row align-items-center">
             <div class="col-5 pr-4">
                 <div id="status_team1" class="mb-2"></div>
-                <div><p id="player1"></p></div>
-                <div><p id="player2"></p></div>
+                <div>
+                    <p id="player1"></p>
+                </div>
+                <div>
+                    <p id="player2"></p>
+                </div>
             </div>
 
             <div class="col-2 p-0" id="scores">
@@ -90,8 +99,12 @@
             </div>
             <div class="col-5 pl-4">
                 <div id="status_team2" class="mb-2"></div>
-                <div><p id="player3"></p></div>
-                <div><p id="player4"></p></div>
+                <div>
+                    <p id="player3"></p>
+                </div>
+                <div>
+                    <p id="player4"></p>
+                </div>
             </div>
         </div>
 
