@@ -4,23 +4,24 @@ var db = firebase.firestore();
 
 
 // --------------- Report match ---------------
-function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
+// function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
+function reportMatch(match) {
 
     var match_template = document.getElementById("template").cloneNode(true); // copy template node
     var history = document.getElementById("history"); // get history div element (contains all matches)
-    match_template.id = match_number; // give id depending on match number
+    match_template.id = match.id; // give id depending on match number
 
     // Add match informations
-    match_template.querySelector("#player1").innerHTML = P1;
-    match_template.querySelector("#player2").innerHTML = P2;
-    match_template.querySelector("#player3").innerHTML = P3;
-    match_template.querySelector("#player4").innerHTML = P4;
-    match_template.querySelector("#team1score").innerHTML = S1;
-    match_template.querySelector("#team2score").innerHTML = S2;
-    match_template.querySelector("#timestamp").innerHTML = date;
+    match_template.querySelector("#player1").innerHTML = match.player1;
+    match_template.querySelector("#player2").innerHTML = match.player2;
+    match_template.querySelector("#player3").innerHTML = match.player3;
+    match_template.querySelector("#player4").innerHTML = match.player4;
+    match_template.querySelector("#team1score").innerHTML = match.score1;
+    match_template.querySelector("#team2score").innerHTML = match.score2;
+    match_template.querySelector("#timestamp").innerHTML = match.date;
 
-    match_template.querySelector("#addHere").innerHTML = toAdd;
-    match_template.querySelector("#pld").innerHTML = playersLegendHTML;
+    match_template.querySelector("#Charts").innerHTML = AddChartsHTML(match.id);
+    match_template.querySelector("#players_details").id += '_' + match.id;
 
     // Give status to match depending on score
     node_team1 = match_template.querySelector("#status_team1");
@@ -45,7 +46,7 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
     // add match to history
     history.insertBefore(match_template, history.firstChild);
 
-    test();
+    addCharts(match);
 }
 
 
@@ -72,11 +73,12 @@ db.collection("matches")
 
         // Invert match order to display newest on top
         for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-            reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+            // reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+            reportMatch(matchs_buffer[i]);
         }
     })
     .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.log(error);
     });
 
 
@@ -120,7 +122,8 @@ document.getElementById("load_more_button").addEventListener("click", function()
 
             // Invert match order to display newest on top
             for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-                reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+                // reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+                reportMatch(matchs_buffer[i]);
             }
 
             if (previous_matchs_number == matchs_buffer.length) {
@@ -166,6 +169,17 @@ $("#history").on("touchend", function(e) {
 });
 
 function inputDown(e) {
+
+    // Test if element e is not players details
+    var node = e.target.parentNode;
+    while (node != null) {
+        // console.log(node);
+        if (node.id != undefined && node.id.includes('players_details')) {
+            return;
+        }
+        node = node.parentNode;
+    }
+
     // Change background color
     $("#" + $(e.target)
             .parentsUntil(".match_container")
@@ -272,128 +286,118 @@ function inputUp(e) {
 
     clearTimeout(pressTimer);
 
-    $('#collapseExample').collapse('toggle');
-    $('#collapseExample2').collapse('toggle');
-    $('#collapseExample3').collapse('toggle');
+
+    // Test if element e is not players details
+    var node = e.target.parentNode;
+    var match_number;
+    while (node != null) {
+        if (node.id != undefined) {
+            if (node.id.includes("match")) {
+                match_number = node.id;
+            }
+            if (node.id != undefined && node.id.includes('players_details')) {
+                return;
+            }
+        }
+        node = node.parentNode;
+    }
+    // console.log(match_number);
+
+    var match_id = '#players_details_' + match_number;
+    $(match_id).collapse('toggle');
+    $('[id*="players_details"]').collapse('hide');
 }
 
 
-
-// document.getElementById("addhere").insertAdjacentHTML('beforeend', '<canvas id="doughnutChart"></canvas>')
-
-// $('#collapseExample').collapse('toggle');
-var toAdd =
-    '<div class="collapse col-4" id="collapseExample">' +
-    '<div class="card card-body">' +
-    '<canvas id="doughnutChart"></canvas>' +
+function AddChartsHTML(n) {
+    return '<div class="col-4">' +
+    '<canvas id="doughnutChart' + n + '"></canvas>' +
     '</div>' +
+    '<div class="col-4">' +
+    '<canvas id="doughnutChart2' + n + '"></canvas>' +
     '</div>' +
-    '<div class="collapse col-4" id="collapseExample2">' +
-    '<div class="card card-body">' +
-    '<canvas id="doughnutChart2"></canvas>' +
-    '</div>' +
-    '</div>'
+    '<div class="col-4">' +
+    '<canvas id="doughnutChart3' + n + '"></canvas>' +
+    '</div>';
+}
 
-var playersLegendHTML =
-    '<div class="col-12" id="collapseExample3">' +
-    '<div class="card card-body ">' +
-    '<canvas id="playersLegendDisplay"></canvas>' +
-    '</div>' +
-    '</div>'
 
-function test() {
-    var ctx_goals_last_play = document.getElementById("doughnutChart");
-    ctx_goals_last_play.height = 300;
-    var chartGoalslastPlay = new Chart(ctx_goals_last_play, {
+function addCharts(match) {
+    var chart_goals_per_player = document.getElementById("doughnutChart" + match.id);
+    var chart_gamelle_per_player = document.getElementById("doughnutChart2" + match.id);
+    var chart_betray_per_player = document.getElementById("doughnutChart3" + match.id);
+
+    var CHARTS_HEIGHT = 300;
+    chart_goals_per_player.height = chart_gamelle_per_player.height = chart_betray_per_player.height = CHARTS_HEIGHT;
+
+    var chartGoalslastPlay = new Chart(chart_goals_per_player, {
         type: 'doughnut',
         data: {
             datasets: [{
                 data: [
-                    20,
-                    30,
-                    50,
-                    30,
+                    match.player1_goals,
+                    match.player2_goals,
+                    match.player3_goals,
+                    match.player4_goals
                 ],
                 backgroundColor: [
                     'rgb(205, 50, 83)',
                     'rgb(226, 93, 200)',
                     'rgb(50, 112, 205)',
                     'rgb(53, 50, 205)',
-                ],
-                label: 'Dataset 1'
-            }],
-
-        }
-        // ,
-        // options: {
-        //     title: {
-        //         display: true,
-        //         text: 'Buts'
-        //     }
-        // }
-    });
-
-
-    var ctx_goals_last_play2 = document.getElementById("doughnutChart2");
-    ctx_goals_last_play2.height = 300;
-    var chartGoalslastPlay2 = new Chart(ctx_goals_last_play2, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [
-                    20,
-                    30,
-                ],
-                backgroundColor: [
-                    'rgb(205, 50, 83)',
-                    'rgb(53, 50, 205)',
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                'Joueur 1',
-                'Joueur 2'
-            ]
-        }
-        // ,
-        // options: {
-        //     title: {
-        //         display: true,
-        //         text: 'Buts'
-        //     }
-        // }
-    });
-
-    var players_legend = document.getElementById("playersLegendDisplay");
-    // players_legend.height = 300;
-    var chartGoalslastPlay = new Chart(players_legend, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [
-                    20,
-                    30,
-                ],
-                backgroundColor: [
-                    'rgb(205, 50, 83)',
-                    'rgb(226, 93, 200)',
-                    'rgb(50, 112, 205)',
-                    'rgb(53, 50, 205)',
-                ],
-                labels: [
-                    'Joueur 1',
-                    'Joueur 2',
-                    'Joueur 3',
-                    'Joueur 4'
                 ]
             }],
+
         }
-        // ,
-        // options: {
-        //     title: {
-        //         display: true,
-        //         text: 'Buts'
-        //     }
-        // }
     });
+
+
+
+
+    var chartGoalslastPlay2 = new Chart(chart_gamelle_per_player, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    match.player1_gamelles,
+                    match.player2_gamelles,
+                    match.player3_gamelles,
+                    match.player4_gamelles
+                ],
+                backgroundColor: [
+                    'rgb(205, 50, 83)',
+                    'rgb(226, 93, 200)',
+                    'rgb(50, 112, 205)',
+                    'rgb(53, 50, 205)',
+                ]
+            }]
+        }
+    });
+
+
+
+
+    var chartGoalslastPlay2 = new Chart(chart_betray_per_player, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    match.player1_betrays,
+                    match.player2_betrays,
+                    match.player3_betrays,
+                    match.player4_betrays
+                ],
+                backgroundColor: [
+                    'rgb(205, 50, 83)',
+                    'rgb(226, 93, 200)',
+                    'rgb(50, 112, 205)',
+                    'rgb(53, 50, 205)',
+                ]
+            }]
+        }
+    });
+
+
+    // TODO : Add players colors and names
+
 }

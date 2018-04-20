@@ -10,9 +10,9 @@ div {
     text-align: center;
 }
 
-#history [id*='match'] {
-    padding-top: 1.5rem;
-}
+/* #history [id*='match'] { */
+    /* padding-top: 1.5rem; */
+/* } */
 
 #template {
     display: none;
