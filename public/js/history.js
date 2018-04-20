@@ -353,10 +353,10 @@ function addCharts(match) {
                 ]
             }],
             labels: [
-                match.player1,
-                match.player2,
+                match.player4,
                 match.player3,
-                match.player4
+                match.player2,
+                match.player1
             ]
         },
         options: {
@@ -387,10 +387,10 @@ function addCharts(match) {
                 ]
             }],
             labels: [
-                match.player1,
-                match.player2,
+                match.player4,
                 match.player3,
-                match.player4
+                match.player2,
+                match.player1
             ]
         },
         options: {
@@ -421,10 +421,10 @@ function addCharts(match) {
                 ]
             }],
             labels: [
-                match.player1,
-                match.player2,
+                match.player4,
                 match.player3,
-                match.player4
+                match.player2,
+                match.player1
             ]
         },
         options: {
