@@ -184,31 +184,31 @@ function inputDown(e) {
     }
 
     // Change background color
-    $("#" + $(e.target)
-            .parentsUntil(".match_container")
-            .parent().attr('id'))
-        .animate({
-                opacity: 0.6,
-                color: "rgb(240, 242, 217)",
-                backgroundColor: "rgb(173, 59, 59)"
-            },
-            1000,
-            'swing');
+    // $("#" + $(e.target)
+    //         .parentsUntil(".match_container")
+    //         .parent().attr('id'))
+    //     .animate({
+    //             opacity: 0.6,
+    //             color: "rgb(240, 242, 217)",
+    //             backgroundColor: "rgb(173, 59, 59)"
+    //         },
+    //         1000,
+    //         'swing');
 
     // If timeout, restore background color
-    setTimeout(function() {
-        $("#" + $(e.target)
-                .parentsUntil(".match_container")
-                .parent()
-                .attr('id'))
-            .animate({
-                    opacity: 1,
-                    color: "rgb(0, 0, 0)",
-                    backgroundColor: "#FFFFFFFF"
-                },
-                100,
-                'swing')
-    }, 1250);
+    // setTimeout(function() {
+    //     $("#" + $(e.target)
+    //             .parentsUntil(".match_container")
+    //             .parent()
+    //             .attr('id'))
+    //         .animate({
+    //                 opacity: 1,
+    //                 color: "rgb(0, 0, 0)",
+    //                 backgroundColor: "#FFFFFFFF"
+    //             },
+    //             100,
+    //             'swing')
+    // }, 1250);
 
     pressTimer = window.setTimeout(function() {
         var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');

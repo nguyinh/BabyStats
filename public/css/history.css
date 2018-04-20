@@ -10,12 +10,6 @@ div {
     text-align: center;
 }
 
-/* #history [id*='match'] { */
-
-/* padding-top: 1.5rem; */
-
-/* } */
-
 #template {
     display: none;
 }
@@ -49,8 +43,7 @@ hr {
 .player1_label, .player2_label, .player3_label, .player4_label {
     font-size: 0.7rem;
     border-radius: 20px;
-    background-color: red;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .player1_label {
@@ -67,4 +60,16 @@ hr {
 
 .player4_label {
     background: rgb(91, 65, 244);
+}
+
+.details_container {
+    -moz-box-shadow: inset 0px 25px 50px -25px #000000;
+    -webkit-box-shadow: inset 0px 25px 50px -25px #000000;
+    box-shadow: inset 0px 25px 50px -25px #000000;
+    background-color: rgb(242, 242, 242);
+}
+
+.details_container.card {
+    border-radius: 0rem;
+    border: 0px;
 }
