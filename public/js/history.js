@@ -16,6 +16,10 @@ function reportMatch(match) {
     match_template.querySelector("#player2").innerHTML = match.player2;
     match_template.querySelector("#player3").innerHTML = match.player3;
     match_template.querySelector("#player4").innerHTML = match.player4;
+    match_template.querySelector("#player1_label").innerHTML = match.player1;
+    match_template.querySelector("#player2_label").innerHTML = match.player2;
+    match_template.querySelector("#player3_label").innerHTML = match.player3;
+    match_template.querySelector("#player4_label").innerHTML = match.player4;
     match_template.querySelector("#team1score").innerHTML = match.score1;
     match_template.querySelector("#team2score").innerHTML = match.score2;
     match_template.querySelector("#timestamp").innerHTML = match.date;
@@ -173,7 +177,6 @@ function inputDown(e) {
     // Test if element e is not players details
     var node = e.target.parentNode;
     while (node != null) {
-        // console.log(node);
         if (node.id != undefined && node.id.includes('players_details')) {
             return;
         }
@@ -229,7 +232,6 @@ function inputDown(e) {
                     var thisMatch = $("#" + $(e.target)
                         .parentsUntil(".match_container")
                         .parent().attr('id')).find("#scores");
-                    console.log();
                     thisMatch[0].innerHTML = "";
                     thisMatch.addClass('fa fa-circle-o-notch fa-spin');
                     thisMatch.css("font-size", "1.75rem");
@@ -301,7 +303,6 @@ function inputUp(e) {
         }
         node = node.parentNode;
     }
-    // console.log(match_number);
 
     var match_id = '#players_details_' + match_number;
     $(match_id).collapse('toggle');
@@ -310,15 +311,15 @@ function inputUp(e) {
 
 
 function AddChartsHTML(n) {
-    return '<div class="col-4">' +
-    '<canvas id="doughnutChart' + n + '"></canvas>' +
-    '</div>' +
-    '<div class="col-4">' +
-    '<canvas id="doughnutChart2' + n + '"></canvas>' +
-    '</div>' +
-    '<div class="col-4">' +
-    '<canvas id="doughnutChart3' + n + '"></canvas>' +
-    '</div>';
+    return '<div class="col-4 pr-2 pl-2">' +
+        '<canvas id="doughnutChart' + n + '"></canvas>' +
+        '</div>' +
+        '<div class="col-4 pr-2 pl-2">' +
+        '<canvas id="doughnutChart2' + n + '"></canvas>' +
+        '</div>' +
+        '<div class="col-4 pr-2 pl-2">' +
+        '<canvas id="doughnutChart3' + n + '"></canvas>' +
+        '</div>';
 }
 
 
@@ -327,77 +328,109 @@ function addCharts(match) {
     var chart_gamelle_per_player = document.getElementById("doughnutChart2" + match.id);
     var chart_betray_per_player = document.getElementById("doughnutChart3" + match.id);
 
-    var CHARTS_HEIGHT = 300;
+    var CHARTS_HEIGHT = 300; // pixels
+    var P1_color = 'rgb(244, 121, 65)';
+    var P2_color = 'rgb(244, 196, 65)';
+    var P3_color = 'rgb(65, 88, 244)';
+    var P4_color = 'rgb(91, 65, 244)';
     chart_goals_per_player.height = chart_gamelle_per_player.height = chart_betray_per_player.height = CHARTS_HEIGHT;
 
-    var chartGoalslastPlay = new Chart(chart_goals_per_player, {
+    new Chart(chart_goals_per_player, {
         type: 'doughnut',
         data: {
             datasets: [{
                 data: [
-                    match.player1_goals,
-                    match.player2_goals,
+                    match.player4_goals,
                     match.player3_goals,
-                    match.player4_goals
+                    match.player2_goals,
+                    match.player1_goals
                 ],
                 backgroundColor: [
-                    'rgb(205, 50, 83)',
-                    'rgb(226, 93, 200)',
-                    'rgb(50, 112, 205)',
-                    'rgb(53, 50, 205)',
+                    P4_color,
+                    P3_color,
+                    P2_color,
+                    P1_color
                 ]
             }],
-
+            labels: [
+                match.player1,
+                match.player2,
+                match.player3,
+                match.player4
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
         }
     });
 
 
 
 
-    var chartGoalslastPlay2 = new Chart(chart_gamelle_per_player, {
+    new Chart(chart_gamelle_per_player, {
         type: 'doughnut',
         data: {
             datasets: [{
                 data: [
-                    match.player1_gamelles,
-                    match.player2_gamelles,
+                    match.player4_gamelles,
                     match.player3_gamelles,
-                    match.player4_gamelles
+                    match.player2_gamelles,
+                    match.player1_gamelles
                 ],
                 backgroundColor: [
-                    'rgb(205, 50, 83)',
-                    'rgb(226, 93, 200)',
-                    'rgb(50, 112, 205)',
-                    'rgb(53, 50, 205)',
+                    P4_color,
+                    P3_color,
+                    P2_color,
+                    P1_color
                 ]
-            }]
+            }],
+            labels: [
+                match.player1,
+                match.player2,
+                match.player3,
+                match.player4
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
         }
     });
 
 
 
 
-    var chartGoalslastPlay2 = new Chart(chart_betray_per_player, {
+    new Chart(chart_betray_per_player, {
         type: 'doughnut',
         data: {
             datasets: [{
                 data: [
-                    match.player1_betrays,
-                    match.player2_betrays,
-                    match.player3_betrays,
-                    match.player4_betrays
+                    match.player4_betray,
+                    match.player3_betray,
+                    match.player2_betray,
+                    match.player1_betray
                 ],
                 backgroundColor: [
-                    'rgb(205, 50, 83)',
-                    'rgb(226, 93, 200)',
-                    'rgb(50, 112, 205)',
-                    'rgb(53, 50, 205)',
+                    P4_color,
+                    P3_color,
+                    P2_color,
+                    P1_color
                 ]
-            }]
+            }],
+            labels: [
+                match.player1,
+                match.player2,
+                match.player3,
+                match.player4
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
         }
     });
-
-
-    // TODO : Add players colors and names
-
 }

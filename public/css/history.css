@@ -11,7 +11,9 @@ div {
 }
 
 /* #history [id*='match'] { */
-    /* padding-top: 1.5rem; */
+
+/* padding-top: 1.5rem; */
+
 /* } */
 
 #template {
@@ -42,4 +44,27 @@ hr {
 
 #history [id*='player'] {
     margin: 0px;
+}
+
+.player1_label, .player2_label, .player3_label, .player4_label {
+    font-size: 0.7rem;
+    border-radius: 20px;
+    background-color: red;
+    color: white;
+}
+
+.player1_label {
+    background: rgb(244, 121, 65);
+}
+
+.player2_label {
+    background: rgb(244, 196, 65);
+}
+
+.player3_label {
+    background: rgb(65, 88, 244);
+}
+
+.player4_label {
+    background: rgb(91, 65, 244);
 }
