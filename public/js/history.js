@@ -4,20 +4,28 @@ var db = firebase.firestore();
 
 
 // --------------- Report match ---------------
-function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
+// function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
+function reportMatch(match) {
 
     var match_template = document.getElementById("template").cloneNode(true); // copy template node
     var history = document.getElementById("history"); // get history div element (contains all matches)
-    match_template.id = match_number; // give id depending on match number
+    match_template.id = match.id; // give id depending on match number
 
     // Add match informations
-    match_template.querySelector("#player1").innerHTML = P1;
-    match_template.querySelector("#player2").innerHTML = P2;
-    match_template.querySelector("#player3").innerHTML = P3;
-    match_template.querySelector("#player4").innerHTML = P4;
-    match_template.querySelector("#team1score").innerHTML = S1;
-    match_template.querySelector("#team2score").innerHTML = S2;
-    match_template.querySelector("#timestamp").innerHTML = date;
+    match_template.querySelector("#player1").innerHTML = match.player1;
+    match_template.querySelector("#player2").innerHTML = match.player2;
+    match_template.querySelector("#player3").innerHTML = match.player3;
+    match_template.querySelector("#player4").innerHTML = match.player4;
+    match_template.querySelector("#player1_label").innerHTML = match.player1;
+    match_template.querySelector("#player2_label").innerHTML = match.player2;
+    match_template.querySelector("#player3_label").innerHTML = match.player3;
+    match_template.querySelector("#player4_label").innerHTML = match.player4;
+    match_template.querySelector("#team1score").innerHTML = match.score1;
+    match_template.querySelector("#team2score").innerHTML = match.score2;
+    match_template.querySelector("#timestamp").innerHTML = match.date;
+
+    match_template.querySelector("#Charts").innerHTML = AddChartsHTML(match.id);
+    match_template.querySelector("#players_details").id += '_' + match.id;
 
     // Give status to match depending on score
     node_team1 = match_template.querySelector("#status_team1");
@@ -41,6 +49,8 @@ function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
 
     // add match to history
     history.insertBefore(match_template, history.firstChild);
+
+    addCharts(match);
 }
 
 
@@ -67,11 +77,12 @@ db.collection("matches")
 
         // Invert match order to display newest on top
         for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-            reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+            // reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+            reportMatch(matchs_buffer[i]);
         }
     })
     .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.log(error);
     });
 
 
@@ -100,7 +111,7 @@ document.getElementById("load_more_button").addEventListener("click", function()
         .limit(matchs_buffer.length + DEFAULT_NUMBER)
         .get()
         .then(function(querySnapshot) {
-            matchs_buffer = [];     // reset matchs buffer to re-import previous matchs and new ones
+            matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {
                 var data = doc.data();
                 data.id = doc.id;
@@ -115,13 +126,13 @@ document.getElementById("load_more_button").addEventListener("click", function()
 
             // Invert match order to display newest on top
             for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-                reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+                // reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
+                reportMatch(matchs_buffer[i]);
             }
 
             if (previous_matchs_number == matchs_buffer.length) {
                 button.innerHTML = 'Y\'a plus <i class="em em-cry"></i>'
-            }
-            else {
+            } else {
                 button.innerHTML = 'Afficher plus <i class="em em-point_down">'
                 button.disabled = false;
             }
@@ -162,6 +173,16 @@ $("#history").on("touchend", function(e) {
 });
 
 function inputDown(e) {
+
+    // Test if element e is not players details
+    var node = e.target.parentNode;
+    while (node != null) {
+        if (node.id != undefined && node.id.includes('players_details')) {
+            return;
+        }
+        node = node.parentNode;
+    }
+
     // Change background color
     $("#" + $(e.target)
             .parentsUntil(".match_container")
@@ -211,7 +232,6 @@ function inputDown(e) {
                     var thisMatch = $("#" + $(e.target)
                         .parentsUntil(".match_container")
                         .parent().attr('id')).find("#scores");
-                    console.log();
                     thisMatch[0].innerHTML = "";
                     thisMatch.addClass('fa fa-circle-o-notch fa-spin');
                     thisMatch.css("font-size", "1.75rem");
@@ -267,4 +287,150 @@ function inputUp(e) {
             'swing');
 
     clearTimeout(pressTimer);
+
+
+    // Test if element e is not players details
+    var node = e.target.parentNode;
+    var match_number;
+    while (node != null) {
+        if (node.id != undefined) {
+            if (node.id.includes("match")) {
+                match_number = node.id;
+            }
+            if (node.id != undefined && node.id.includes('players_details')) {
+                return;
+            }
+        }
+        node = node.parentNode;
+    }
+
+    var match_id = '#players_details_' + match_number;
+    $(match_id).collapse('toggle');
+    $('[id*="players_details"]').collapse('hide');
+}
+
+
+function AddChartsHTML(n) {
+    return '<div class="col-4 pr-2 pl-2">' +
+        '<canvas id="doughnutChart' + n + '"></canvas>' +
+        '</div>' +
+        '<div class="col-4 pr-2 pl-2">' +
+        '<canvas id="doughnutChart2' + n + '"></canvas>' +
+        '</div>' +
+        '<div class="col-4 pr-2 pl-2">' +
+        '<canvas id="doughnutChart3' + n + '"></canvas>' +
+        '</div>';
+}
+
+
+function addCharts(match) {
+    var chart_goals_per_player = document.getElementById("doughnutChart" + match.id);
+    var chart_gamelle_per_player = document.getElementById("doughnutChart2" + match.id);
+    var chart_betray_per_player = document.getElementById("doughnutChart3" + match.id);
+
+    var CHARTS_HEIGHT = 300; // pixels
+    var P1_color = 'rgb(244, 121, 65)';
+    var P2_color = 'rgb(244, 196, 65)';
+    var P3_color = 'rgb(65, 88, 244)';
+    var P4_color = 'rgb(91, 65, 244)';
+    chart_goals_per_player.height = chart_gamelle_per_player.height = chart_betray_per_player.height = CHARTS_HEIGHT;
+
+    new Chart(chart_goals_per_player, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    match.player4_goals,
+                    match.player3_goals,
+                    match.player2_goals,
+                    match.player1_goals
+                ],
+                backgroundColor: [
+                    P4_color,
+                    P3_color,
+                    P2_color,
+                    P1_color
+                ]
+            }],
+            labels: [
+                match.player1,
+                match.player2,
+                match.player3,
+                match.player4
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
+        }
+    });
+
+
+
+
+    new Chart(chart_gamelle_per_player, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    match.player4_gamelles,
+                    match.player3_gamelles,
+                    match.player2_gamelles,
+                    match.player1_gamelles
+                ],
+                backgroundColor: [
+                    P4_color,
+                    P3_color,
+                    P2_color,
+                    P1_color
+                ]
+            }],
+            labels: [
+                match.player1,
+                match.player2,
+                match.player3,
+                match.player4
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
+        }
+    });
+
+
+
+
+    new Chart(chart_betray_per_player, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    match.player4_betray,
+                    match.player3_betray,
+                    match.player2_betray,
+                    match.player1_betray
+                ],
+                backgroundColor: [
+                    P4_color,
+                    P3_color,
+                    P2_color,
+                    P1_color
+                ]
+            }],
+            labels: [
+                match.player1,
+                match.player2,
+                match.player3,
+                match.player4
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
+        }
+    });
 }

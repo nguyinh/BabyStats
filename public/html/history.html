@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/history.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- https://afeld.github.io/emoji-css/ -->
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
@@ -51,7 +52,11 @@
         </div>
     </nav> -->
 
-
+    <!-- <div class="collapse row" id="collapseExample">
+        <div class="card card-body">
+            <canvas id="doughnutChart"></canvas>
+        </div>
+    </div> -->
 
     <!--  HISTORY  -->
     <div class="row" style="margin-top: 1.5em;  margin-right: 2px; margin-left: 2px;" id="history_card">
@@ -74,12 +79,16 @@
 
 
     <!--  TEMPLATE  -->
-    <div id="template" class="match_container">
+    <div id="template" class="match_container pt-4">
         <div class="row align-items-center">
             <div class="col-5 pr-4">
                 <div id="status_team1" class="mb-2"></div>
-                <div><p id="player1"></p></div>
-                <div><p id="player2"></p></div>
+                <div>
+                    <p id="player1"></p>
+                </div>
+                <div>
+                    <p id="player2"></p>
+                </div>
             </div>
 
             <div class="col-2 p-0" id="scores">
@@ -90,8 +99,12 @@
             </div>
             <div class="col-5 pl-4">
                 <div id="status_team2" class="mb-2"></div>
-                <div><p id="player3"></p></div>
-                <div><p id="player4"></p></div>
+                <div>
+                    <p id="player3"></p>
+                </div>
+                <div>
+                    <p id="player4"></p>
+                </div>
             </div>
         </div>
 
@@ -100,34 +113,75 @@
                 <p id="timestamp" class="m-0 mb-1 mt-1" style="text-align: right;"></p>
             </div>
         </div>
-        <!-- <hr/> separator will appear here -->
-    </div>
+
+        <div class="collapse" id="players_details">
+            <div class="card card-body">
+
+                <div class="row pb-2">
+                    <div class="col-3 pr-2 pl-2">
+                        <p class="player1_label" id="player1_label"></p>
+                    </div>
+
+                    <div class="col-3 pr-2 pl-2">
+                        <p class="player2_label" id="player2_label"></p>
+                    </div>
+
+                    <div class="col-3 pr-2 pl-2">
+                        <p class="player3_label" id="player3_label"></p>
+                    </div>
+
+                    <div class="col-3 pr-2 pl-2">
+                        <p class="player4_label" id="player4_label"></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <strong>Buts</strong>
+                    </div>
+
+                    <div class="col-4">
+                        <strong>Gamelles</strong>
+                    </div>
+
+                    <div class="col-4">
+                        <strong>Contre son camp</strong>
+                    </div>
+                </div>
+
+                <div id="Charts" class="row">
+                    
+                </div>
+
+            </div>
+            <!-- <hr/> separator will appear here -->
+        </div>
 
 
 
-    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyC9YNHO1_eQOfgSQp5IifQj2fzrf5u3Hik",
-            authDomain: "babystats-df22b.firebaseapp.com",
-            databaseURL: "https://babystats-df22b.firebaseio.com",
-            projectId: "babystats-df22b",
-            storageBucket: "babystats-df22b.appspot.com",
-            messagingSenderId: "892281132936"
-        };
-        firebase.initializeApp(config);
-    </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/fr.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="../js/history.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-firestore.js"></script>
+        <script>
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyC9YNHO1_eQOfgSQp5IifQj2fzrf5u3Hik",
+                authDomain: "babystats-df22b.firebaseapp.com",
+                databaseURL: "https://babystats-df22b.firebaseio.com",
+                projectId: "babystats-df22b",
+                storageBucket: "babystats-df22b.appspot.com",
+                messagingSenderId: "892281132936"
+            };
+            firebase.initializeApp(config);
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/fr.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="../js/history.js"></script>
 </body>
 
 </html>
