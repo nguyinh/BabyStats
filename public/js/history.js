@@ -77,7 +77,6 @@ db.collection("matches")
 
         // Invert match order to display newest on top
         for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-            // reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
             reportMatch(matchs_buffer[i]);
         }
     })
@@ -126,7 +125,6 @@ document.getElementById("load_more_button").addEventListener("click", function()
 
             // Invert match order to display newest on top
             for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-                // reportMatch(matchs_buffer[i].player1, matchs_buffer[i].player2, matchs_buffer[i].player3, matchs_buffer[i].player4, matchs_buffer[i].score1, matchs_buffer[i].score2, matchs_buffer[i].id, matchs_buffer[i].date);
                 reportMatch(matchs_buffer[i]);
             }
 
@@ -146,32 +144,6 @@ document.getElementById("load_more_button").addEventListener("click", function()
 
 
 // Delete functionnality on match element hold
-var pressTimer;
-
-// Computer navigation
-// $("#history").mouseup(function(e) {
-//     if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-//         inputUp(e);
-//     }
-//     return false;
-//
-// }).mousedown(function(e) {
-//     if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-//         inputDown(e);
-//     }
-//     return false;
-// });
-
-
-// Mobile navigation
-// $("#history").on("touchstart", function(e) {
-//     inputDown(e);
-// });
-//
-// $("#history").on("touchend", function(e) {
-//     inputUp(e);
-// });
-
 function inputDown(e) {
 
     // Test if element e is not players details
@@ -209,84 +181,21 @@ function inputDown(e) {
     //             100,
     //             'swing')
     // }, 1250);
-
-    pressTimer = window.setTimeout(function() {
-        var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');
-
-        if (new RegExp('match').test(match_id)) {
-            swal({
-                title: 'Confirmation',
-                text: "Êtes vous sûr de vouloir supprimer ce match ?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Oui !',
-                cancelButtonText: 'How about no.',
-                confirmButtonClass: 'btn btn-success mr-1',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.value) {
-                    // Add loading icon
-                    var thisMatch = $("#" + $(e.target)
-                        .parentsUntil(".match_container")
-                        .parent().attr('id')).find("#scores");
-                    thisMatch[0].innerHTML = "";
-                    thisMatch.addClass('fa fa-circle-o-notch fa-spin');
-                    thisMatch.css("font-size", "1.75rem");
-
-                    db.collection("matches")
-                        .doc(match_id)
-                        .get()
-                        .then(function(doc) {
-                            if (doc.exists) {
-                                db.collection("matches")
-                                    .doc(match_id)
-                                    .delete()
-                                    .then(function() {
-                                        var match = document.getElementById(match_id);
-                                        match.parentNode.removeChild(match);
-
-                                        swal(
-                                            'Succès',
-                                            'Le match a bien été supprimé !',
-                                            'success'
-                                        );
-                                    }).catch(function(error) {
-                                        swal({
-                                            type: 'error',
-                                            title: 'Erreur',
-                                            text: 'Il y a eu un problème lors de la suppression du match'
-                                        });
-                                    });
-                            } else {
-                                console.log("No such document!");
-                            }
-                        }).catch(function(error) {
-                            console.log("Error getting document:", error);
-                        });
-                }
-            })
-        }
-    }, 1000);
 }
 
 function inputUp(e) {
     // Restore background color
-    $("#" + $(e.target)
-            .parentsUntil(".match_container")
-            .parent()
-            .attr('id'))
-        .animate({
-                opacity: 1,
-                color: "rgb(0, 0, 0)",
-                backgroundColor: "#FFFFFFFF"
-            },
-            100,
-            'swing');
-
-    clearTimeout(pressTimer);
+    // $("#" + $(e.target)
+    //         .parentsUntil(".match_container")
+    //         .parent()
+    //         .attr('id'))
+    //     .animate({
+    //             opacity: 1,
+    //             color: "rgb(0, 0, 0)",
+    //             backgroundColor: "#FFFFFFFF"
+    //         },
+    //         100,
+    //         'swing');
 
 
     // Test if element e is not players details
@@ -304,6 +213,7 @@ function inputUp(e) {
         node = node.parentNode;
     }
 
+    // Toggle specific match details
     var match_id = '#players_details_' + match_number;
     $(match_id).collapse('toggle');
     $('[id*="players_details"]').collapse('hide');
@@ -316,7 +226,7 @@ function inputUp(e) {
 
 
 
-// Addon to regulate tap and scroll on smartphones
+// Script to regulate tap and scroll on mobiles
 var startX,
     startY,
     tap;
@@ -348,7 +258,6 @@ $("#history").on('touchstart', function(ev) {
     if (Math.abs(getCoord(ev, 'X') - startX) < 20 && Math.abs(getCoord(ev, 'Y') - startY) < 20) {
         // Prevent emulated mouse events
         ev.preventDefault();
-        // console.log("touchend");
         if (!isErasing) {
             inputUp(ev);
         } else {
@@ -356,32 +265,21 @@ $("#history").on('touchstart', function(ev) {
         }
     }
     setTap();
-    // }).on('click', function(ev) {
-    //     if (!tap) {
-    //         // If handler was not called on touchend, call it on click;
-    //         console.log("click");
-    //         deleteTimeout = setTimeout(function() {
-    //             deleteMatch(ev);
-    //             isErasing = true;
-    //         }, 1000);
-    //         inputUp(ev);
-    //     }
-    //     ev.preventDefault();
 }).mousedown(function(ev) {
     if (!tap) {
         // If handler was not called on touchend, call it on click;
-        console.log("mouse down");
         deleteTimeout = setTimeout(function() {
             deleteMatch(ev);
             isErasing = true;
         }, 1000);
-        inputUp(ev);
+        // inputUp(ev);
     }
     ev.preventDefault();
 }).mouseup(function(ev) {
     clearTimeout(deleteTimeout);
-    console.log("mouse up");
-    if (isErasing) {
+    if (!isErasing) {
+        inputUp(ev);
+    } else {
         isErasing = false;
     }
 });
