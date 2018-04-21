@@ -149,28 +149,28 @@ document.getElementById("load_more_button").addEventListener("click", function()
 var pressTimer;
 
 // Computer navigation
-$("#history").mouseup(function(e) {
-    if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-        inputUp(e);
-    }
-    return false;
-
-}).mousedown(function(e) {
-    if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-        inputDown(e);
-    }
-    return false;
-});
+// $("#history").mouseup(function(e) {
+//     if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+//         inputUp(e);
+//     }
+//     return false;
+//
+// }).mousedown(function(e) {
+//     if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+//         inputDown(e);
+//     }
+//     return false;
+// });
 
 
 // Mobile navigation
-$("#history").on("touchstart", function(e) {
-    inputDown(e);
-});
-
-$("#history").on("touchend", function(e) {
-    inputUp(e);
-});
+// $("#history").on("touchstart", function(e) {
+//     inputDown(e);
+// });
+//
+// $("#history").on("touchend", function(e) {
+//     inputUp(e);
+// });
 
 function inputDown(e) {
 
@@ -308,6 +308,151 @@ function inputUp(e) {
     $(match_id).collapse('toggle');
     $('[id*="players_details"]').collapse('hide');
 }
+
+
+
+
+
+
+
+
+// Addon to regulate tap and scroll on smartphones
+var startX,
+    startY,
+    tap;
+
+function getCoord(e, c) {
+    return /touch/.test(e.type) ? (e.originalEvent || e).changedTouches[0]['page' + c] : e['page' + c];
+}
+
+function setTap() {
+    tap = true;
+    setTimeout(function() {
+        tap = false;
+    }, 500);
+}
+
+var deleteTimeout;
+var isErasing = false;
+$("#history").on('touchstart', function(ev) {
+    startX = getCoord(ev, 'X');
+    startY = getCoord(ev, 'Y');
+    deleteTimeout = setTimeout(function() {
+        deleteMatch(ev);
+        isErasing = true;
+    }, 1000);
+    // console.log("touchstart");
+}).on('touchend', function(ev) {
+    clearTimeout(deleteTimeout);
+    // If movement is less than 20px, execute the handler
+    if (Math.abs(getCoord(ev, 'X') - startX) < 20 && Math.abs(getCoord(ev, 'Y') - startY) < 20) {
+        // Prevent emulated mouse events
+        ev.preventDefault();
+        // console.log("touchend");
+        if (!isErasing) {
+            inputUp(ev);
+        } else {
+            isErasing = false;
+        }
+    }
+    setTap();
+    // }).on('click', function(ev) {
+    //     if (!tap) {
+    //         // If handler was not called on touchend, call it on click;
+    //         console.log("click");
+    //         deleteTimeout = setTimeout(function() {
+    //             deleteMatch(ev);
+    //             isErasing = true;
+    //         }, 1000);
+    //         inputUp(ev);
+    //     }
+    //     ev.preventDefault();
+}).mousedown(function(ev) {
+    if (!tap) {
+        // If handler was not called on touchend, call it on click;
+        console.log("mouse down");
+        deleteTimeout = setTimeout(function() {
+            deleteMatch(ev);
+            isErasing = true;
+        }, 1000);
+        inputUp(ev);
+    }
+    ev.preventDefault();
+}).mouseup(function(ev) {
+    clearTimeout(deleteTimeout);
+    console.log("mouse up");
+    if (isErasing) {
+        isErasing = false;
+    }
+});
+
+
+
+function deleteMatch(e) {
+    var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');
+
+    if (new RegExp('match').test(match_id)) {
+        swal({
+            title: 'Confirmation',
+            text: "Êtes vous sûr de vouloir supprimer ce match ?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui !',
+            cancelButtonText: 'How about no.',
+            confirmButtonClass: 'btn btn-success mr-1',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.value) {
+                // Add loading icon
+                var thisMatch = $("#" + $(e.target)
+                    .parentsUntil(".match_container")
+                    .parent().attr('id')).find("#scores");
+                thisMatch[0].innerHTML = "";
+                thisMatch.addClass('fa fa-circle-o-notch fa-spin');
+                thisMatch.css("font-size", "1.75rem");
+
+                db.collection("matches")
+                    .doc(match_id)
+                    .get()
+                    .then(function(doc) {
+                        if (doc.exists) {
+                            db.collection("matches")
+                                .doc(match_id)
+                                .delete()
+                                .then(function() {
+                                    var match = document.getElementById(match_id);
+                                    match.parentNode.removeChild(match);
+
+                                    swal(
+                                        'Succès',
+                                        'Le match a bien été supprimé !',
+                                        'success'
+                                    );
+                                }).catch(function(error) {
+                                    swal({
+                                        type: 'error',
+                                        title: 'Erreur',
+                                        text: 'Il y a eu un problème lors de la suppression du match'
+                                    });
+                                });
+                        } else {
+                            console.log("No such document!");
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
+            }
+        })
+    }
+}
+
+
+
+
+
 
 
 function AddChartsHTML(n) {

@@ -63,13 +63,13 @@ hr {
 }
 
 .details_container {
-    -moz-box-shadow: inset 0px 25px 50px -25px #000000;
-    -webkit-box-shadow: inset 0px 25px 50px -25px #000000;
-    box-shadow: inset 0px 25px 50px -25px #000000;
+    -moz-box-shadow: inset 0px 25px 35px -25px #000000;
+    -webkit-box-shadow: inset 0px 25px 35px -25px #000000;
+    box-shadow: inset 0px 25px 35px -25px #000000;
     background-color: rgb(242, 242, 242);
 }
 
 .details_container.card {
     border-radius: 0rem;
-    border: 0px;
+    border: 1px solid rgba(0,0,0,.125);
 }
