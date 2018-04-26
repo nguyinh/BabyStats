@@ -47,11 +47,8 @@ function reportMatch(match, addToEnd) {
 
     match_template.style.display = 'block';
 
-    // add match to history
-    if (!addToEnd)
-        history.insertBefore(match_template, history.firstChild);
-    else
-        history.insertBefore(match_template, history.lastChild);
+    // Add match to bottom of history
+    history.insertBefore(match_template, history.lastChild);
 
     addCharts(match);
 }
@@ -61,32 +58,12 @@ function reportMatch(match, addToEnd) {
 // --------------- History ---------------
 var matchs_buffer = [];
 var DEFAULT_NUMBER = 5;
+document.getElementById("load_more_button").innerHTML = 'Un petit instant <i class="em em-hand"></i>';
+document.getElementById("load_more_button").disabled = true;
 
-// Get all matches, order from oldest to newest and display them
-db.collection("matches")
-    .orderBy("invert_number")
-    .limit(DEFAULT_NUMBER)
-    .get()
-    .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            var data = doc.data();
-            data.id = doc.id;
-            data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
-            // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
-            if (data.date == "• Invalid date")
-                data.date = "•";
-            matchs_buffer.push(data);
-        });
+refreshHistory(matchs_buffer.length);
 
-        // Invert match order to display newest on top
-        for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-            reportMatch(matchs_buffer[i], false);
-            // TODO: Add matchs only on one way (see : "history.insertBefore(match_template, history.firstChild/lastChild);")
-        }
-    })
-    .catch(function(error) {
-        console.log(error);
-    });
+
 
 
 var REFRESH_INTERVAL = 10;
@@ -107,44 +84,10 @@ document.getElementById("load_more_button").addEventListener("click", function()
     var button = this;
     button.innerHTML = 'Un petit instant <i class="em em-hand"></i>';
     this.disabled = true;
-    var previous_matchs_number = matchs_buffer.length;
 
-    db.collection("matches")
-        .orderBy("invert_number")
-        .limit(matchs_buffer.length + DEFAULT_NUMBER)
-        .get()
-        .then(function(querySnapshot) {
-            matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
-            querySnapshot.forEach(function(doc) {
-                var data = doc.data();
-                data.id = doc.id;
-                data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
-                // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
-                if (data.date == "• Invalid date")
-                    data.date = "•";
-                matchs_buffer.push(data);
-            });
-
-            // document.getElementById("history").innerHTML = "";
-
-            // Invert match order to display newest on top
-            for (var i = previous_matchs_number; i <= matchs_buffer.length - 1; i++) {
-                console.log(previous_matchs_number);
-                reportMatch(matchs_buffer[i], true);
-            }
-            // TODO: Add matchs only on one way (see : "history.insertBefore(match_template, history.firstChild/lastChild);")
-
-            if (previous_matchs_number == matchs_buffer.length) {
-                button.innerHTML = 'Y\'a plus <i class="em em-cry"></i>'
-            } else {
-                button.innerHTML = 'Afficher plus <i class="em em-point_down">'
-                button.disabled = false;
-            }
-        })
-        .catch(function(error) {
-            console.log("Error getting documents: ", error);
-        });
+    refreshHistory(matchs_buffer.length);
 });
+
 
 
 
@@ -292,6 +235,43 @@ $("#history").on('touchstart', function(ev) {
 
 
 
+// Method called to get matchs from database then display them in History container
+function refreshHistory(previous_matchs_number) {
+    db.collection("matches")
+        .orderBy("invert_number")
+        .limit(matchs_buffer.length + DEFAULT_NUMBER)
+        .get()
+        .then(function(querySnapshot) {
+            matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+                data.id = doc.id;
+                data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
+                // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+                if (data.date == "• Invalid date")
+                    data.date = "•";
+                matchs_buffer.push(data);
+            });
+
+            // Invert match order to display newest on top
+            for (var i = previous_matchs_number; i <= matchs_buffer.length - 1; i++) {
+                reportMatch(matchs_buffer[i], true);
+            }
+
+            if (previous_matchs_number == matchs_buffer.length) {
+                document.getElementById("load_more_button").innerHTML = 'Y\'a plus <i class="em em-cry"></i>'
+            } else {
+                document.getElementById("load_more_button").innerHTML = 'Afficher plus <i class="em em-point_down">'
+                document.getElementById("load_more_button").disabled = false;
+            }
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+}
+
+
+
 function deleteMatch(e) {
     var match_id = $(e.target).parentsUntil(".match_container").parent().attr('id');
 
@@ -386,7 +366,7 @@ function addCharts(match) {
     var CHARTS_HEIGHT = 300; // pixels
     var P1_color = 'rgb(244, 121, 65)';
     var P2_color = 'rgb(244, 196, 65)';
-    var P3_color = 'rgb(65, 88, 244)';
+    var P3_color = 'rgb(65, 116, 244)';
     var P4_color = 'rgb(91, 65, 244)';
     chart_goals_per_player.height = chart_gamelle_per_player.height = chart_betray_per_player.height = CHARTS_HEIGHT;
 
@@ -421,9 +401,6 @@ function addCharts(match) {
         }
     });
 
-
-
-
     new Chart(chart_gamelle_per_player, {
         type: 'doughnut',
         data: {
@@ -454,9 +431,6 @@ function addCharts(match) {
             }
         }
     });
-
-
-
 
     new Chart(chart_betray_per_player, {
         type: 'doughnut',
