@@ -5,7 +5,7 @@ var db = firebase.firestore();
 
 // --------------- Report match ---------------
 // function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
-function reportMatch(match) {
+function reportMatch(match, addToEnd) {
 
     var match_template = document.getElementById("template").cloneNode(true); // copy template node
     var history = document.getElementById("history"); // get history div element (contains all matches)
@@ -48,7 +48,10 @@ function reportMatch(match) {
     match_template.style.display = 'block';
 
     // add match to history
-    history.insertBefore(match_template, history.firstChild);
+    if (!addToEnd)
+        history.insertBefore(match_template, history.firstChild);
+    else
+        history.insertBefore(match_template, history.lastChild);
 
     addCharts(match);
 }
@@ -77,7 +80,8 @@ db.collection("matches")
 
         // Invert match order to display newest on top
         for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-            reportMatch(matchs_buffer[i]);
+            reportMatch(matchs_buffer[i], false);
+            // TODO: Add matchs only on one way (see : "history.insertBefore(match_template, history.firstChild/lastChild);")
         }
     })
     .catch(function(error) {
@@ -121,12 +125,14 @@ document.getElementById("load_more_button").addEventListener("click", function()
                 matchs_buffer.push(data);
             });
 
-            document.getElementById("history").innerHTML = "";
+            // document.getElementById("history").innerHTML = "";
 
             // Invert match order to display newest on top
-            for (var i = matchs_buffer.length - 1; i >= 0; i--) {
-                reportMatch(matchs_buffer[i]);
+            for (var i = previous_matchs_number; i <= matchs_buffer.length - 1; i++) {
+                console.log(previous_matchs_number);
+                reportMatch(matchs_buffer[i], true);
             }
+            // TODO: Add matchs only on one way (see : "history.insertBefore(match_template, history.firstChild/lastChild);")
 
             if (previous_matchs_number == matchs_buffer.length) {
                 button.innerHTML = 'Y\'a plus <i class="em em-cry"></i>'
@@ -323,6 +329,12 @@ function deleteMatch(e) {
                                 .then(function() {
                                     var match = document.getElementById(match_id);
                                     match.parentNode.removeChild(match);
+                                    for (var i = 0; i < matchs_buffer.length - 1; i++) {
+                                        if (matchs_buffer[i].id == match_id) {
+                                            matchs_buffer.splice(i, 1);
+                                            break;
+                                        }
+                                    }
 
                                     swal(
                                         'Succès',
@@ -396,10 +408,10 @@ function addCharts(match) {
                 ]
             }],
             labels: [
-                match.player4,
-                match.player3,
-                match.player2,
-                match.player1
+                "J4",
+                "J3",
+                "J2",
+                "J1"
             ]
         },
         options: {
@@ -430,10 +442,10 @@ function addCharts(match) {
                 ]
             }],
             labels: [
-                match.player4,
-                match.player3,
-                match.player2,
-                match.player1
+                "J4",
+                "J3",
+                "J2",
+                "J1"
             ]
         },
         options: {
@@ -464,10 +476,10 @@ function addCharts(match) {
                 ]
             }],
             labels: [
-                match.player4,
-                match.player3,
-                match.player2,
-                match.player1
+                "J4",
+                "J3",
+                "J2",
+                "J1"
             ]
         },
         options: {
