@@ -5,7 +5,8 @@
 // }
 
 
-
+// TO-DO : matches en 5 buts
+// TO-DO : Fix the ELO stuff
 
 
 // Integer sorting function
@@ -54,10 +55,13 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
     for (i = 18; i < data.length; i++) {
 
         // Stock in temporary variables to compute ELOs
-        Sa = Math.min(data[i].score1, data[i].score2)
+
 
         // Player 1
         if (players.hasOwnProperty(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))) {
+        // Si le joueur existe déjà dans le vecteur
+        // Ajouter les buts, gamelles et csc marqués par ce joueur au nombre de buts existants
+        // Ajout au nombre de buts, gamelles et csc totaux
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].goals += data[i].player1_goals
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].gamelles += data[i].player1_gamelles
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].betray += data[i].player1_betray
@@ -65,15 +69,21 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
             total_gamelles[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] += data[i].player1_gamelles
             total_betray[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] += data[i].player1_betray
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
+            // Si l'équipe 1 a marqué 10 buts
+            // Ajouter une victoire à ce joueur
                 total_wins[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] += 1
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)){
+            // Sinon ajouter une défaite à ce joueur
                 total_losses[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] += 1
             }
 
+            // Dans tous les cas augmenter le nombre de parties jouées de 1
             number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] += 1
 
             // K coefficient
+            // Si le nombre de parties jouées est supérieur à 30, K vaut 20
+            // Si l'ELO du joueur est supérieur à 2400, K vaut 10.
             if (number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] > 30) {
                 players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k = 20
             }
@@ -81,6 +91,7 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
                 players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k = 10
             }
 
+            // Ajout des statistiques par match
             goals_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = total_goals[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))]
             gamelles_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = total_gamelles[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))]
             betray_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = total_betray[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))]
@@ -89,16 +100,18 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
 
         } else {
 
+            // Si le joueur n'existait pas création du joueur
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))] = {}
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].goals = data[i].player1_goals
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].gamelles = data[i].player1_gamelles
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].betray = data[i].player1_betray
 
             // Crediting an initial 1000-point ELO
+            // K initial vaut 40
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo = 1000;
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k = 40;
 
-
+            // Création de tous les attributs, totaux et par match
             total_goals[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = data[i].player1_goals
             total_gamelles[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = data[i].player1_gamelles
             names.push(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')));
@@ -108,10 +121,11 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
             total_betray[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = data[i].player1_betray
             betray_per_play[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = total_betray[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))]
 
-            if (data[i].score1 == 10) {
+            // Si l'équipe du joueur a gagné ou perdu
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = 1
                 total_losses[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = 0
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)){
                 total_wins[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = 0
                 total_losses[Object.keys(players).indexOf(String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')))] = 1
             }
@@ -141,9 +155,9 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
                 players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].k = 10
             }
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] += 1
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)){
                 total_losses[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] += 1
             }
 
@@ -169,10 +183,10 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
             total_betray[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] = data[i].player2_betray
             betray_per_play[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] = total_betray[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))]
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] = 1
                 total_losses[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] = 0
-            } else {
+            } else if (data[i].score1 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)){
                 total_losses[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] = 1
                 total_wins[Object.keys(players).indexOf(String(data[i].player2.replace(/ /g, "_").replace(/\./g, '')))] = 0
             }
@@ -203,9 +217,9 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
                 players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k = 10
             }
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_losses[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] += 1
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] += 1
             }
 
@@ -231,10 +245,10 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
             total_betray[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = data[i].player3_betray
             betray_per_play[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = total_betray[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))]
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = 0
                 total_losses[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = 1
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = 1
                 total_losses[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = 0
             }
@@ -265,9 +279,9 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
                 players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k = 10
             }
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_losses[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] += 1
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
                 total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] += 1
             }
 
@@ -293,10 +307,10 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
             total_betray[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = data[i].player4_betray
             betray_per_play[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = total_betray[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] / number_of_plays[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))]
 
-            if (data[i].score1 == 10) {
+            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
                 total_losses[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = 1
                 total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = 0
-            } else {
+            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
                 total_losses[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = 0
                 total_wins[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = 1
             }
@@ -307,33 +321,48 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
         }
 
         // Computation of winning probabilities
+
         D_team1 = (players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo + players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo) / 2;
         D_team2 = (players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo) / 2;
         difference = D_team2 - D_team1;
+
+
         if (D_team2 - D_team1 > 400) {
             difference = 400
         } else if (D_team2 - D_team1 < -400) {
             difference = -400
         }
-        difference = (-1) * difference
+
         power = difference / 400;
 
+        // Expected scores
         Ea = 1 / (1 + Math.pow(10, power));
         Eb = Ea;
         Ec = 1 - Ea;
         Ed = 1 - Ea;
+
+        Sa = 10/(10+Math.min(data[i].score1, data[i].score2));
+
         change_player1 = players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k * (Sa - Ea)
         change_player2 = players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].k * (Sa - Eb)
         change_player3 = players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k * (Sa - Ec)
         change_player4 = players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k * (Sa - Ed)
 
+        console.log(i + ", " + "TEAM1 :" + data[i].player1 + ", " + data[i].player2 + ", "
+        + "TEAM2 :" + data[i].player3 + ", " + data[i].player4 + ", " + ", " + "P1v2:" + Ea + ", " + "P2v1:" + Ec + ", "
+        + "SCORE_TEAM1 :" + data[i].score1 + ", " + "SCORE_TEAM2 :" + data[i].score2 + ", "+ "ELO1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo
+        + ", " + "ELO2:" + players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo + ", " + "ELO3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo
+        + ", " + "ELO4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo, ", " + "Sa :" + Sa + ", "
+        + "K1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K2:" +
+        players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k + ", "
+        + "K4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k)
 
-        if (data[i].score1 == 10) {
+        if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player1
             players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player2
             players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo -= change_player3
             players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo -= change_player4
-        } else if (data[i].score2 == 10) {
+        } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo -= change_player1
             players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo -= change_player2
             players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player3
@@ -344,7 +373,11 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
         elo[Object.keys(players).indexOf(String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')))] = players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo
         elo[Object.keys(players).indexOf(String(data[i].player4.replace(/ /g, "_").replace(/\./g, '')))] = players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo
 
-
+        console.log(i + ", " + "TEAM1 :" + data[i].player1 + ", " + data[i].player2 + ", "
+        + "TEAM2 :" + data[i].player3 + ", " + data[i].player4 + ", " + ", " + "P1v2:" + Ea + ", " + "P2v1:" + Ec + ", "
+        + "SCORE_TEAM1 :" + data[i].score1 + ", " + "SCORE_TEAM2 :" + data[i].score2 + ", "+ "ELO1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo
+        + ", " + "ELO2:" + players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo + ", " + "ELO3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo
+        + ", " + "ELO4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo)
 
 
         // Statistics about last game
@@ -436,9 +469,7 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
         sort_number_win.push(temp)
         temp = []
     }
-    console.log(sort_number_win)
     sort_number_win.sort(compareNombres).reverse()
-    console.log(sort_number_win)
     // console.log(sort_ratio_win)
     var three_best_players_wins = []
     var three_best_number_wins = []
@@ -475,7 +506,7 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
     }
     sort_number_goals.sort(compareNombres).reverse()
     // console.log(sort_number_goals)
-    console.log(sort_number_goals)
+    // console.log(sort_number_goals)
     // console.log(sort_ratio_win)
     var three_best_players_goals = []
     var three_best_number_goals = []
