@@ -356,7 +356,6 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
         + "K1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K2:" +
         players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k + ", "
         + "K4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k)
-
         if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player1
             players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player2
