@@ -1,6 +1,13 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    console.log(user);
+  } else {
+    console.log("no user connected");
+  }
+});
 
 function emojization(from, to) {
     switch (from) {

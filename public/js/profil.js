@@ -138,6 +138,7 @@ document.getElementById('log_in').addEventListener('click', function() {
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
+        console.log(user);
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
         if (document.getElementById('signin').style.display == "none") {

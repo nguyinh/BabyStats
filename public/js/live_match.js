@@ -2,6 +2,14 @@
 var db = firebase.firestore();
 
 
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    console.log(user);
+  } else {
+    console.log("no user connected");
+  }
+});
+
 
 // --------------- Players list ---------------
 var player1select = document.getElementById('player1_input');
