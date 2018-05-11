@@ -301,12 +301,11 @@ function deleteMatch(e) {
             cancelButtonText: 'How about no.',
             confirmButtonClass: 'btn btn-success mr-1',
             cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false,
-            preConfirm: (reason) => {
-                // console.log(reason);
-            }
+            buttonsStyling: false
         }).then((result) => {
-            if (result.value) {
+            if (result.dismiss == "cancel")
+                return;
+            else if (result.value) {
                 db.collection("matches")
                     .doc(match_id)
                     .get()

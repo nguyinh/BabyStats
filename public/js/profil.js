@@ -264,9 +264,9 @@ function reportMatch(match, addToEnd) {
     match_template.querySelector("#team1score").innerHTML = match.score1;
     match_template.querySelector("#team2score").innerHTML = match.score2;
     match_template.querySelector("#timestamp").innerHTML = match.date;
+    match_template.querySelector(".reason").innerHTML = match.reason;
 
     match_template.querySelector("#delete_button").addEventListener("click", function(e) {
-        console.log(e.path[4].id);
         swal({
             title: 'Supression',
             text: 'C\'est irréversible ! Est-ce votre dernier mot ?',
@@ -284,11 +284,17 @@ function reportMatch(match, addToEnd) {
                     .doc(e.path[4].id)
                     .delete()
                     .then(function() {
-                        swal(
-                            'Adieu',
-                            'Le match a bien été supprimé !',
-                            'success'
-                        );
+                        db.collection("matches")
+                            .doc(e.path[4].id)
+                            .delete()
+                            .then(function() {
+                                swal(
+                                    'Adieu',
+                                    'Le match a bien été supprimé !',
+                                    'success'
+                                );
+                            });
+                        // Remove match from html
                         e.path[4].parentNode.removeChild(e.path[4]);
                     }).catch(function(error) {
                         swal(
@@ -302,7 +308,34 @@ function reportMatch(match, addToEnd) {
     });
 
     match_template.querySelector("#restore_button").addEventListener("click", function(e) {
-        console.log(e.path[5]);
+        e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+
+        db.collection("deleted_matchs")
+            .doc(e.path[4].id)
+            .delete()
+            .then(function() {                
+                db.collection("matches")
+                    .doc(e.path[4].id)
+                    .update({
+                        reason: ""
+                    })
+                    .then(function() {
+                        swal(
+                            'C\'est fait !',
+                            'Le match a bien été restauré !',
+                            'success'
+                        );
+
+                        // Remove match from html
+                        e.path[4].parentNode.removeChild(e.path[4]);
+                    });
+            }).catch(function(error) {
+                swal(
+                    'Oops',
+                    'Une erreur est survenue pendant la restauration ...',
+                    'error'
+                )
+            });
     });
 
     // Give status to match depending on score
