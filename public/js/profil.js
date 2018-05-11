@@ -198,7 +198,7 @@ function clearArea() {
 
 
 // db.collection("matches")
-//     .doc("match52")
+//     .doc("match46")
 //     .get()
 //     .then(function(docRef) {
 //         db.collection("deleted_matchs")
@@ -264,6 +264,46 @@ function reportMatch(match, addToEnd) {
     match_template.querySelector("#team1score").innerHTML = match.score1;
     match_template.querySelector("#team2score").innerHTML = match.score2;
     match_template.querySelector("#timestamp").innerHTML = match.date;
+
+    match_template.querySelector("#delete_button").addEventListener("click", function(e) {
+        console.log(e.path[4].id);
+        swal({
+            title: 'Supression',
+            text: 'C\'est irréversible ! Est-ce votre dernier mot ?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Oui Jean-Pierre',
+            cancelButtonText: 'Non'
+        }).then((result) => {
+            if (result.value) {
+                e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+
+                db.collection("deleted_matchs")
+                    .doc(e.path[4].id)
+                    .delete()
+                    .then(function() {
+                        swal(
+                            'Adieu',
+                            'Le match a bien été supprimé !',
+                            'success'
+                        );
+                        e.path[4].parentNode.removeChild(e.path[4]);
+                    }).catch(function(error) {
+                        swal(
+                            'Oops',
+                            'Une erreur est survenue pendant la supression ...',
+                            'error'
+                        )
+                    });
+            }
+        })
+    });
+
+    match_template.querySelector("#restore_button").addEventListener("click", function(e) {
+        console.log(e.path[5]);
+    });
 
     // Give status to match depending on score
     node_team1 = match_template.querySelector("#status_team1");
