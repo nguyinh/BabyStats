@@ -27,6 +27,18 @@ function reportMatch(match, addToEnd) {
     match_template.querySelector("#Charts").innerHTML = AddChartsHTML(match.id);
     match_template.querySelector("#players_details").id += '_' + match.id;
 
+    // Define if match has been submitted to deletion
+    if (match.reason == undefined) {
+        match_template.querySelector(".cross_icon").style.display = "none";
+    }
+    else {
+        if (match.reason == "")
+            match_template.querySelector(".cross_icon").style.display = "none";
+        else {
+            match_template.querySelector(".cross_icon").style.display = "block";
+        }
+    }
+
     // Give status to match depending on score
     node_team1 = match_template.querySelector("#status_team1");
     node_team2 = match_template.querySelector("#status_team2");
@@ -280,6 +292,8 @@ function deleteMatch(e) {
             title: 'Confirmation',
             text: "Êtes vous sûr de vouloir supprimer ce match ?",
             type: 'warning',
+            input: 'text',
+            inputPlaceholder: "Quelle est la raison ?",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -287,40 +301,38 @@ function deleteMatch(e) {
             cancelButtonText: 'How about no.',
             confirmButtonClass: 'btn btn-success mr-1',
             cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false
+            buttonsStyling: false,
+            preConfirm: (reason) => {
+                // console.log(reason);
+            }
         }).then((result) => {
             if (result.value) {
-                // Add loading icon
-                var thisMatch = $("#" + $(e.target)
-                    .parentsUntil(".match_container")
-                    .parent().attr('id')).find("#scores");
-                thisMatch[0].innerHTML = "";
-                thisMatch.addClass('fa fa-circle-o-notch fa-spin');
-                thisMatch.css("font-size", "1.75rem");
-
                 db.collection("matches")
                     .doc(match_id)
                     .get()
                     .then(function(doc) {
                         if (doc.exists) {
-                            db.collection("matches")
+                            submitted_match = doc.data();
+                            submitted_match.reason = result.value;
+                            db.collection("deleted_matchs")
                                 .doc(match_id)
-                                .delete()
-                                .then(function() {
-                                    var match = document.getElementById(match_id);
-                                    match.parentNode.removeChild(match);
-                                    for (var i = 0; i < matchs_buffer.length - 1; i++) {
-                                        if (matchs_buffer[i].id == match_id) {
-                                            matchs_buffer.splice(i, 1);
-                                            break;
-                                        }
-                                    }
+                                .set(submitted_match)
+                                .then(function(docRef) {
+                                    db.collection("matches")
+                                        .doc(match_id)
+                                        .update({
+                                            reason: submitted_match.reason
+                                        });
 
                                     swal(
                                         'Succès',
-                                        'Le match a bien été supprimé !',
+                                        'Le match a été soumis à un modérateur ! Il sera supprimé sous peu si la justification est valide',
                                         'success'
                                     );
+
+                                    // Add cross icon
+                                    $("#" + match_id + " .cross_icon")[0].style.display = "block";
+
                                 }).catch(function(error) {
                                     swal({
                                         type: 'error',
@@ -328,12 +340,14 @@ function deleteMatch(e) {
                                         text: 'Il y a eu un problème lors de la suppression du match'
                                     });
                                 });
-                        } else {
-                            console.log("No such document!");
                         }
-                    }).catch(function(error) {
-                        console.log("Error getting document:", error);
                     });
+            } else {
+                swal({
+                    type: 'error',
+                    title: 'Erreur',
+                    text: 'Veuillez ajouter une raison pour cette suppression'
+                });
             }
         })
     }
