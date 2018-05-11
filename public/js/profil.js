@@ -12,7 +12,7 @@ function afficheProfil() {
         name_dispayer.innerHTML = user.displayName;
     } else {
         // No user is signed in.
-        console.log('Grave erreur gros dans la fonction afficheProfil');
+        console.log('Grave erreur dans la fonction afficheProfil');
     }
 }
 
@@ -189,4 +189,98 @@ function clearArea() {
     $('#ID_input').removeClass('is-invalid');
     $('#password_input').removeClass('is-invalid');
     $('#password_confirm_input').removeClass('is-invalid');
+}
+
+
+
+
+
+
+
+// db.collection("matches")
+//     .doc("match52")
+//     .get()
+//     .then(function(docRef) {
+//         db.collection("deleted_matchs")
+//             .doc(docRef.id)
+//             .set(docRef.data())
+//             .then(function() {
+//                 console.log("sucess");
+//             }).catch(function(error) {
+//                 console.log("Error getting documents: ", error);
+//             });
+//     });
+
+
+
+var matchs_buffer = [];
+refreshHistory(matchs_buffer.length);
+
+
+
+// Method called to get matchs from database then display them in History container
+function refreshHistory(previous_matchs_number) {
+    db.collection("deleted_matchs")
+        .orderBy("invert_number")
+        .get()
+        .then(function(querySnapshot) {
+            matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+                data.id = doc.id;
+                data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
+                // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+                if (data.date == "• Invalid date")
+                    data.date = "•";
+                matchs_buffer.push(data);
+            });
+
+            // Invert match order to display newest on top
+            for (var i = previous_matchs_number; i <= matchs_buffer.length - 1; i++) {
+                reportMatch(matchs_buffer[i], true);
+            }
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+}
+
+
+function reportMatch(match, addToEnd) {
+
+    var match_template = document.getElementById("template").cloneNode(true); // copy template node
+    var history = document.getElementById("history"); // get history div element (contains all matches)
+    match_template.id = match.id; // give id depending on match number
+
+    // Add match informations
+    match_template.querySelector("#player1").innerHTML = match.player1;
+    match_template.querySelector("#player2").innerHTML = match.player2;
+    match_template.querySelector("#player3").innerHTML = match.player3;
+    match_template.querySelector("#player4").innerHTML = match.player4;
+    match_template.querySelector("#team1score").innerHTML = match.score1;
+    match_template.querySelector("#team2score").innerHTML = match.score2;
+    match_template.querySelector("#timestamp").innerHTML = match.date;
+
+    // Give status to match depending on score
+    node_team1 = match_template.querySelector("#status_team1");
+    node_team2 = match_template.querySelector("#status_team2");
+    if (parseInt(match_template.querySelector("#team1score").innerHTML) > parseInt(match_template.querySelector("#team2score").innerHTML)) {
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-success disabled\">Victoire</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-danger disabled\">Défaite</button>");
+    } else if (parseInt(match_template.querySelector("#team1score").innerHTML) < parseInt(match_template.querySelector("#team2score").innerHTML)) {
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-danger disabled\">Défaite</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-success disabled\">Victoire</button>");
+    } else {
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-warning disabled\">Erreur</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-warning disabled\">Erreur</button>");
+    }
+
+    if (history.firstChild != null) {
+        match_template.insertAdjacentHTML('beforeend', "<hr/>");
+    }
+
+    match_template.style.display = 'block';
+
+    // Add match to bottom of history
+    history.insertBefore(match_template, history.lastChild);
 }
