@@ -2,6 +2,26 @@
 var db = firebase.firestore();
 
 
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        console.log(user.uid);
+
+    } else {
+        console.log("no user connected");
+    }
+});
+
+db.collection("deleted_matchs")
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            console.log(doc.data());
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
 
 // --------------- Players list ---------------
 var player1select = document.getElementById('player1_input');
@@ -457,8 +477,8 @@ function validate() {
         // ((int(score1) != 10) && (int(score2) != 10))) {
 
         if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "")) {
-            $("#player1_input").addClass("is-invalid");
-            $("#player2_input").addClass("is-invalid");
+            $("#player1_input").Class("is-invalid");
+            $("#player2_input").Class("is-invalid");
         }
         // if (((int(score1) == 10) && (int(score2) == 10)) ||
         //     ((int(score1) != 10) && (int(score2) != 10))) {
@@ -467,8 +487,8 @@ function validate() {
             document.getElementsByClassName("score_border").item(1).style.borderColor = "rgb(194, 57, 57)";
         }
         if ((inputs[2].options[inputs[2].selectedIndex].value == "" && inputs[3].options[inputs[3].selectedIndex].value == "")) {
-            $("#player3_input").addClass("is-invalid");
-            $("#player4_input").addClass("is-invalid");
+            $("#player3_input").Class("is-invalid");
+            $("#player4_input").Class("is-invalid");
         }
 
         // Exit method if error(s)
@@ -483,8 +503,8 @@ function validate() {
     for (a = 0; a < inputsValues.length; a++) {
         for (b = a + 1; b < inputsValues.length; b++) {
             if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
-                $("#player" + (a + 1) + "_input").addClass("is-invalid");
-                $("#player" + (b + 1) + "_input").addClass("is-invalid");
+                $("#player" + (a + 1) + "_input").Class("is-invalid");
+                $("#player" + (b + 1) + "_input").Class("is-invalid");
                 errorFlag = true;
             }
         }

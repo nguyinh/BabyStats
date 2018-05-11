@@ -17,7 +17,6 @@
 <body>
 
     <!-- NAVBAR -->
-    <!-- <div class='container'> -->
     <nav class='navbar navbar-expand-lg navbar-dark bg-dark'>
         <a class='navbar-brand' href='#'>BabyStats</a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNavAltMarkup' aria-controls='navbarNavAltMarkup' aria-expanded='false' aria-label='Toggle navigation'>
@@ -34,7 +33,7 @@
         </div>
     </nav>
 
-    <!--  ADD_PLAYER  -->
+    <!--  LOG  -->
     <div class='row' style='margin-top: 1.5em;' id='log_user_container'>
         <div class='col-xl-4 offset-xl-4'>
             <div class='card' id='affiche_connect' style='display:none'>
@@ -98,6 +97,76 @@
         </div>
     </div>
 
+
+
+    <!--  HISTORY  -->
+    <div class="row" style="margin-top: 1.5em;  margin-right: 2px; margin-left: 2px; display:none;" id="submit_card">
+        <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
+            <div class="card" id="history_container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+                <h3 class="card-header">Soumis à suppression</h3>
+                <div id="history">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  TEMPLATE  -->
+    <div id="template" class="match_container pt-4">
+        <div class="row align-items-center">
+            <div class="col-5 pr-4">
+                <div id="status_team1" class="mb-2"></div>
+                <div>
+                    <p id="player1"></p>
+                </div>
+                <div>
+                    <p id="player2"></p>
+                </div>
+            </div>
+
+            <div class="col-2 p-0" id="scores">
+                <div class="row justify-content-between align-items-center">
+                    <p id="team1score" class="m-0 p-0 col-6" style="border-right:1px solid #bababa;"></p>
+                    <p id="team2score" class="m-0 p-0 col-6" style="border-left:1px solid #bababa;"></p>
+                </div>
+            </div>
+            <div class="col-5 pl-4">
+                <div id="status_team2" class="mb-2"></div>
+                <div>
+                    <p id="player3"></p>
+                </div>
+                <div>
+                    <p id="player4"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-end">
+            <div class="col-6 mr-2">
+                <p id="timestamp" class="m-0 mb-1 mt-1" style="text-align: right;"></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <p id="reason" class="reason my-1 p-2 px-4"></p>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-danger btn-lg" id="delete_button">Supprimer</button>
+                    <button type="button" class="btn btn-success btn-lg" id="restore_button">Restaurer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <!-- </div> -->
     <script src='https://www.gstatic.com/firebasejs/4.9.0/firebase.js'></script>
     <script src='https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js'></script>
@@ -117,6 +186,9 @@
     </script>
     <script src='https://code.jquery.com/jquery-3.3.1.js' crossorigin='anonymous'></script>
     <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
+    <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/fr.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js' integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q' crossorigin='anonymous'></script>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js' integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl' crossorigin='anonymous'></script>
     <script src='../js/profil.js'></script>

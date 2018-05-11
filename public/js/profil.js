@@ -12,7 +12,7 @@ function afficheProfil() {
         name_dispayer.innerHTML = user.displayName;
     } else {
         // No user is signed in.
-        console.log('Grave erreur gros dans la fonction afficheProfil');
+        console.log('Grave erreur dans la fonction afficheProfil');
     }
 }
 
@@ -138,6 +138,7 @@ document.getElementById('log_in').addEventListener('click', function() {
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
+        console.log(user);
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
         if (document.getElementById('signin').style.display == "none") {
@@ -188,4 +189,175 @@ function clearArea() {
     $('#ID_input').removeClass('is-invalid');
     $('#password_input').removeClass('is-invalid');
     $('#password_confirm_input').removeClass('is-invalid');
+}
+
+
+
+
+
+
+
+// db.collection("matches")
+//     .doc("match46")
+//     .get()
+//     .then(function(docRef) {
+//         db.collection("deleted_matchs")
+//             .doc(docRef.id)
+//             .set(docRef.data())
+//             .then(function() {
+//                 console.log("sucess");
+//             }).catch(function(error) {
+//                 console.log("Error getting documents: ", error);
+//             });
+//     });
+
+
+
+var matchs_buffer = [];
+refreshHistory(matchs_buffer.length);
+
+
+
+// Method called to get matchs from database then display them in History container
+function refreshHistory(previous_matchs_number) {
+    db.collection("deleted_matchs")
+        .orderBy("invert_number")
+        .get()
+        .then(function(querySnapshot) {
+            // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
+            document.getElementById("submit_card").style.display = "block";
+
+            matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+                data.id = doc.id;
+                data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").locale('fr').fromNow();
+                // data.date = "• " + moment(data.timestamp, "YYYY-MM-DDThh:mm:ss").add(2, 'hours').locale('fr').fromNow();
+                if (data.date == "• Invalid date")
+                    data.date = "•";
+                matchs_buffer.push(data);
+            });
+
+            // Invert match order to display newest on top
+            for (var i = previous_matchs_number; i <= matchs_buffer.length - 1; i++) {
+                reportMatch(matchs_buffer[i], true);
+            }
+        })
+        .catch(function(error) {
+            // If user is not admin, don't display deleted matchs
+            console.log("Error getting documents: ", error);
+        });
+}
+
+
+function reportMatch(match, addToEnd) {
+
+    var match_template = document.getElementById("template").cloneNode(true); // copy template node
+    var history = document.getElementById("history"); // get history div element (contains all matches)
+    match_template.id = match.id; // give id depending on match number
+
+    // Add match informations
+    match_template.querySelector("#player1").innerHTML = match.player1;
+    match_template.querySelector("#player2").innerHTML = match.player2;
+    match_template.querySelector("#player3").innerHTML = match.player3;
+    match_template.querySelector("#player4").innerHTML = match.player4;
+    match_template.querySelector("#team1score").innerHTML = match.score1;
+    match_template.querySelector("#team2score").innerHTML = match.score2;
+    match_template.querySelector("#timestamp").innerHTML = match.date;
+    match_template.querySelector(".reason").innerHTML = match.reason;
+
+    match_template.querySelector("#delete_button").addEventListener("click", function(e) {
+        swal({
+            title: 'Supression',
+            text: 'C\'est irréversible ! Est-ce votre dernier mot ?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Oui Jean-Pierre',
+            cancelButtonText: 'Non'
+        }).then((result) => {
+            if (result.value) {
+                e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+
+                db.collection("deleted_matchs")
+                    .doc(e.path[4].id)
+                    .delete()
+                    .then(function() {
+                        db.collection("matches")
+                            .doc(e.path[4].id)
+                            .delete()
+                            .then(function() {
+                                swal(
+                                    'Adieu',
+                                    'Le match a bien été supprimé !',
+                                    'success'
+                                );
+                            });
+                        // Remove match from html
+                        e.path[4].parentNode.removeChild(e.path[4]);
+                    }).catch(function(error) {
+                        swal(
+                            'Oops',
+                            'Une erreur est survenue pendant la supression ...',
+                            'error'
+                        )
+                    });
+            }
+        })
+    });
+
+    match_template.querySelector("#restore_button").addEventListener("click", function(e) {
+        e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+
+        db.collection("deleted_matchs")
+            .doc(e.path[4].id)
+            .delete()
+            .then(function() {                
+                db.collection("matches")
+                    .doc(e.path[4].id)
+                    .update({
+                        reason: ""
+                    })
+                    .then(function() {
+                        swal(
+                            'C\'est fait !',
+                            'Le match a bien été restauré !',
+                            'success'
+                        );
+
+                        // Remove match from html
+                        e.path[4].parentNode.removeChild(e.path[4]);
+                    });
+            }).catch(function(error) {
+                swal(
+                    'Oops',
+                    'Une erreur est survenue pendant la restauration ...',
+                    'error'
+                )
+            });
+    });
+
+    // Give status to match depending on score
+    node_team1 = match_template.querySelector("#status_team1");
+    node_team2 = match_template.querySelector("#status_team2");
+    if (parseInt(match_template.querySelector("#team1score").innerHTML) > parseInt(match_template.querySelector("#team2score").innerHTML)) {
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-success disabled\">Victoire</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-danger disabled\">Défaite</button>");
+    } else if (parseInt(match_template.querySelector("#team1score").innerHTML) < parseInt(match_template.querySelector("#team2score").innerHTML)) {
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-danger disabled\">Défaite</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-success disabled\">Victoire</button>");
+    } else {
+        node_team1.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-warning disabled\">Erreur</button>");
+        node_team2.insertAdjacentHTML('beforeend', "<button type=\"button\" class=\"btn btn-md btn-warning disabled\">Erreur</button>");
+    }
+
+    if (history.firstChild != null) {
+        match_template.insertAdjacentHTML('beforeend', "<hr/>");
+    }
+
+    match_template.style.display = 'block';
+
+    // Add match to bottom of history
+    history.insertBefore(match_template, history.lastChild);
 }
