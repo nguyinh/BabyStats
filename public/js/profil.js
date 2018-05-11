@@ -224,6 +224,9 @@ function refreshHistory(previous_matchs_number) {
         .orderBy("invert_number")
         .get()
         .then(function(querySnapshot) {
+            // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
+            document.getElementById("submit_card").style.display = "block";
+
             matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {
                 var data = doc.data();
@@ -241,6 +244,7 @@ function refreshHistory(previous_matchs_number) {
             }
         })
         .catch(function(error) {
+            // If user is not admin, don't display deleted matchs
             console.log("Error getting documents: ", error);
         });
 }

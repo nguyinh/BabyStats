@@ -100,7 +100,7 @@
 
 
     <!--  HISTORY  -->
-    <div class="row" style="margin-top: 1.5em;  margin-right: 2px; margin-left: 2px;" id="history_card">
+    <div class="row" style="margin-top: 1.5em;  margin-right: 2px; margin-left: 2px; display:none;" id="submit_card">
         <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
             <div class="card" id="history_container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
                 <h3 class="card-header">Soumis à suppression</h3>
@@ -146,6 +146,21 @@
         <div class="row justify-content-end">
             <div class="col-6 mr-2">
                 <p id="timestamp" class="m-0 mb-1 mt-1" style="text-align: right;"></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <p id="reason" class="reason my-1 p-2 px-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem repudiandae, nihil debitis similique voluptatum eveniet aspernatur dolores dignissimos voluptatibus consectetur facilis dolorum laudantium, vero explicabo. Quae, aspernatur officia excepturi sequi!</p>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-danger btn-lg">Supprimer</button>
+                    <button type="button" class="btn btn-success btn-lg">Restaurer</button>
+                </div>
             </div>
         </div>
     </div>

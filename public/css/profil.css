@@ -40,3 +40,39 @@ hr {
 .signin_form {
     display: none;
 }
+
+#template {
+    display: none;
+}
+
+hr {
+    margin: 0px;
+}
+
+#timestamp {
+    color: rgb(164, 164, 164);
+    font-size: 0.85rem;
+}
+
+#scores p {
+    font-size: 2.2rem;
+    display: inline;
+}
+
+#team1score {
+    text-align: left;
+}
+
+#team2score {
+    text-align: right;
+}
+
+#history [id*='player'] {
+    margin: 0px;
+}
+
+.reason {
+    text-align: justify;
+    text-justify: inter-word;
+    background: rgb(250, 251, 208);
+}
