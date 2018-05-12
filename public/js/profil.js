@@ -1,6 +1,13 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
+// Get a reference to the storage service, which is used to create references in your storage bucket
+var storage = firebase.storage();
+
+// Create a storage reference from our storage service
+var storageRef = storage.ref();
+
+
 function afficheProfil() {
     var user = firebase.auth().currentUser;
     if (user) {
@@ -96,24 +103,33 @@ document.getElementById('log_in').addEventListener('click', function() {
         if (password == password_confirm) {
             document.getElementById("log_in").disabled = true;
             document.getElementById("log_in").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i>";
-            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                document.getElementById('error_info').style.display = 'block';
-                document.getElementById('error_message').style.display = 'block';
-                $('#error_message').removeClass('text-success');
-                $('#error_message').addClass('text-danger');
-                var errortxt = document.getElementById('error_message');
-                errortxt.textContent = errorMessage;
-                if (errorCode == 'auth/invalid-email') {
-                    $('#ID_input').addClass('is-invalid');
-                }
-                if (errorCode == 'auth/weak-password') {
-                    $('#password_input').addClass('is-invalid');
-                    $('#password_confirm_input').addClass('is-invalid');
-                }
-            });
+            firebase.auth()
+                .createUserWithEmailAndPassword(email, password)
+                // .then(function(user) {
+                //     var user = firebase.auth().currentUser;
+                //     user.updateProfile({
+                //         displayName: "Florent Dupont"
+                //     });
+                //     logUser(user); // Optional
+                // })
+                .catch(function(error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    document.getElementById('error_info').style.display = 'block';
+                    document.getElementById('error_message').style.display = 'block';
+                    $('#error_message').removeClass('text-success');
+                    $('#error_message').addClass('text-danger');
+                    var errortxt = document.getElementById('error_message');
+                    errortxt.textContent = errorMessage;
+                    if (errorCode == 'auth/invalid-email') {
+                        $('#ID_input').addClass('is-invalid');
+                    }
+                    if (errorCode == 'auth/weak-password') {
+                        $('#password_input').addClass('is-invalid');
+                        $('#password_confirm_input').addClass('is-invalid');
+                    }
+                });
         } else {
             document.getElementById('error_info').style.display = 'block';
             document.getElementById('error_message').style.display = 'block';
@@ -136,9 +152,16 @@ document.getElementById('log_in').addEventListener('click', function() {
     }
 });
 
+
+var currentUser;
+
 firebase.auth().onAuthStateChanged(function(user) {
+    // Update currentUser object
+    currentUser = user;
+
     if (user) {
-        console.log(user);
+        document.getElementById("profil_picture").src = user.photoURL;
+
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
         if (document.getElementById('signin').style.display == "none") {
@@ -146,26 +169,33 @@ firebase.auth().onAuthStateChanged(function(user) {
             clearArea();
         } else {
             var user = firebase.auth().currentUser;
-            user.updateProfile({
-                displayName: document.getElementById('name_input').value,
-            }).then(function() {
-                document.getElementById('error_info').style.display = 'block';
-                document.getElementById('error_message').style.display = 'block';
-                $('#error_message').removeClass('text-danger');
-                $('#error_message').addClass('text-success');
-                var errortxt = document.getElementById('error_message');
-                errortxt.textContent = 'Successfull profil creation.';
-                afficheProfil();
-
-            }).catch(function(error) {
-                document.getElementById('error_info').style.display = 'block';
-                document.getElementById('error_message').style.display = 'block';
-                $('#error_message').removeClass('text-success');
-                $('#error_message').addClass('text-danger');
-                var errortxt = document.getElementById('error_message');
-                console.log(error.message);
-                errortxt.textContent = error.errorMessage;
-            });
+            document.getElementById('error_info').style.display = 'block';
+            document.getElementById('error_message').style.display = 'block';
+            $('#error_message').removeClass('text-danger');
+            $('#error_message').addClass('text-success');
+            var errortxt = document.getElementById('error_message');
+            errortxt.textContent = 'Successfull profil creation.';
+            afficheProfil();
+            // user.updateProfile({
+            //     displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value,
+            // }).then(function() {
+            //     document.getElementById('error_info').style.display = 'block';
+            //     document.getElementById('error_message').style.display = 'block';
+            //     $('#error_message').removeClass('text-danger');
+            //     $('#error_message').addClass('text-success');
+            //     var errortxt = document.getElementById('error_message');
+            //     errortxt.textContent = 'Successfull profil creation.';
+            //     afficheProfil();
+            //
+            // }).catch(function(error) {
+            //     document.getElementById('error_info').style.display = 'block';
+            //     document.getElementById('error_message').style.display = 'block';
+            //     $('#error_message').removeClass('text-success');
+            //     $('#error_message').addClass('text-danger');
+            //     var errortxt = document.getElementById('error_message');
+            //     console.log(error.message);
+            //     errortxt.textContent = error.errorMessage;
+            // });
         }
     } else {
         afficheSignin();
@@ -313,7 +343,7 @@ function reportMatch(match, addToEnd) {
         db.collection("deleted_matchs")
             .doc(e.path[4].id)
             .delete()
-            .then(function() {                
+            .then(function() {
                 db.collection("matches")
                     .doc(e.path[4].id)
                     .update({
@@ -361,3 +391,68 @@ function reportMatch(match, addToEnd) {
     // Add match to bottom of history
     history.insertBefore(match_template, history.lastChild);
 }
+
+
+
+
+
+// Upload profile picture
+document.getElementById("fileButton").addEventListener('change', function(e) {
+    // File or Blob named mountains.jpg
+    var file = e.target.files[0];
+
+    var user = firebase.auth().currentUser;
+
+    // Create the file metadata
+    var metadata = {
+        contentType: 'image/png'
+    };
+
+    // Upload file and metadata to the object 'images/mountains.jpg'
+    var uploadTask = storageRef.child('profile_pictures/' + user.displayName.replace(' ', '')).put(file, metadata);
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+        function(snapshot) {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                    console.log('Upload is paused');
+                    break;
+                case firebase.storage.TaskState.RUNNING: // or 'running'
+                    console.log('Upload is running');
+                    break;
+            }
+        },
+        function(error) {
+
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+                case 'storage/unauthorized':
+                    // User doesn't have permission to access the object
+                    break;
+
+                case 'storage/canceled':
+                    // User canceled the upload
+                    break;
+
+                case 'storage/unknown':
+                    // Unknown error occurred, inspect error.serverResponse
+                    break;
+            }
+        },
+        function() {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+                document.getElementById("profil_picture").src = downloadURL;
+                var user = firebase.auth().currentUser;
+                user.updateProfile({
+                    photoURL: downloadURL
+                });
+            });
+        });
+})

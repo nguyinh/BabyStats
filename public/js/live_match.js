@@ -2,25 +2,25 @@
 var db = firebase.firestore();
 
 
+var currentUser;
+
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         console.log(user.uid);
+        currentUser = user;
 
+        // currentUser.updateProfile({
+        //   displayName: "Florent Dupont"
+        // }).then(function() {
+        //   console.log("yeees");
+        // }).catch(function(error) {
+        //   console.log("ah.");
+        // });
     } else {
         console.log("no user connected");
     }
 });
 
-db.collection("deleted_matchs")
-    .get()
-    .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            console.log(doc.data());
-        });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
 
 
 // --------------- Players list ---------------
