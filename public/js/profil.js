@@ -216,6 +216,9 @@ function clearArea() {
 var matchs_buffer = [];
 refreshHistory(matchs_buffer.length);
 
+var logtxt = document.getElementById('log_text');
+
+var thisbutton;
 
 
 // Method called to get matchs from database then display them in History container
@@ -246,6 +249,7 @@ function refreshHistory(previous_matchs_number) {
         .catch(function(error) {
             // If user is not admin, don't display deleted matchs
             console.log("Error getting documents: ", error);
+            logtxt.innerHTML = error;
         });
 }
 
@@ -307,15 +311,26 @@ function reportMatch(match, addToEnd) {
         })
     });
 
+
     match_template.querySelector("#restore_button").addEventListener("click", function(e) {
-        e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+        // logtxt.innerHTML = this.children[0].children[1].innerHTML;
+        // console.log(this);
+        // thisbutton = this;
+        var matchElement = e.composedPath()[4];
+        matchElement.children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+        // this.parentNode.parentNode.parentNode.parentNode.children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+        // e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+        // console.log(this.parentNode.parentNode.parentNode.parentNode);
+        logtxt.innerHTML += matchElement.id;
+        // console.log(e.composedPath());
+        // console.log(e.path);
 
         db.collection("deleted_matchs")
-            .doc(e.path[4].id)
+            .doc(matchElement.id)
             .delete()
-            .then(function() {                
+            .then(function() {
                 db.collection("matches")
-                    .doc(e.path[4].id)
+                    .doc(matchElement.id)
                     .update({
                         reason: ""
                     })
@@ -327,7 +342,7 @@ function reportMatch(match, addToEnd) {
                         );
 
                         // Remove match from html
-                        e.path[4].parentNode.removeChild(e.path[4]);
+                        matchElement.parentNode.removeChild(matchElement);
                     });
             }).catch(function(error) {
                 swal(
@@ -335,6 +350,7 @@ function reportMatch(match, addToEnd) {
                     'Une erreur est survenue pendant la restauration ...',
                     'error'
                 )
+                logtxt.innerHTML += error;
             });
     });
 
