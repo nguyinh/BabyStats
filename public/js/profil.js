@@ -216,10 +216,6 @@ function clearArea() {
 var matchs_buffer = [];
 refreshHistory(matchs_buffer.length);
 
-var logtxt = document.getElementById('log_text');
-
-var thisbutton;
-
 
 // Method called to get matchs from database then display them in History container
 function refreshHistory(previous_matchs_number) {
@@ -249,7 +245,6 @@ function refreshHistory(previous_matchs_number) {
         .catch(function(error) {
             // If user is not admin, don't display deleted matchs
             console.log("Error getting documents: ", error);
-            logtxt.innerHTML = error;
         });
 }
 
@@ -272,7 +267,7 @@ function reportMatch(match, addToEnd) {
 
     match_template.querySelector("#delete_button").addEventListener("click", function(e) {
         var matchElement = e.composedPath()[4];
-        
+
         swal({
             title: 'Supression',
             text: 'C\'est irréversible ! Est-ce votre dernier mot ?',
@@ -318,7 +313,6 @@ function reportMatch(match, addToEnd) {
     match_template.querySelector("#restore_button").addEventListener("click", function(e) {
         var matchElement = e.composedPath()[4];
         matchElement.children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
-        logtxt.innerHTML += matchElement.id;
 
         db.collection("deleted_matchs")
             .doc(matchElement.id)
@@ -345,7 +339,6 @@ function reportMatch(match, addToEnd) {
                     'Une erreur est survenue pendant la restauration ...',
                     'error'
                 )
-                logtxt.innerHTML += error;
             });
     });
 
