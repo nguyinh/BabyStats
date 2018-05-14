@@ -271,6 +271,8 @@ function reportMatch(match, addToEnd) {
     match_template.querySelector(".reason").innerHTML = match.reason;
 
     match_template.querySelector("#delete_button").addEventListener("click", function(e) {
+        var matchElement = e.composedPath()[4];
+        
         swal({
             title: 'Supression',
             text: 'C\'est irréversible ! Est-ce votre dernier mot ?',
@@ -282,14 +284,15 @@ function reportMatch(match, addToEnd) {
             cancelButtonText: 'Non'
         }).then((result) => {
             if (result.value) {
-                e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
+
+                matchElement.children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
 
                 db.collection("deleted_matchs")
-                    .doc(e.path[4].id)
+                    .doc(matchElement.id)
                     .delete()
                     .then(function() {
                         db.collection("matches")
-                            .doc(e.path[4].id)
+                            .doc(matchElement.id)
                             .delete()
                             .then(function() {
                                 swal(
@@ -299,7 +302,7 @@ function reportMatch(match, addToEnd) {
                                 );
                             });
                         // Remove match from html
-                        e.path[4].parentNode.removeChild(e.path[4]);
+                        matchElement.parentNode.removeChild(matchElement);
                     }).catch(function(error) {
                         swal(
                             'Oops',
@@ -313,17 +316,9 @@ function reportMatch(match, addToEnd) {
 
 
     match_template.querySelector("#restore_button").addEventListener("click", function(e) {
-        // logtxt.innerHTML = this.children[0].children[1].innerHTML;
-        // console.log(this);
-        // thisbutton = this;
         var matchElement = e.composedPath()[4];
         matchElement.children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
-        // this.parentNode.parentNode.parentNode.parentNode.children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
-        // e.path[4].children[0].children[1].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
-        // console.log(this.parentNode.parentNode.parentNode.parentNode);
         logtxt.innerHTML += matchElement.id;
-        // console.log(e.composedPath());
-        // console.log(e.path);
 
         db.collection("deleted_matchs")
             .doc(matchElement.id)
