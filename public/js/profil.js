@@ -96,6 +96,8 @@ document.getElementById('log_in').addEventListener('click', function() {
             document.getElementById('error_info').style.display = 'block';
             document.getElementById('error_message').style.display = 'block';
             errortxt.textContent = 'Adresse e-mail ou mot de passe incorrect';
+            document.getElementById("log_in").disabled = false;
+            document.getElementById("log_in").innerHTML = "Se connecter";
         });
     } else if (email != '' && password != '' && signin == false) {
         //SIGN UP code is executed when signin radio button isn't checked, and that ID and Password is not empty
@@ -105,13 +107,15 @@ document.getElementById('log_in').addEventListener('click', function() {
             document.getElementById("log_in").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i>";
             firebase.auth()
                 .createUserWithEmailAndPassword(email, password)
-                // .then(function(user) {
-                //     var user = firebase.auth().currentUser;
-                //     user.updateProfile({
-                //         displayName: "Florent Dupont"
-                //     });
-                //     logUser(user); // Optional
-                // })
+                .then(function(user) {
+                    var user = firebase.auth().currentUser;
+                    user.updateProfile({
+                        displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value
+                    });
+                    document.getElementById("log_in").disabled = false;
+                    document.getElementById("log_in").innerHTML = "Créer un compte";
+                    // logUser(user); // Optional
+                })
                 .catch(function(error) {
                     // Handle Errors here.
                     var errorCode = error.code;
@@ -129,6 +133,8 @@ document.getElementById('log_in').addEventListener('click', function() {
                         $('#password_input').addClass('is-invalid');
                         $('#password_confirm_input').addClass('is-invalid');
                     }
+                    document.getElementById("log_in").disabled = false;
+                    document.getElementById("log_in").innerHTML = "Créer un compte";
                 });
         } else {
             document.getElementById('error_info').style.display = 'block';
@@ -155,12 +161,18 @@ document.getElementById('log_in').addEventListener('click', function() {
 
 var currentUser;
 
+// Observer triggered each sign in/sign up/sign out
 firebase.auth().onAuthStateChanged(function(user) {
     // Update currentUser object
     currentUser = user;
 
+    // If log in/sign up
     if (user) {
-        document.getElementById("profil_picture").src = user.photoURL;
+        // Check if user has picture URL
+        if (user.photoURL != null)
+            document.getElementById("profil_picture").src = user.photoURL;
+        else
+            document.getElementById("profil_picture").src = "../blank_profile.png";
 
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
@@ -197,9 +209,12 @@ firebase.auth().onAuthStateChanged(function(user) {
             //     errortxt.textContent = error.errorMessage;
             // });
         }
-    } else {
+    }
+    // If log out
+    else {
         afficheSignin();
         clearArea();
+        document.getElementById("profil_picture").src = "../blank_profile.png";
     }
 });
 
@@ -227,21 +242,9 @@ function clearArea() {
 
 
 
-// db.collection("matches")
-//     .doc("match46")
-//     .get()
-//     .then(function(docRef) {
-//         db.collection("deleted_matchs")
-//             .doc(docRef.id)
-//             .set(docRef.data())
-//             .then(function() {
-//                 console.log("sucess");
-//             }).catch(function(error) {
-//                 console.log("Error getting documents: ", error);
-//             });
-//     });
 
 
+// Admin part : allow matchs to be deleted for good
 
 var matchs_buffer = [];
 refreshHistory(matchs_buffer.length);
