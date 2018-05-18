@@ -16,6 +16,7 @@ function afficheProfil() {
         document.getElementById('affiche_connect').style.display = 'none';
         document.getElementById('affiche_profil').style.display = 'block';
         var name_dispayer = document.getElementById("player_name")
+        console.log(user);
         name_dispayer.innerHTML = user.displayName;
     } else {
         // No user is signed in.
@@ -50,9 +51,14 @@ document.getElementById('signin').addEventListener('click', function() {
 document.getElementById('log_out').addEventListener('click', function() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
+        logMode();
+        document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
         $("#signin").removeClass("mb-3");
+        afficheSignin();
         clearArea();
+        console.log("logout");
+        document.getElementById('welcome_message').innerHTML = "Bienvenue ";
         this.style.display = "none";
         document.getElementById('signup').style.display = "block";
         document.getElementById('error_info').style.display = 'none';
@@ -111,6 +117,8 @@ document.getElementById('log_in').addEventListener('click', function() {
                     var user = firebase.auth().currentUser;
                     user.updateProfile({
                         displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value
+                    }).then(function() {
+                        document.getElementById('welcome_message').innerHTML += user.displayName;
                     });
                     document.getElementById("log_in").disabled = false;
                     document.getElementById("log_in").innerHTML = "Créer un compte";
@@ -174,47 +182,54 @@ firebase.auth().onAuthStateChanged(function(user) {
         else
             document.getElementById("profil_picture").src = "../blank_profile.png";
 
+        if (user.displayName != null)
+            document.getElementById('welcome_message').innerHTML += user.displayName;
+
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
-        if (document.getElementById('signin').style.display == "none") {
-            afficheProfil();
-            clearArea();
-        } else {
-            var user = firebase.auth().currentUser;
-            document.getElementById('error_info').style.display = 'block';
-            document.getElementById('error_message').style.display = 'block';
-            $('#error_message').removeClass('text-danger');
-            $('#error_message').addClass('text-success');
-            var errortxt = document.getElementById('error_message');
-            errortxt.textContent = 'Successfull profil creation.';
-            afficheProfil();
-            // user.updateProfile({
-            //     displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value,
-            // }).then(function() {
-            //     document.getElementById('error_info').style.display = 'block';
-            //     document.getElementById('error_message').style.display = 'block';
-            //     $('#error_message').removeClass('text-danger');
-            //     $('#error_message').addClass('text-success');
-            //     var errortxt = document.getElementById('error_message');
-            //     errortxt.textContent = 'Successfull profil creation.';
-            //     afficheProfil();
-            //
-            // }).catch(function(error) {
-            //     document.getElementById('error_info').style.display = 'block';
-            //     document.getElementById('error_message').style.display = 'block';
-            //     $('#error_message').removeClass('text-success');
-            //     $('#error_message').addClass('text-danger');
-            //     var errortxt = document.getElementById('error_message');
-            //     console.log(error.message);
-            //     errortxt.textContent = error.errorMessage;
-            // });
-        }
+
+        connectedMode();
+
+        // if (document.getElementById('signin').style.display == "none") {
+        //     afficheProfil();
+        //     clearArea();
+        // } else {
+        //     var user = firebase.auth().currentUser;
+        //     document.getElementById('error_info').style.display = 'block';
+        //     document.getElementById('error_message').style.display = 'block';
+        //     $('#error_message').removeClass('text-danger');
+        //     $('#error_message').addClass('text-success');
+        //     // var errortxt = document.getElementById('error_message');
+        //     // errortxt.textContent = 'Successfull profil creation.';
+        //     afficheProfil();
+        // user.updateProfile({
+        //     displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value,
+        // }).then(function() {
+        //     document.getElementById('error_info').style.display = 'block';
+        //     document.getElementById('error_message').style.display = 'block';
+        //     $('#error_message').removeClass('text-danger');
+        //     $('#error_message').addClass('text-success');
+        //     var errortxt = document.getElementById('error_message');
+        //     errortxt.textContent = 'Successfull profil creation.';
+        //     afficheProfil();
+        //
+        // }).catch(function(error) {
+        //     document.getElementById('error_info').style.display = 'block';
+        //     document.getElementById('error_message').style.display = 'block';
+        //     $('#error_message').removeClass('text-success');
+        //     $('#error_message').addClass('text-danger');
+        //     var errortxt = document.getElementById('error_message');
+        //     console.log(error.message);
+        //     errortxt.textContent = error.errorMessage;
+        // });
+        // }
     }
     // If log out
     else {
-        afficheSignin();
-        clearArea();
-        document.getElementById("profil_picture").src = "../blank_profile.png";
+        // logMode();
+        // afficheSignin();
+        // clearArea();
+        // document.getElementById("profil_picture").src = "../blank_profile.png";
     }
 });
 
@@ -400,7 +415,7 @@ function reportMatch(match, addToEnd) {
 
 
 // Upload profile picture
-document.getElementById("fileButton").addEventListener('change', function(e) {
+document.getElementById("imageUploadButton").addEventListener('change', function(e) {
     // File or Blob named mountains.jpg
     var file = e.target.files[0];
 
@@ -459,3 +474,38 @@ document.getElementById("fileButton").addEventListener('change', function(e) {
             });
         });
 })
+
+
+function test() {
+    var query = db.collection("players");
+    var querySelect = query.where("number", "==", 5);
+    querySelect = query.where("invert_number", "==", -5);
+    querySelect.get()
+        .then(function(querySnapshot) {
+            if (querySnapshot.docs.length != 0)
+                querySnapshot.forEach(function(doc) {
+                    console.log(doc.data());
+                });
+            else
+                console.log("no user found");
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+}
+
+
+function logMode() {
+    document.getElementById('log_user_container').style.display = 'block';
+    document.getElementById('connected_container').style.display = 'none';
+}
+
+
+function connectedMode() {
+    document.getElementById('log_user_container').style.display = 'none';
+    document.getElementById('connected_container').style.display = 'block';
+}
+
+// function triggerUpload() {
+//     $("#imageUploadButton").click();
+// }
