@@ -8,6 +8,7 @@ var storage = firebase.storage();
 var storageRef = storage.ref();
 
 
+
 function afficheProfil() {
     var user = firebase.auth().currentUser;
     if (user) {
@@ -51,6 +52,7 @@ document.getElementById('signin').addEventListener('click', function() {
 document.getElementById('log_out').addEventListener('click', function() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
+        console.log("SUCESS");
         logMode();
         document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
@@ -174,6 +176,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     // Update currentUser object
     currentUser = user;
 
+    refreshHistory(matchs_buffer.length);
+
     // If log in/sign up
     if (user) {
         // Check if user has picture URL
@@ -224,12 +228,12 @@ firebase.auth().onAuthStateChanged(function(user) {
         // });
         // }
     }
-    // If log out
+    // If not connected on refresh
     else {
-        // logMode();
-        // afficheSignin();
-        // clearArea();
-        // document.getElementById("profil_picture").src = "../blank_profile.png";
+        logMode();
+        afficheSignin();
+        clearArea();
+        document.getElementById("profil_picture").src = "../blank_profile.png";
     }
 });
 
@@ -293,6 +297,7 @@ function refreshHistory(previous_matchs_number) {
         })
         .catch(function(error) {
             // If user is not admin, don't display deleted matchs
+            document.getElementById("submit_card").style.display = "none";
             console.log("Error getting documents: ", error);
         });
 }
