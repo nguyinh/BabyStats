@@ -1,21 +1,10 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
-
-var currentUser;
-
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-        console.log(user.uid);
-        currentUser = user;
-
-        // currentUser.updateProfile({
-        //   displayName: "Florent Dupont"
-        // }).then(function() {
-        //   console.log("yeees");
-        // }).catch(function(error) {
-        //   console.log("ah.");
-        // });
+        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
+        document.getElementById('profile_picture').src = user.photoURL;
     } else {
         console.log("no user connected");
     }
