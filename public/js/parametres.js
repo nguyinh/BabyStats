@@ -2,11 +2,10 @@
 var db = firebase.firestore();
 
 firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    console.log(user);
-  } else {
-    console.log("no user connected");
-  }
+    if (user) {
+        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="../blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
+        document.getElementById('profile_picture').src = user.photoURL;
+    }
 });
 
 function emojization(from, to) {

@@ -1,7 +1,12 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
-
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="../blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
+        document.getElementById('profile_picture').src = user.photoURL;
+    }
+});
 
 // --------------- Report match ---------------
 // function reportMatch(P1, P2, P3, P4, S1, S2, match_number, date) {
@@ -30,8 +35,7 @@ function reportMatch(match, addToEnd) {
     // Define if match has been submitted to deletion
     if (match.reason == undefined) {
         match_template.querySelector(".cross_icon").style.display = "none";
-    }
-    else {
+    } else {
         if (match.reason == "")
             match_template.querySelector(".cross_icon").style.display = "none";
         else {

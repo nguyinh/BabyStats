@@ -1,26 +1,15 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
-
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-        console.log(user.uid);
-
+        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
+        document.getElementById('profile_picture').src = user.photoURL;
     } else {
         console.log("no user connected");
     }
 });
 
-db.collection("deleted_matchs")
-    .get()
-    .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            console.log(doc.data());
-        });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
 
 
 // --------------- Players list ---------------
