@@ -9,7 +9,10 @@
     <!-- Bootstrap CSS -->
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous'>
     <link rel='stylesheet' type='text/css' href='../css/profil.css'>
+    <link rel='stylesheet' type='text/css' href='../css/radiobutton.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <!-- https://afeld.github.io/emoji-css/ -->
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
     <title>Profil | BabyStats</title>
 </head>
@@ -67,69 +70,58 @@
                         </div>
 
                         <div class='row mt-2' id='affiche_confirm' style='display:none'>
-                            <!-- visibility ='hidden' when Signin in-->
                             <input type='password' class='form-control' placeholder=' Confirmation de mot de passe' aria-describedby='basic-addon1' id='password_confirm_input'>
                         </div>
 
                         <div class='row' id='error_info' style='display:none'>
                             <p class='text-danger' id='error_message' style='display:none'> Classe danger - Rouge</p>
                         </div>
+                        <div class='row mb-3'>
+                            <button type='button' class='btn btn-primary btn-lg btn-block signin_form' style='margin-bottom: 1em; margin-top: 1em;' id='log_in'>Se connecter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <button type='button' class='btn btn-primary btn-lg btn-block signin_form' style='margin-bottom: 1em; margin-top: 1em;' id='log_in'>Se connecter</button>
-                    </div>
-                </div>
-            </div>
-            <div class='card' id='affiche_profil' style='display:none'>
-                <h3 class='card-header' id='player_name'><span></span></h3>
-                <div class='col-10 offset-1' style='padding-top: 1em;'>
-                    <div class='row'>
-                        <!-- <button type='button' class='btn btn-primary btn-lg btn-block' style='margin-bottom: 1em; margin-top: 1em;' id='log_out'>Se déconnecter</button> -->
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
 
     <!-- CONNECTED -->
-    <div class='row' style='margin-top: 1.5em; display: none;' id='connected_container'>
+    <div class='row mt-4' style='display: none;' id='connected_container'>
         <div class='col-xl-4 offset-xl-4'>
-            <div class="row  m-0">
+            <div class="row m-0">
                 <div class="col-3 px-1">
                     <img id="profil_picture" src="../blank_profile.png" alt="pp" onclick="$('#imageUploadButton').click()" width="100%;" style="border-radius: 50%;">
+                    <i class="fa fa-circle-o-notch fa-spin" style="font-size: 4rem; display: none;" id="load_icon"></i>
                 </div>
                 <div class="col-9">
-                    <h3 style=" text-align: left; vertical-align: bottom;" class="m-0 mt-1" id="welcome_message">Bienvenue </h3>
+                    <h3 style="text-align: left; vertical-align: bottom;" class="m-0 mt-1" id="welcome_message">Bienvenue </h3>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-6 offset-3">
-                    <button type='button' class='btn btn-info btn-lg btn-block' onclick="test()">Lier le compte</button>
+            <div class="row mt-3">
+                <div class="col-10 offset-1">
+                    <button type='button' class='btn btn-primary btn-lg btn-block' onclick="linkToPlayer()" id="link_button" style="display: none;">Lier le compte à un joueur</button>
                 </div>
             </div>
 
-            <div class='row'>
+            <div class='row mt-3'>
                 <div class='col-10 offset-1'>
-                    <button type='button' class='btn btn-warning btn-lg btn-block' style='margin-bottom: 1em; margin-top: 1em;' id='log_out'><strong>Se déconnecter</strong></button>
+                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out'><strong>Se déconnecter</strong></button>
                 </div>
             </div>
         </div>
     </div>
 
+
+    <!-- Upload file button hidden -->
     <input type="file" value="upload" id="imageUploadButton" class="d-none"></input>
 
 
 
-
-    <!-- <div style="height:0px;overflow:hidden">
-        <input type="file" id="fileInput" name="fileInput" />
-    </div> -->
-
-
-
     <!--  HISTORY  -->
-    <div class="row" style="margin-top: 1.5em;  margin-right: 2px; margin-left: 2px; display:none;" id="submit_card">
+    <div class="row mt-4" style="margin-right: 2px; margin-left: 2px; display:none;" id="submit_card">
         <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
             <div class="card" id="history_container" unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
                 <h3 class="card-header">Soumis à suppression</h3>
@@ -195,10 +187,6 @@
     </div>
 
 
-
-
-
-    <!-- </div> -->
     <script src='https://www.gstatic.com/firebasejs/4.9.0/firebase.js'></script>
     <script src='https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js'></script>
     <script src='https://www.gstatic.com/firebasejs/4.9.1/firebase-auth.js'></script>

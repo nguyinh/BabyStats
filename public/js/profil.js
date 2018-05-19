@@ -15,10 +15,6 @@ function afficheProfil() {
         // User is signed in.
         clearArea();
         document.getElementById('affiche_connect').style.display = 'none';
-        document.getElementById('affiche_profil').style.display = 'block';
-        var name_dispayer = document.getElementById("player_name")
-        console.log(user);
-        name_dispayer.innerHTML = user.displayName;
     } else {
         // No user is signed in.
         console.log('Grave erreur dans la fonction afficheProfil');
@@ -52,12 +48,11 @@ document.getElementById('signin').addEventListener('click', function() {
 document.getElementById('log_out').addEventListener('click', function() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
-        console.log("SUCESS");
         logMode();
         document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
         $("#signin").removeClass("mb-3");
-        afficheSignin();
+        document.getElementById('affiche_connect').style.display = 'block';
         clearArea();
         console.log("logout");
         document.getElementById('welcome_message').innerHTML = "Bienvenue ";
@@ -124,7 +119,6 @@ document.getElementById('log_in').addEventListener('click', function() {
                     });
                     document.getElementById("log_in").disabled = false;
                     document.getElementById("log_in").innerHTML = "Créer un compte";
-                    // logUser(user); // Optional
                 })
                 .catch(function(error) {
                     // Handle Errors here.
@@ -169,13 +163,10 @@ document.getElementById('log_in').addEventListener('click', function() {
 });
 
 
-var currentUser;
 
-// Observer triggered each sign in/sign up/sign out
+// Observer triggered for each sign in/sign up/sign out
 firebase.auth().onAuthStateChanged(function(user) {
-    // Update currentUser object
-    currentUser = user;
-
+    // Display admin actions if user is admin
     refreshHistory(matchs_buffer.length);
 
     // If log in/sign up
@@ -186,6 +177,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         else
             document.getElementById("profil_picture").src = "../blank_profile.png";
 
+        // Check for user name
         if (user.displayName != null)
             document.getElementById('welcome_message').innerHTML += user.displayName;
 
@@ -194,53 +186,28 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         connectedMode();
 
-        // if (document.getElementById('signin').style.display == "none") {
-        //     afficheProfil();
-        //     clearArea();
-        // } else {
-        //     var user = firebase.auth().currentUser;
-        //     document.getElementById('error_info').style.display = 'block';
-        //     document.getElementById('error_message').style.display = 'block';
-        //     $('#error_message').removeClass('text-danger');
-        //     $('#error_message').addClass('text-success');
-        //     // var errortxt = document.getElementById('error_message');
-        //     // errortxt.textContent = 'Successfull profil creation.';
-        //     afficheProfil();
-        // user.updateProfile({
-        //     displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value,
-        // }).then(function() {
-        //     document.getElementById('error_info').style.display = 'block';
-        //     document.getElementById('error_message').style.display = 'block';
-        //     $('#error_message').removeClass('text-danger');
-        //     $('#error_message').addClass('text-success');
-        //     var errortxt = document.getElementById('error_message');
-        //     errortxt.textContent = 'Successfull profil creation.';
-        //     afficheProfil();
-        //
-        // }).catch(function(error) {
-        //     document.getElementById('error_info').style.display = 'block';
-        //     document.getElementById('error_message').style.display = 'block';
-        //     $('#error_message').removeClass('text-success');
-        //     $('#error_message').addClass('text-danger');
-        //     var errortxt = document.getElementById('error_message');
-        //     console.log(error.message);
-        //     errortxt.textContent = error.errorMessage;
-        // });
-        // }
+        db.collection("players")
+            .where("uid", "==", user.uid)
+            .get()
+            .then(function(querySnapshot) {
+                // Firestore player already has uid
+                if (querySnapshot.docs.length != 0) {
+                    document.getElementById('link_button').style.display = 'none';
+                }
+                // Firestore player already has not uid
+                else {
+                    document.getElementById('link_button').style.display = 'block';
+                }
+            });
     }
-    // If not connected on refresh
+    // If not connected on page refresh
     else {
         logMode();
-        afficheSignin();
+        document.getElementById('affiche_connect').style.display = 'block';
         clearArea();
         document.getElementById("profil_picture").src = "../blank_profile.png";
     }
 });
-
-function afficheSignin() {
-    document.getElementById('affiche_profil').style.display = 'none';
-    document.getElementById('affiche_connect').style.display = 'block';
-}
 
 function clearArea() {
     $('#name_input').val('');
@@ -258,17 +225,271 @@ function clearArea() {
 
 
 
+// Upload profile picture
+document.getElementById("imageUploadButton").addEventListener('change', function(e) {
+    document.getElementById('load_icon').style.display = 'block';
+    document.getElementById('profil_picture').style.display = 'none';
+    // File or Blob named mountains.jpg
+    var file = e.target.files[0];
+
+    var user = firebase.auth().currentUser;
+
+    // Create the file metadata
+    var metadata = {
+        contentType: 'image/png'
+    };
+
+    // Upload file and metadata to the object 'images/mountains.jpg'
+    var uploadTask = storageRef.child('profile_pictures/' + user.uid).put(file, metadata);
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+        function(snapshot) {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                    console.log('Upload is paused');
+                    break;
+                case firebase.storage.TaskState.RUNNING: // or 'running'
+                    console.log('Upload is running');
+                    break;
+            }
+        },
+        function(error) {
+            swal({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000,
+                type: 'error',
+                title: 'Echec'
+            });
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+                case 'storage/unauthorized':
+                    // User doesn't have permission to access the object
+                    break;
+
+                case 'storage/canceled':
+                    // User canceled the upload
+                    break;
+
+                case 'storage/unknown':
+                    // Unknown error occurred, inspect error.serverResponse
+                    break;
+            }
+        },
+        function() {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+                document.getElementById("profil_picture").src = downloadURL;
+                var user = firebase.auth().currentUser;
+                user.updateProfile({
+                    photoURL: downloadURL
+                });
+
+                document.getElementById('load_icon').style.display = 'none';
+                document.getElementById('profil_picture').style.display = 'block';
+
+                swal({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    type: 'success',
+                    title: 'Image enregistrée'
+                });
+            });
+        });
+})
 
 
 
 
+var begin_template = '<div class="container">' +
+    '<div class="row align-items-center" id="container_row">' +
+    '<div class="col-12 col-xl-10 offset-xl-1" id="sw_container">';
 
-// Admin part : allow matchs to be deleted for good
+function addPlayerCheckbox(name, n) {
+    return '<div class="container mt-2">' +
+        '<div class="row mb-2">' +
+        '<label>' +
+        '<input type="radio" class="option-input radio" name="player_selection" id="rb_' + n + '_' + name + '"/>' +
+        name +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+}
+
+var end_template = '</div>' +
+    '</div>' +
+    '</div>'
+
+var borders_template = begin_template + end_template;
+
+
+
+function linkToPlayer() {
+    document.getElementById("link_button").innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
+    document.getElementById("link_button").disabled = true;
+    var user = firebase.auth().currentUser;
+    db.collection("players")
+        .where("uid", "==", user.uid)
+        .get()
+        .then(function(querySnapshot) {
+            // Firestore player already has uid
+            if (querySnapshot.docs.length != 0) {
+                swal({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    type: 'warning',
+                    title: 'Déjà lié'
+                });
+
+                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                document.getElementById("link_button").disabled = false;
+            }
+            // No uid found for connected user in Firestore
+            else {
+                swal({
+                    title: 'Qui êtes-vous ?',
+                    html: '<div id="swal_container_custom"></div>',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonClass: 'btn btn-success mr-1',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    confirmButtonText: 'C\'est bien moi <i class="em em-ok_hand"></i>',
+                    cancelButtonText: 'Plus tard',
+                    onOpen: () => {
+                        $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
+
+                        // Get players from database and display it when ready
+                        db.collection("players")
+                            .orderBy("team")
+                            .get()
+                            .then(function(querySnapshot) {
+                                var n = 0;
+                                $("#swal_container_custom")[0].innerHTML = borders_template;
+                                var team_name = "";
+                                var player_buffer = [];
+                                // Query team by team
+                                querySnapshot.forEach(function(doc) {
+                                    // If player is not linked to an account, display it on swal
+                                    if (doc.data().uid == undefined) {
+                                        if (team_name == "") {
+                                            team_name = doc.data().team;
+                                            $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>'); // insert team name in swal
+                                        } else if (team_name != doc.data().team) {
+                                            // Sort and place sorted players in swal (1 team)
+                                            player_buffer.sort();
+                                            for (var i = 0; i < player_buffer.length; i++) {
+                                                $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+                                            }
+                                            player_buffer = [];
+                                            team_name = doc.data().team;
+                                            $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>');
+                                        }
+                                        player_buffer.push(doc.data().name);
+                                    }
+                                })
+
+                                // Sort and place sorted players in swal for the last team
+                                player_buffer.sort(); // sort players
+                                for (var i = 0; i < player_buffer.length; i++) {
+                                    $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+                                }
+                            })
+                            .catch(function(error) {
+                                console.log("Error getting documents: ", error);
+                                swal.showValidationError('Un petit problème est survenu ... Nos meilleurs ingénieurs sont sur le coup !');
+                            });
+                    },
+                    preConfirm: () => {
+                        // Check which player has been selected
+                        var buttons = document.getElementsByName("player_selection");
+                        var buttonName;
+
+                        for (var i = 0; i < buttons.length; i++) {
+                            if (buttons[i].checked) {
+                                buttonName = buttons[i].id;
+                                break;
+                            }
+                        }
+
+                        // Update player's UID (in Firestore) with actual connected user
+                        var user = firebase.auth().currentUser;
+                        db.collection("players")
+                            .where("name", "==", buttonName.split('_')[2])
+                            .get()
+                            .then(function(querySnapshot) {
+                                querySnapshot.forEach(function(doc) {
+                                    db.collection("players")
+                                        .doc(doc.id)
+                                        .update({
+                                            uid: user.uid
+                                        })
+                                        .then(function(querySnapshot) {
+                                            swal({
+                                                toast: true,
+                                                position: 'top-start',
+                                                showConfirmButton: false,
+                                                timer: 3000,
+                                                type: 'success',
+                                                title: 'Lié pour la vie <i class="em em-link"></i> <i class="em em-heart"></i>'
+                                            });
+                                            document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                            document.getElementById("link_button").disabled = false;
+                                            document.getElementById("link_button").style.display = 'none';
+                                            // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
+                                        });
+                                })
+                            });
+                    }
+                }).then((result) => {
+                    if (result.dismiss === swal.DismissReason.backdrop ||
+                        result.dismiss === swal.DismissReason.cancel ||
+                        result.dismiss === swal.DismissReason.close ||
+                        result.dismiss === swal.DismissReason.esc) {
+                        document.getElementById("link_button").innerHTML = 'Lier le compte';
+                        document.getElementById("link_button").disabled = false;
+                    }
+                });
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+}
+
+
+function logMode() {
+    document.getElementById('log_user_container').style.display = 'block';
+    document.getElementById('connected_container').style.display = 'none';
+}
+
+
+function connectedMode() {
+    document.getElementById('log_user_container').style.display = 'none';
+    document.getElementById('connected_container').style.display = 'block';
+}
+
+
+
+
+// ADMIN PART : allow matchs to be deleted for good
 
 var matchs_buffer = [];
-refreshHistory(matchs_buffer.length);
-
-
 
 // Method called to get matchs from database then display them in History container
 function refreshHistory(previous_matchs_number) {
@@ -414,103 +635,3 @@ function reportMatch(match, addToEnd) {
     // Add match to bottom of history
     history.insertBefore(match_template, history.lastChild);
 }
-
-
-
-
-
-// Upload profile picture
-document.getElementById("imageUploadButton").addEventListener('change', function(e) {
-    // File or Blob named mountains.jpg
-    var file = e.target.files[0];
-
-    var user = firebase.auth().currentUser;
-
-    // Create the file metadata
-    var metadata = {
-        contentType: 'image/png'
-    };
-
-    // Upload file and metadata to the object 'images/mountains.jpg'
-    var uploadTask = storageRef.child('profile_pictures/' + user.displayName.replace(' ', '')).put(file, metadata);
-
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-        function(snapshot) {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED: // or 'paused'
-                    console.log('Upload is paused');
-                    break;
-                case firebase.storage.TaskState.RUNNING: // or 'running'
-                    console.log('Upload is running');
-                    break;
-            }
-        },
-        function(error) {
-
-            // A full list of error codes is available at
-            // https://firebase.google.com/docs/storage/web/handle-errors
-            switch (error.code) {
-                case 'storage/unauthorized':
-                    // User doesn't have permission to access the object
-                    break;
-
-                case 'storage/canceled':
-                    // User canceled the upload
-                    break;
-
-                case 'storage/unknown':
-                    // Unknown error occurred, inspect error.serverResponse
-                    break;
-            }
-        },
-        function() {
-            // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL);
-                document.getElementById("profil_picture").src = downloadURL;
-                var user = firebase.auth().currentUser;
-                user.updateProfile({
-                    photoURL: downloadURL
-                });
-            });
-        });
-})
-
-
-function test() {
-    var query = db.collection("players");
-    var querySelect = query.where("number", "==", 5);
-    querySelect = query.where("invert_number", "==", -5);
-    querySelect.get()
-        .then(function(querySnapshot) {
-            if (querySnapshot.docs.length != 0)
-                querySnapshot.forEach(function(doc) {
-                    console.log(doc.data());
-                });
-            else
-                console.log("no user found");
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
-}
-
-
-function logMode() {
-    document.getElementById('log_user_container').style.display = 'block';
-    document.getElementById('connected_container').style.display = 'none';
-}
-
-
-function connectedMode() {
-    document.getElementById('log_user_container').style.display = 'none';
-    document.getElementById('connected_container').style.display = 'block';
-}
-
-// function triggerUpload() {
-//     $("#imageUploadButton").click();
-// }
