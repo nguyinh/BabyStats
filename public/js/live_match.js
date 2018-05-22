@@ -1,6 +1,7 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
+// User profil display
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
@@ -20,39 +21,56 @@ var player4select = document.getElementById('player4_input');
 
 var selectsElements = [player1select, player2select, player3select, player4select];
 
+
 // Get all players from database and PSA teams then fill 'select' elements with it
 db.collection("players")
     .orderBy("team")
     .get()
     .then(function(querySnapshot) {
-        // Query players list
-        var team_id = null;
+        // var n = 0;
+        var team_name = "";
+        var player_buffer = [];
         querySnapshot.forEach(function(doc) {
-            data = doc.data();
+            if (team_name == "") { // Initialization
+                team_name = doc.data().team;
+                for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+                    selectsElements[j].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_name + "\">"); // insert team name as title
+                }
+            } else if (team_name != doc.data().team) { // When team changes
+                // Sort and place sorted players in swal (1 team)
+                player_buffer.sort();
+                for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+                    for (var i = 0; i < player_buffer.length; i++) {
 
-            // If new docSnapshot of if new team in doc
-            if ((team_id == null) || (team_id != data.team)) {
-                team_id = data.team;
-                for (var i = 0; i < selectsElements.length; i++) {
-                    selectsElements[i].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_id + "\">"); // insert PSA team name as title
+                        var opt = document.createElement('option');
+                        opt.value = player_buffer[i];
+                        opt.innerHTML = player_buffer[i];
+                        selectsElements[j].appendChild(opt);
+                    }
+                }
+                player_buffer = [];
+                team_name = doc.data().team;
+                for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+                    selectsElements[j].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_name + "\">"); // insert team name as title
                 }
             }
-            // If same team as before, do nothing particular
-            for (var i = 0; i < selectsElements.length; i++) {
+            player_buffer.push(doc.data().name);
+        })
+
+        // Sort and place sorted players in swal for the last team
+        player_buffer.sort(); // sort players
+        for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+            for (var i = 0; i < player_buffer.length; i++) {
                 var opt = document.createElement('option');
-                opt.value = data.name;
-                opt.innerHTML = data.name;
-                selectsElements[i].appendChild(opt);
+                opt.value = player_buffer[i];
+                opt.innerHTML = player_buffer[i];
+                selectsElements[j].appendChild(opt);
             }
-        });
+        }
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
-
-
-
-
 
 
 
@@ -73,6 +91,8 @@ var betrayJ1 = document.getElementById("betrayJ1score");
 var betrayJ2 = document.getElementById("betrayJ2score");
 var betrayJ3 = document.getElementById("betrayJ3score");
 var betrayJ4 = document.getElementById("betrayJ4score");
+
+var scores_indicators = [goalJ1, goalJ2, goalJ3, goalJ4, gamJ1, gamJ2, gamJ3, gamJ4, betrayJ1, betrayJ2, betrayJ3, betrayJ4];
 
 
 // Cast string number to integer
@@ -131,9 +151,9 @@ function updateScore(team, type, change) {
                             break;
 
                         case "-":
-                            if (!isMin(score1) && isCorrect(goalJ1)) {
+                            if (!isMin(score1) && isCorrect()) {
                                 minus(score1);
-                                minus(goalJ1);
+                                minus();
                             }
                             break;
 
@@ -432,12 +452,50 @@ for (i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener("click", function() {
         if (this.id.split("|")[0] == "validate_button")
             validate();
-        else {
-            // console.log(this.id.split("|"));
+        else if (this.id.split("|")[0] == "random_button") {
+            // Get all choosen players
+            var choosenPlayers = [document.getElementById("player1_input").options[document.getElementById("player1_input").selectedIndex].value,
+                document.getElementById("player2_input").options[document.getElementById("player2_input").selectedIndex].value,
+                document.getElementById("player3_input").options[document.getElementById("player3_input").selectedIndex].value,
+                document.getElementById("player4_input").options[document.getElementById("player4_input").selectedIndex].value
+            ];
+
+            function shuffle(array) {
+                var currentIndex = array.length,
+                    temporaryValue, randomIndex;
+                while (0 !== currentIndex) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex -= 1;
+                    temporaryValue = array[currentIndex];
+                    array[currentIndex] = array[randomIndex];
+                    array[randomIndex] = temporaryValue;
+                }
+                return array;
+            }
+
+            // Shuffle and replace players
+            choosenPlayers = shuffle(choosenPlayers);
+            $("#player1_input")[0].value = choosenPlayers[0];
+            $("#player2_input")[0].value = choosenPlayers[1];
+            $("#player3_input")[0].value = choosenPlayers[2];
+            $("#player4_input")[0].value = choosenPlayers[3];
+
+            updateButtons();
+        } else {
             updateScore(this.id.split("|")[0], this.id.split("|")[1], this.id.split("|")[2]);
+            // Display random button if scores are at 0
+            for (var n = 0; n < scores_indicators.length; n++) {
+                if (scores_indicators[n].innerHTML != 0) {
+                    document.getElementById('random_button').style.display = 'none';
+                    break;
+                }
+                document.getElementById('random_button').style.display = 'block';
+            }
         }
     });
 };
+
+
 
 
 function validate() {
@@ -466,8 +524,8 @@ function validate() {
         // ((int(score1) != 10) && (int(score2) != 10))) {
 
         if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "")) {
-            $("#player1_input").Class("is-invalid");
-            $("#player2_input").Class("is-invalid");
+            $("#player1_input").addClass("is-invalid");
+            $("#player2_input").addClass("is-invalid");
         }
         // if (((int(score1) == 10) && (int(score2) == 10)) ||
         //     ((int(score1) != 10) && (int(score2) != 10))) {
@@ -476,8 +534,8 @@ function validate() {
             document.getElementsByClassName("score_border").item(1).style.borderColor = "rgb(194, 57, 57)";
         }
         if ((inputs[2].options[inputs[2].selectedIndex].value == "" && inputs[3].options[inputs[3].selectedIndex].value == "")) {
-            $("#player3_input").Class("is-invalid");
-            $("#player4_input").Class("is-invalid");
+            $("#player3_input").addClass("is-invalid");
+            $("#player4_input").addClass("is-invalid");
         }
 
         // Exit method if error(s)
@@ -492,8 +550,8 @@ function validate() {
     for (a = 0; a < inputsValues.length; a++) {
         for (b = a + 1; b < inputsValues.length; b++) {
             if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
-                $("#player" + (a + 1) + "_input").Class("is-invalid");
-                $("#player" + (b + 1) + "_input").Class("is-invalid");
+                $("#player" + (a + 1) + "_input").addClass("is-invalid");
+                $("#player" + (b + 1) + "_input").addClass("is-invalid");
                 errorFlag = true;
             }
         }
@@ -505,7 +563,7 @@ function validate() {
 
     // Disable button while match not added
     document.getElementById("validate_button").disabled = true;
-    document.getElementById("validate_button").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i>";
+    document.getElementById("validate_button").innerHTML = "<i class=\"fas fa-circle-notch fa-spin\"></i>";
 
     // Create match object
     var reported_match = {
@@ -657,6 +715,7 @@ function validate() {
 
                         updateButtons();
 
+                        document.getElementById('random_button').style.display = 'block'
                         document.getElementById("shuffle_container").style.display = "block";
                         document.getElementById("score_indicators").style.display = "none";
                     }, 500);
@@ -711,7 +770,7 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
         confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
         cancelButtonText: 'Annuler',
         onOpen: () => {
-            $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
+            $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 
             // Get players from database and display it when ready
             db.collection("players")
