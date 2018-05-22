@@ -489,6 +489,86 @@ function connectedMode() {
 
 // ADMIN PART : allow matchs to be deleted for good
 
+document.getElementById('new_season_button').addEventListener('click', function() {
+    swal({
+        title: 'Nouvelle saison',
+        html: '<input id="swal-input2" class="swal2-input" placeholder="Titre (\'Saison 2\')">' +
+            '<input id="swal-input1" class="swal2-input" placeholder="Pitch (\'Gamelle forever\')">',
+        focusConfirm: false,
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#d63030',
+        cancelButtonColor: '#33a321',
+        confirmButtonText: '<i class="em em-soccer"></i> Créer',
+        cancelButtonText: 'Annuler',
+        preConfirm: () => {
+            return [
+                document.getElementById('swal-input1').value,
+                document.getElementById('swal-input2').value
+            ]
+        }
+    }).then((result) => {
+        if (result.dismiss == null) {
+            console.log(result.value[0]);
+            console.log(result.value[1]);
+
+
+            db.collection("seasons")
+                .get()
+                .then(function(querySnapshot) {
+                    var lastDoc;
+                    // Disable all seasons
+                    querySnapshot.forEach(function(doc) {
+                        lastDoc = doc.data();
+                        db.collection("seasons")
+                            .doc(doc.id)
+                            .update({
+                                active: false
+                            });
+                    });
+
+                    // Create new season and enable it
+                    var newSeason = {
+                        active: true,
+                        order: lastDoc.order + 1,
+                        invert_order: -lastDoc.order - 1,
+                        pitch: result.value[0],
+                        title: result.value[1],
+                        start_date: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+
+                    db.collection("seasons")
+                        .doc("season" + (parseInt(lastDoc.order) + 1))
+                        .set(newSeason)
+                        .then(function(docRef) {
+                            swal({
+                                toast: true,
+                                position: 'top-start',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                type: 'success',
+                                title: 'Saison commencée !'
+                            });
+                        }).catch(function(error) {
+                            swal({
+                                toast: true,
+                                position: 'top-start',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                type: 'error',
+                                title: 'Erreur lors de la création'
+                            });
+                        });
+                });
+
+
+            // create new one
+        }
+    });
+});
+
+
 var matchs_buffer = [];
 
 // Method called to get matchs from database then display them in History container
@@ -499,6 +579,7 @@ function refreshHistory(previous_matchs_number) {
         .then(function(querySnapshot) {
             // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
             document.getElementById("submit_card").style.display = "block";
+            document.getElementById("new_season_container").style.display = "block";
 
             matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {
