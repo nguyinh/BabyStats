@@ -565,20 +565,26 @@ function reportMatch(match, addToEnd) {
                             .doc(matchElement.id)
                             .delete()
                             .then(function() {
-                                swal(
-                                    'Adieu',
-                                    'Le match a bien été supprimé !',
-                                    'success'
-                                );
+                                swal({
+                                    toast: true,
+                                    position: 'top-start',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    type: 'success',
+                                    title: 'Match supprimé'
+                                });
                             });
                         // Remove match from html
                         matchElement.parentNode.removeChild(matchElement);
                     }).catch(function(error) {
-                        swal(
-                            'Oops',
-                            'Une erreur est survenue pendant la supression ...',
-                            'error'
-                        )
+                        swal({
+                            toast: true,
+                            position: 'top-start',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            type: 'error',
+                            title: 'Erreur durant la suppression'
+                        });
                     });
             }
         })
@@ -598,21 +604,27 @@ function reportMatch(match, addToEnd) {
                         reason: ""
                     })
                     .then(function() {
-                        swal(
-                            'C\'est fait !',
-                            'Le match a bien été restauré !',
-                            'success'
-                        );
+                        swal({
+                            toast: true,
+                            position: 'top-start',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            type: 'success',
+                            title: 'Match restauré'
+                        });
 
                         // Remove match from html
                         matchElement.parentNode.removeChild(matchElement);
                     });
             }).catch(function(error) {
-                swal(
-                    'Oops',
-                    'Une erreur est survenue pendant la restauration ...',
-                    'error'
-                )
+                swal({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    type: 'error',
+                    title: 'Erreur durant la restauration'
+                });
             });
     });
 
