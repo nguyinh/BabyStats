@@ -12,6 +12,9 @@ firebase.auth().onAuthStateChanged(function(user) {
 // }
 
 
+
+
+
 // TO-DO : matches en 5 buts
 // TO-DO : Fix the ELO stuff
 
