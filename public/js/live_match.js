@@ -31,6 +31,8 @@ db.collection("players")
         var team_name = "";
         var player_buffer = [];
         querySnapshot.forEach(function(doc) {
+            if (!doc.data().isActive)
+                return;
             if (team_name == "") { // Initialization
                 team_name = doc.data().team;
                 for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
@@ -791,6 +793,8 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
                     var team_name = "";
                     var player_buffer = [];
                     querySnapshot.forEach(function(doc) {
+                        if (!doc.data().isActive)
+                            return;
                         if (team_name == "") {
                             team_name = doc.data().team;
                             $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>'); // insert team name in swal

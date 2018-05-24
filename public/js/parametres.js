@@ -47,6 +47,8 @@ function RefreshPlayerList() {
             querySnapshot.forEach(function(doc) {
                 var list = document.getElementById("players_list");
                 data = doc.data();
+                if (!data.isActive)
+                    return;
 
                 // If new docSnapshot
                 if (team_id == null) {
