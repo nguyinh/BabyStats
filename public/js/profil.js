@@ -314,11 +314,23 @@ var begin_template = '<div class="container">' +
     '<div class="row align-items-center" id="container_row">' +
     '<div class="col-12 col-xl-10 offset-xl-1" id="sw_container">';
 
-function addPlayerCheckbox(name, n) {
+function addPlayerRadiobox(name, n) {
     return '<div class="container mt-2">' +
         '<div class="row mb-2">' +
         '<label>' +
         '<input type="radio" class="option-input radio" name="player_selection" id="rb_' + n + '_' + name + '"/>' +
+        name +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+}
+
+function addPlayerCheckbox(name, n, checked) {
+    return '<div class="container mt-2">' +
+        '<div class="row mb-2">' +
+        '<label>' +
+        '<input type="checkbox" class="option-input checkbox" name="player_selection" id="rb_' + n + '_' + name + '" ' + (checked ? "checked" : "") + '/>' +
         name +
         '</label>' +
         '</div>' +
@@ -394,7 +406,7 @@ function linkToPlayer() {
                                             // Sort and place sorted players in swal (1 team)
                                             player_buffer.sort();
                                             for (var i = 0; i < player_buffer.length; i++) {
-                                                $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+                                                $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerRadiobox(player_buffer[i], n++));
                                             }
                                             player_buffer = [];
                                             team_name = doc.data().team;
@@ -407,7 +419,7 @@ function linkToPlayer() {
                                 // Sort and place sorted players in swal for the last team
                                 player_buffer.sort(); // sort players
                                 for (var i = 0; i < player_buffer.length; i++) {
-                                    $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+                                    $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerRadiobox(player_buffer[i], n++));
                                 }
                             })
                             .catch(function(error) {
@@ -509,8 +521,6 @@ document.getElementById('new_season_button').addEventListener('click', function(
         }
     }).then((result) => {
         if (result.dismiss == null) {
-            console.log(result.value[0]);
-            console.log(result.value[1]);
             if (result.value[0] == "" || result.value[1] == "") {
                 swal({
                     toast: true,
@@ -580,6 +590,134 @@ document.getElementById('new_season_button').addEventListener('click', function(
 });
 
 
+document.getElementById('players_status_button').addEventListener('click', function() {
+    swal({
+        title: 'Quels sont les joueurs actifs ?',
+        html: '<div id="swal_container_custom"></div>',
+        showCloseButton: true,
+        showCancelButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonClass: 'btn btn-success mr-1',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false,
+        confirmButtonText: 'All good',
+        cancelButtonText: 'Plus tard',
+        onOpen: () => {
+            $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
+
+            // Get players from database and display it when ready
+            db.collection("players")
+                .orderBy("team")
+                .get()
+                .then(function(querySnapshot) {
+                    var n = 0;
+                    $("#swal_container_custom")[0].innerHTML = borders_template;
+                    var team_name = "";
+                    var player_buffer = [];
+                    // Query team by team
+                    querySnapshot.forEach(function(doc) {
+                        if (team_name == "") {
+                            team_name = doc.data().team;
+                            $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>'); // insert team name in swal
+                        } else if (team_name != doc.data().team) {
+                            // Sort and place sorted players in swal (1 team)
+                            player_buffer.sort(function(a, b) {
+                                if (a.name.toLowerCase() < b.name.toLowerCase()) //sort string ascending
+                                    return -1
+                                if (a.name.toLowerCase() > b.name.toLowerCase())
+                                    return 1
+                                return 0 //default return value (no sorting)
+                            });
+                            for (var i = 0; i < player_buffer.length; i++) {
+                                $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i].name, player_buffer[i].id, player_buffer[i].isActive));
+                            }
+                            player_buffer = [];
+                            team_name = doc.data().team;
+                            $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>');
+                        }
+                        player_buffer.push({
+                            name: doc.data().name,
+                            isActive: doc.data().isActive,
+                            id: doc.id
+                        });
+                    })
+
+                    // Sort and place sorted players in swal for the last team
+                    player_buffer.sort(function(a, b) {
+                        if (a.name.toLowerCase() < b.name.toLowerCase()) //sort string ascending
+                            return -1
+                        if (a.name.toLowerCase() > b.name.toLowerCase())
+                            return 1
+                        return 0 //default return value (no sorting)
+                    });
+                    for (var i = 0; i < player_buffer.length; i++) {
+                        $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i].name, player_buffer[i].id, player_buffer[i].isActive));
+                    }
+                })
+                .catch(function(error) {
+                    console.log("Error getting documents: ", error);
+                    swal.showValidationError('Un petit problème est survenu ... Nos meilleurs ingénieurs sont sur le coup !');
+                });
+        },
+        preConfirm: () => {
+            // Check which player has been selected
+            var playersCheckboxes = document.getElementsByName("player_selection");
+            var playerNames;
+            var dbPromises = [];
+
+            document.getElementById("players_status_button").disabled = true;
+            document.getElementById("players_status_button").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin fa-lg\"></i>";
+
+            for (var i = 0; i < playersCheckboxes.length; i++) {
+                dbPromises.push(db.collection("players")
+                    .doc(playersCheckboxes[i].id.split('_')[1])
+                    .update({
+                        isActive: playersCheckboxes[i].checked
+                    })
+                );
+            }
+
+            Promise.all(dbPromises).then(function() {
+                    swal({
+                        toast: true,
+                        position: 'top-start',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        type: 'success',
+                        title: 'Status des joueurs mis à jour <i class="em em---1"></i>'
+                    });
+
+                    document.getElementById("players_status_button").disabled = false;
+                    document.getElementById("players_status_button").innerHTML = "<strong>Changer statut joueur</strong>";
+                })
+                .catch(function(error) {
+                    swal({
+                        toast: true,
+                        position: 'top-start',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        type: 'error',
+                        title: 'Erreur lors de la mise à jour <i class="em em--1"></i>'
+                    });
+
+                    document.getElementById("players_status_button").disabled = false;
+                    document.getElementById("players_status_button").innerHTML = "<strong>Changer statut joueur</strong>";
+                });
+        }
+    }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||
+            result.dismiss === swal.DismissReason.cancel ||
+            result.dismiss === swal.DismissReason.close ||
+            result.dismiss === swal.DismissReason.esc) {
+            document.getElementById("players_status_button").disabled = false;
+            document.getElementById("players_status_button").innerHTML = "<strong>Changer statut joueur</strong>";
+        }
+    });
+});
+
+
 var matchs_buffer = [];
 
 // Method called to get matchs from database then display them in History container
@@ -591,6 +729,7 @@ function refreshHistory(previous_matchs_number) {
             // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
             document.getElementById("submit_card").style.display = "block";
             document.getElementById("new_season_container").style.display = "block";
+            document.getElementById("players_status_container").style.display = "block";
 
             matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {
