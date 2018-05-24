@@ -493,7 +493,7 @@ document.getElementById('new_season_button').addEventListener('click', function(
     swal({
         title: 'Nouvelle saison',
         html: '<input id="swal-input2" class="swal2-input" placeholder="Titre (\'Saison 2\')">' +
-            '<input id="swal-input1" class="swal2-input" placeholder="Pitch (\'Gamelle forever\')">',
+            '<input id="swal-input1" class="swal2-input" placeholder="Pitch (\'Gamelle is bae\')">',
         focusConfirm: false,
         type: 'info',
         showCancelButton: true,
@@ -523,6 +523,8 @@ document.getElementById('new_season_button').addEventListener('click', function(
                 return;
             }
 
+            document.getElementById("new_season_button").disabled = true;
+            document.getElementById("new_season_button").innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin fa-lg\"></i>";
 
             db.collection("seasons")
                 .get()
@@ -539,19 +541,16 @@ document.getElementById('new_season_button').addEventListener('click', function(
                     });
 
                     // Create new season and enable it
-                    var newSeason = {
-                        active: true,
-                        order: lastDoc.order + 1,
-                        invert_order: -lastDoc.order - 1,
-                        pitch: result.value[0],
-                        title: result.value[1],
-                        start_date: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-
-
                     db.collection("seasons")
                         .doc("season" + (parseInt(lastDoc.order) + 1))
-                        .set(newSeason)
+                        .set({
+                            active: true,
+                            order: lastDoc.order + 1,
+                            invert_order: -lastDoc.order - 1,
+                            pitch: result.value[0],
+                            title: result.value[1],
+                            start_date: firebase.firestore.FieldValue.serverTimestamp()
+                        })
                         .then(function(docRef) {
                             swal({
                                 toast: true,
@@ -561,6 +560,8 @@ document.getElementById('new_season_button').addEventListener('click', function(
                                 type: 'success',
                                 title: 'Saison commencée ! <i class="em em-soccer"></i>'
                             });
+                            document.getElementById("new_season_button").disabled = false;
+                            document.getElementById("new_season_button").innerHTML = "<strong>Démarrer nouvelle saison</strong>";
                         }).catch(function(error) {
                             swal({
                                 toast: true,
@@ -570,6 +571,8 @@ document.getElementById('new_season_button').addEventListener('click', function(
                                 type: 'error',
                                 title: 'Erreur lors de la création'
                             });
+                            document.getElementById("new_season_button").disabled = true;
+                            document.getElementById("new_season_button").innerHTML = "<strong>Démarrer nouvelle saison</strong>";
                         });
                 });
         }
