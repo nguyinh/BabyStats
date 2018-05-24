@@ -153,9 +153,9 @@ function updateScore(team, type, change) {
                             break;
 
                         case "-":
-                            if (!isMin(score1) && isCorrect()) {
+                            if (!isMin(score1) && isCorrect(goalJ1)) {
                                 minus(score1);
-                                minus();
+                                minus(goalJ1);
                             }
                             break;
 
