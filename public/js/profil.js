@@ -511,6 +511,17 @@ document.getElementById('new_season_button').addEventListener('click', function(
         if (result.dismiss == null) {
             console.log(result.value[0]);
             console.log(result.value[1]);
+            if (result.value[0] == "" || result.value[1] == "") {
+                swal({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    type: 'error',
+                    title: 'Remplissez tous les champs <i class="em em-hand"></i>'
+                });
+                return;
+            }
 
 
             db.collection("seasons")
@@ -548,7 +559,7 @@ document.getElementById('new_season_button').addEventListener('click', function(
                                 showConfirmButton: false,
                                 timer: 3000,
                                 type: 'success',
-                                title: 'Saison commencée !'
+                                title: 'Saison commencée ! <i class="em em-soccer"></i>'
                             });
                         }).catch(function(error) {
                             swal({
@@ -561,9 +572,6 @@ document.getElementById('new_season_button').addEventListener('click', function(
                             });
                         });
                 });
-
-
-            // create new one
         }
     });
 });
