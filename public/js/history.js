@@ -312,8 +312,8 @@ function deleteMatch(e) {
             else if (result.value) {
                 var user = firebase.auth().currentUser;
 
+                // Check if user is connected in order to delete matchs
                 if (user) {
-                    console.log(user);
                     db.collection("matches")
                         .doc(match_id)
                         .get()

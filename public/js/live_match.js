@@ -619,7 +619,7 @@ function validate() {
                             .then(function(docRef) {
 
                                 // Choose a quote
-                                var goal_type = Math.floor(Math.random() * 3);
+                                var goal_type = [];
                                 var high_low = Math.random() >= 0.5; // true = max, false = min
 
                                 // Get all players scores
@@ -635,10 +635,22 @@ function validate() {
                                         ]);
                                 }
 
+                                for (var i = 0; i < players.length; i++) {
+                                    if (players[i][1] != 0 && !goal_type.includes("goal")) {
+                                        goal_type.push("goal");
+                                    }
+                                    if (players[i][2] != 0 && !goal_type.includes("gamelle")) {
+                                        goal_type.push("gamelle");
+                                    }
+                                    if (players[i][3] != 0 && !goal_type.includes("betray")) {
+                                        goal_type.push("betray");
+                                    }
+                                }
+
                                 quote = "Le match a bien été validé !";
 
-                                switch (goal_type) {
-                                    case 0: // sort with goals
+                                switch (goal_type[Math.floor(Math.random() * goal_type.length)]) {
+                                    case "goal": // sort with goals
                                         players.sort(function(a, b) {
                                             if (a[1] === b[1]) {
                                                 return 0;
@@ -656,7 +668,8 @@ function validate() {
                                             quote = players[0][0].value.split(" ")[0] +
                                             ", faut dormir plus la nuit <i class=\"em em-smiling_face_with_smiling_eyes_and_hand_covering_mouth\"></i>";
                                         break;
-                                    case 1: // sort with gamelles
+
+                                    case "gamelle": // sort with gamelles
                                         players.sort(function(a, b) {
                                             if (a[2] === b[2]) {
                                                 return 0;
@@ -680,7 +693,8 @@ function validate() {
                                                 " gamelles <i class=\"em em-clap\"></i>";
                                         }
                                         break;
-                                    case 2: // sort with betrays
+
+                                    case "betray": // sort with betrays
                                         players.sort(function(a, b) {
                                             if (a[3] === b[3]) {
                                                 return 0;
