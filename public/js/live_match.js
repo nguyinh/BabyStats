@@ -808,11 +808,12 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonClass: 'btn btn-success mr-1',
-        cancelButtonClass: 'btn btn-danger',
+        confirmButtonClass: 'btn btn-success ml-1 btn-lg',
+        cancelButtonClass: 'btn btn-danger mr-1 btn-lg',
         buttonsStyling: false,
         confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
         cancelButtonText: 'Annuler',
+        reverseButtons: true,
         onOpen: () => {
             $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 

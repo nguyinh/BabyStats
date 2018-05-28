@@ -150,6 +150,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                     betrays: 0,
                     wins: 0,
                     defeats: 0,
+                    isActive: true,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
 

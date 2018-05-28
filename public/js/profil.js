@@ -286,23 +286,66 @@ document.getElementById("imageUploadButton").addEventListener('change', function
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 console.log('File available at', downloadURL);
-                document.getElementById("profil_picture").src = downloadURL;
-                var user = firebase.auth().currentUser;
-                user.updateProfile({
-                    photoURL: downloadURL
-                });
 
-                document.getElementById('load_icon').style.display = 'none';
-                document.getElementById('profil_picture').style.display = 'block';
+                db.collection("players")
+                    .where("uid", "==", user.uid)
+                    .get()
+                    .then(function(querySnapshot) {
+                        // Firestore player already has uid
+                        if (querySnapshot.docs.length != 0) {
+                            console.log(querySnapshot.docs[0].data());
 
-                swal({
-                    toast: true,
-                    position: 'top-start',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    type: 'success',
-                    title: 'Image enregistrée'
-                });
+                            db.collection("players")
+                                .doc(querySnapshot.docs[0].id)
+                                .update({
+                                    photoURL: downloadURL
+                                })
+                                .then(function(querySnapshot) {
+                                    document.getElementById("profil_picture").src = downloadURL;
+                                    var user = firebase.auth().currentUser;
+                                    user.updateProfile({
+                                        photoURL: downloadURL
+                                    });
+
+                                    document.getElementById('load_icon').style.display = 'none';
+                                    document.getElementById('profil_picture').style.display = 'block';
+
+                                    swal({
+                                        toast: true,
+                                        position: 'top-start',
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        type: 'success',
+                                        title: 'Image enregistrée'
+                                    });
+                                }).catch(function(error) {
+                                    document.getElementById('load_icon').style.display = 'none';
+                                    document.getElementById('profil_picture').style.display = 'block';
+                                });
+                        }
+                        // No uid found for connected user in Firestore
+                        else {
+                            console.log("no user");
+
+                            swal({
+                                toast: true,
+                                position: 'top-start',
+                                showConfirmButton: false,
+                                timer: 4500,
+                                type: 'error',
+                                title: 'Lie ton compte pour ajouter une photo de profil <i class="em em-wink"></i>'
+                            });
+
+                            document.getElementById('load_icon').style.display = 'none';
+                            document.getElementById('profil_picture').style.display = 'block';
+                        }
+                    });
+
+
+
+
+
+
             });
         });
 })
