@@ -327,11 +327,15 @@ function deleteMatch(e) {
                                             reason: submitted_match.reason
                                         });
 
-                                    swal(
-                                        'Succès',
-                                        'Le match a été soumis à un modérateur ! Il sera supprimé sous peu si la justification est valide',
-                                        'success'
-                                    );
+                                    swal({
+                                        title: 'Succès',
+                                        html: 'Le match a été soumis à un modérateur ! Il sera supprimé sous peu si la justification est valide',
+                                        type: 'success',
+                                        toast: true,
+                                        position: 'top-start',
+                                        timer: 4500,
+                                        showConfirmButton: false,
+                                    });
 
                                     // Add cross icon
                                     $("#" + match_id + " .cross_icon")[0].style.display = "block";
@@ -340,7 +344,11 @@ function deleteMatch(e) {
                                     swal({
                                         type: 'error',
                                         title: 'Erreur',
-                                        text: 'Il y a eu un problème lors de la suppression du match'
+                                        text: 'Il y a eu un problème lors de la suppression du match',
+                                        toast: true,
+                                        position: 'top-start',
+                                        timer: 3000,
+                                        showConfirmButton: false
                                     });
                                 });
                         }
@@ -349,7 +357,11 @@ function deleteMatch(e) {
                 swal({
                     type: 'error',
                     title: 'Erreur',
-                    text: 'Veuillez ajouter une raison pour cette suppression'
+                    text: 'Veuillez ajouter une raison pour cette suppression',
+                    toast: true,
+                    position: 'top-start',
+                    timer: 3000,
+                    showConfirmButton: false
                 });
             }
         })

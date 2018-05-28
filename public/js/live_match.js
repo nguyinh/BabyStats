@@ -706,11 +706,30 @@ function validate() {
                                 }
 
 
-                                swal(
-                                    'Succès',
-                                    quote,
-                                    'success'
-                                );
+                                swal({
+                                    toast: true,
+                                    position: 'bottom-start',
+                                    showConfirmButton: false,
+                                    timer: 6000,
+                                    title: quote,
+                                    type: 'success',
+                                    showConfirmButton: true,
+                                    confirmButtonText: "<i class='em em-trophy m-2' style='font-size: 1.75rem;'></i>"
+                                }).then(function(result) {
+                                    // if (result.dismiss)
+                                    //     console.log("dismiss");
+                                    // else
+                                    if (result.value) {
+                                        swal({
+                                            title: 'Selectionnez les joueurs',
+                                            html: 'Ici seront affiché les changements d\'ELOs',
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonColor: '#3ab02b',
+                                            confirmButtonClass: 'btn btn-success mr-1'
+                                        });
+                                    }
+                                });
 
                                 setTimeout(function() {
                                     document.getElementById("validate_button").disabled = false;
