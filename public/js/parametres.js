@@ -4,7 +4,7 @@ var db = firebase.firestore();
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="../blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
-        document.getElementById('profile_picture').src = user.photoURL;
+        document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
     }
 });
 
@@ -118,11 +118,14 @@ document.getElementById("add_player").addEventListener("click", function() {
                                 n--;
                             fullname = name.charAt(0).toUpperCase() + name.slice(1) + " " + lastname.charAt(0).toUpperCase() + lastname.slice(1, lastname.length - n--) + ".";
                             if (n < 0) { // if all letters failed, return error
-                                swal(
-                                    'Erreur',
-                                    'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
-                                    'error'
-                                );
+                                swal({
+                                    html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                    type: 'error',
+                                    toast: true,
+                                    position: 'top-start',
+                                    timer: 3000,
+                                    showConfirmButton: false
+                                });
 
                                 // Remove loading button
                                 document.getElementById("add_player").disabled = false;
@@ -147,6 +150,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                     betrays: 0,
                     wins: 0,
                     defeats: 0,
+                    isActive: true,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -189,11 +193,14 @@ document.getElementById("add_player").addEventListener("click", function() {
                                 })
                                 .catch(function(error) {
                                     console.log("Error getting documents: ", error);
-                                    swal(
-                                        'Erreur',
-                                        'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
-                                        'error'
-                                    );
+                                    swal({
+                                        html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                        type: 'error',
+                                        toast: true,
+                                        position: 'top-start',
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
                                 });
 
                             // Clear inputs
@@ -211,20 +218,26 @@ document.getElementById("add_player").addEventListener("click", function() {
                                 "Penses à bien t'échauffer les poignets " + name + " <i class=\"em em-raised_hands\"></i>"
                             ]
 
-                            swal(
-                                'Succès',
-                                quotes[Math.floor(Math.random() * quotes.length)],
-                                'success'
-                            );
+                            swal({
+                                html: quotes[Math.floor(Math.random() * quotes.length)],
+                                type: 'success',
+                                toast: true,
+                                position: 'top-start',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
                         }, 200);
                     })
                     .catch(function(error) {
                         console.error("Error writing document: ", error);
-                        swal(
-                            'Erreur',
-                            'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
-                            'error'
-                        );
+                        swal({
+                            html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                            type: 'error',
+                            toast: true,
+                            position: 'top-start',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
                     });
 
 
@@ -232,11 +245,14 @@ document.getElementById("add_player").addEventListener("click", function() {
             })
             .catch(function(error) {
                 console.log("Error getting document:", error);
-                swal(
-                    'Erreur',
-                    'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
-                    'error'
-                );
+                swal({
+                    html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                    type: 'error',
+                    toast: true,
+                    position: 'top-start',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
             });
 
     } else {
@@ -254,122 +270,122 @@ document.getElementById("add_player").addEventListener("click", function() {
 
 
 // Delete functionnality on match element hold
-var pressTimer;
+// var pressTimer;
 
 // Computer navigation
-$("#history").mouseup(function(e) {
-    if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-        inputUp(e);
-    }
-
-
-    return false;
-
-}).mousedown(function(e) {
-    if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-        inputDown(e);
-    }
-    return false;
-});
+// $("#history").mouseup(function(e) {
+//     if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+//         inputUp(e);
+//     }
+//
+//
+//     return false;
+//
+// }).mousedown(function(e) {
+//     if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+//         inputDown(e);
+//     }
+//     return false;
+// });
 
 
 
 
 // Mobile navigation
-$("#players_list").on("touchstart", function(e) {
-    inputDown(e);
-});
-
-$("#players_list").on("touchend", function(e) {
-    inputUp(e);
-});
-
-
-function inputDown(e) {
-    pressTimer = window.setTimeout(function() {
-        // Check if element is a player name
-        var playerName;
-        if (e.target.tagName == "P")
-            if (e.target.innerHTML.includes("</i>"))
-                playerName = e.target.innerHTML.split("</i>")[1];
-            else
-                playerName = e.target.innerHTML;
-        else if (e.target.tagName == "I")
-            if (e.target.parentElement.innerHTML.includes("</i>"))
-                playerName = e.target.parentElement.innerHTML.split("</i>")[1];
-            else
-                playerName = e.target.parentElement.innerHTML;
-        else
-            return;
-
-        // Display delete confirmation
-        swal({
-            title: 'Confirmation',
-            text: "Êtes vous sûr de vouloir supprimer " + playerName + " ?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Définitivement',
-            cancelButtonText: 'Non',
-            confirmButtonClass: 'btn btn-success mr-1',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.value) {
-                var playerId;
-                // Search for player document id
-                var ref = db.collection("players")
-                    .where("name", "==", playerName)
-                    .get()
-                    .then(function(querySnapshot) {
-                        querySnapshot.forEach(function(doc) {
-                            playerId = doc.id;
-
-                            // Delete player depending on its player Id
-                            if (playerId != "") {
-                                db.collection("players").doc(playerId).delete().then(function() {
-                                    swal(
-                                        'Succès',
-                                        'Adieu ' + doc.data().first_name + ' ' + doc.data().last_name + ' <i class="em em-wave"></i><i class="em em-cry"></i>',
-                                        'success'
-                                    );
+// $("#players_list").on("touchstart", function(e) {
+//     inputDown(e);
+// });
+//
+// $("#players_list").on("touchend", function(e) {
+//     inputUp(e);
+// });
 
 
-                                    RefreshPlayerList();
+// function inputDown(e) {
+//     pressTimer = window.setTimeout(function() {
+//         // Check if element is a player name
+//         var playerName;
+//         if (e.target.tagName == "P")
+//             if (e.target.innerHTML.includes("</i>"))
+//                 playerName = e.target.innerHTML.split("</i>")[1];
+//             else
+//                 playerName = e.target.innerHTML;
+//         else if (e.target.tagName == "I")
+//             if (e.target.parentElement.innerHTML.includes("</i>"))
+//                 playerName = e.target.parentElement.innerHTML.split("</i>")[1];
+//             else
+//                 playerName = e.target.parentElement.innerHTML;
+//         else
+//             return;
+//
+//         // Display delete confirmation
+//         swal({
+//             title: 'Confirmation',
+//             text: "Êtes vous sûr de vouloir supprimer " + playerName + " ?",
+//             type: 'warning',
+//             showCancelButton: true,
+//             confirmButtonColor: '#3085d6',
+//             cancelButtonColor: '#d33',
+//             confirmButtonText: 'Définitivement',
+//             cancelButtonText: 'Non',
+//             confirmButtonClass: 'btn btn-success mr-1',
+//             cancelButtonClass: 'btn btn-danger',
+//             buttonsStyling: false
+//         }).then((result) => {
+//             if (result.value) {
+//                 var playerId;
+//                 // Search for player document id
+//                 var ref = db.collection("players")
+//                     .where("name", "==", playerName)
+//                     .get()
+//                     .then(function(querySnapshot) {
+//                         querySnapshot.forEach(function(doc) {
+//                             playerId = doc.id;
+//
+//                             // Delete player depending on its player Id
+//                             if (playerId != "") {
+//                                 db.collection("players").doc(playerId).delete().then(function() {
+//                                     swal(
+//                                         'Succès',
+//                                         'Adieu ' + doc.data().first_name + ' ' + doc.data().last_name + ' <i class="em em-wave"></i><i class="em em-cry"></i>',
+//                                         'success'
+//                                     );
+//
+//
+//                                     RefreshPlayerList();
+//
+//
+//                                 }).catch(function(error) {
+//                                     swal({
+//                                         type: 'error',
+//                                         title: 'Erreur',
+//                                         text: 'Erreur lors de la suppression du joueur ' + doc.data().first_name + ' ' + doc.data().last_name
+//                                     });
+//                                 });
+//                             }
+//                         }) // querySnapshot.forEach(function(doc) {
+//                     }); // .then(function(querySnapshot) {
+//             } // if () {
+//         }) //.then((result) => {
+//     }, 1000);
+// }
 
 
-                                }).catch(function(error) {
-                                    swal({
-                                        type: 'error',
-                                        title: 'Erreur',
-                                        text: 'Erreur lors de la suppression du joueur ' + doc.data().first_name + ' ' + doc.data().last_name
-                                    });
-                                });
-                            }
-                        }) // querySnapshot.forEach(function(doc) {
-                    }); // .then(function(querySnapshot) {
-            } // if () {
-        }) //.then((result) => {
-    }, 1000);
-}
-
-
-function inputUp(e) {
-    // $({
-    //     blurRadius: 0
-    // }).animate({
-    //     blurRadius: 10
-    // }, {
-    //     duration: 500,
-    //     easing: 'swing', // or "linear"
-    //     // use jQuery UI or Easing plugin for more options
-    //     step: function() {
-    //         $(e.target).css({
-    //             "-webkit-filter": "blur(" + this.blurRadius + "px)",
-    //             "filter": "blur(" + this.blurRadius + "px)"
-    //         });
-    //     }
-    // });
-    clearTimeout(pressTimer);
-}
+// function inputUp(e) {
+//     // $({
+//     //     blurRadius: 0
+//     // }).animate({
+//     //     blurRadius: 10
+//     // }, {
+//     //     duration: 500,
+//     //     easing: 'swing', // or "linear"
+//     //     // use jQuery UI or Easing plugin for more options
+//     //     step: function() {
+//     //         $(e.target).css({
+//     //             "-webkit-filter": "blur(" + this.blurRadius + "px)",
+//     //             "filter": "blur(" + this.blurRadius + "px)"
+//     //         });
+//     //     }
+//     // });
+//     clearTimeout(pressTimer);
+// }

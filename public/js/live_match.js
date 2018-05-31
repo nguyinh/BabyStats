@@ -5,7 +5,7 @@ var db = firebase.firestore();
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
-        document.getElementById('profile_picture').src = user.photoURL;
+        document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
     } else {
         console.log("no user connected");
     }
@@ -619,7 +619,7 @@ function validate() {
                             .then(function(docRef) {
 
                                 // Choose a quote
-                                var goal_type = Math.floor(Math.random() * 3);
+                                var goal_type = [];
                                 var high_low = Math.random() >= 0.5; // true = max, false = min
 
                                 // Get all players scores
@@ -635,10 +635,22 @@ function validate() {
                                         ]);
                                 }
 
+                                for (var i = 0; i < players.length; i++) {
+                                    if (players[i][1] != 0 && !goal_type.includes("goal")) {
+                                        goal_type.push("goal");
+                                    }
+                                    if (players[i][2] != 0 && !goal_type.includes("gamelle")) {
+                                        goal_type.push("gamelle");
+                                    }
+                                    if (players[i][3] != 0 && !goal_type.includes("betray")) {
+                                        goal_type.push("betray");
+                                    }
+                                }
+
                                 quote = "Le match a bien été validé !";
 
-                                switch (goal_type) {
-                                    case 0: // sort with goals
+                                switch (goal_type[Math.floor(Math.random() * goal_type.length)]) {
+                                    case "goal": // sort with goals
                                         players.sort(function(a, b) {
                                             if (a[1] === b[1]) {
                                                 return 0;
@@ -656,7 +668,8 @@ function validate() {
                                             quote = players[0][0].value.split(" ")[0] +
                                             ", faut dormir plus la nuit <i class=\"em em-smiling_face_with_smiling_eyes_and_hand_covering_mouth\"></i>";
                                         break;
-                                    case 1: // sort with gamelles
+
+                                    case "gamelle": // sort with gamelles
                                         players.sort(function(a, b) {
                                             if (a[2] === b[2]) {
                                                 return 0;
@@ -680,7 +693,8 @@ function validate() {
                                                 " gamelles <i class=\"em em-clap\"></i>";
                                         }
                                         break;
-                                    case 2: // sort with betrays
+
+                                    case "betray": // sort with betrays
                                         players.sort(function(a, b) {
                                             if (a[3] === b[3]) {
                                                 return 0;
@@ -706,11 +720,30 @@ function validate() {
                                 }
 
 
-                                swal(
-                                    'Succès',
-                                    quote,
-                                    'success'
-                                );
+                                swal({
+                                    toast: true,
+                                    position: 'bottom-start',
+                                    showConfirmButton: false,
+                                    timer: 6000,
+                                    title: quote,
+                                    type: 'success',
+                                    showConfirmButton: true,
+                                    confirmButtonText: "<i class='em em-trophy m-2' style='font-size: 1.75rem;'></i>"
+                                }).then(function(result) {
+                                    // if (result.dismiss)
+                                    //     console.log("dismiss");
+                                    // else
+                                    if (result.value) {
+                                        swal({
+                                            title: 'Selectionnez les joueurs',
+                                            html: 'Ici seront affiché les changements d\'ELOs',
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonColor: '#3ab02b',
+                                            confirmButtonClass: 'btn btn-success mr-1'
+                                        });
+                                    }
+                                });
 
                                 setTimeout(function() {
                                     document.getElementById("validate_button").disabled = false;
@@ -775,11 +808,12 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonClass: 'btn btn-success mr-1',
-        cancelButtonClass: 'btn btn-danger',
+        confirmButtonClass: 'btn btn-success ml-1 btn-lg',
+        cancelButtonClass: 'btn btn-danger mr-1 btn-lg',
         buttonsStyling: false,
         confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
         cancelButtonText: 'Annuler',
+        reverseButtons: true,
         onOpen: () => {
             $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 

@@ -49,6 +49,9 @@ document.getElementById('log_out').addEventListener('click', function() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
         logMode();
+        document.getElementById("submit_card").style.display = "none";
+        document.getElementById("new_season_container").style.display = "none";
+        document.getElementById("players_status_container").style.display = "none";
         document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
         $("#signin").removeClass("mb-3");
@@ -229,82 +232,134 @@ function clearArea() {
 document.getElementById("imageUploadButton").addEventListener('change', function(e) {
     document.getElementById('load_icon').style.display = 'block';
     document.getElementById('profil_picture').style.display = 'none';
-    // File or Blob named mountains.jpg
-    var file = e.target.files[0];
 
     var user = firebase.auth().currentUser;
 
-    // Create the file metadata
-    var metadata = {
-        contentType: 'image/png'
-    };
+    // Check if player has user uid
+    db.collection("players")
+        .where("uid", "==", user.uid)
+        .get()
+        .then(function(querySnapshot) {
+            // Firestore player already has uid
+            if (querySnapshot.docs.length != 0) {
 
-    // Upload file and metadata to the object 'images/mountains.jpg'
-    var uploadTask = storageRef.child('profile_pictures/' + user.uid).put(file, metadata);
+                // File or Blob named mountains.jpg
+                var file = e.target.files[0];
 
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-        function(snapshot) {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED: // or 'paused'
-                    console.log('Upload is paused');
-                    break;
-                case firebase.storage.TaskState.RUNNING: // or 'running'
-                    console.log('Upload is running');
-                    break;
-            }
-        },
-        function(error) {
-            swal({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                type: 'error',
-                title: 'Echec'
-            });
-            // A full list of error codes is available at
-            // https://firebase.google.com/docs/storage/web/handle-errors
-            switch (error.code) {
-                case 'storage/unauthorized':
-                    // User doesn't have permission to access the object
-                    break;
-
-                case 'storage/canceled':
-                    // User canceled the upload
-                    break;
-
-                case 'storage/unknown':
-                    // Unknown error occurred, inspect error.serverResponse
-                    break;
-            }
-        },
-        function() {
-            // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL);
-                document.getElementById("profil_picture").src = downloadURL;
                 var user = firebase.auth().currentUser;
-                user.updateProfile({
-                    photoURL: downloadURL
-                });
 
-                document.getElementById('load_icon').style.display = 'none';
-                document.getElementById('profil_picture').style.display = 'block';
+                // Create the file metadata
+                var metadata = {
+                    contentType: 'image/png'
+                };
+
+                // Upload file and metadata to the object 'images/mountains.jpg'
+                var uploadTask = storageRef.child('profile_pictures/' + user.uid).put(file, metadata);
+
+                // Listen for state changes, errors, and completion of the upload.
+                uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                    function(snapshot) {
+                        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                                console.log('Upload is paused');
+                                break;
+                            case firebase.storage.TaskState.RUNNING: // or 'running'
+                                console.log('Upload is running');
+                                break;
+                        }
+                    },
+                    function(error) {
+                        swal({
+                            toast: true,
+                            position: 'top-start',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            type: 'error',
+                            title: 'Echec'
+                        });
+                        // A full list of error codes is available at
+                        // https://firebase.google.com/docs/storage/web/handle-errors
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                // User doesn't have permission to access the object
+                                break;
+
+                            case 'storage/canceled':
+                                // User canceled the upload
+                                break;
+
+                            case 'storage/unknown':
+                                // Unknown error occurred, inspect error.serverResponse
+                                break;
+                        }
+                    },
+                    function() {
+                        // Upload completed successfully, now we can get the download URL
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                            console.log('File available at', downloadURL);
+
+                            document.getElementById("profil_picture").src = downloadURL;
+
+                            // Update user profile
+                            user.updateProfile({
+                                photoURL: downloadURL
+                            });
+
+                            // Update player database
+                            db.collection("players")
+                                .doc(querySnapshot.docs[0].id)
+                                .update({
+                                    photoURL: downloadURL
+                                })
+                                .then(function(querySnapshot) {
+                                    document.getElementById('load_icon').style.display = 'none';
+                                    document.getElementById('profil_picture').style.display = 'block';
+
+                                    swal({
+                                        toast: true,
+                                        position: 'top-start',
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        type: 'success',
+                                        title: 'Image enregistrée'
+                                    });
+
+                                    e.target.value = "";
+
+                                }).catch(function(error) {
+                                    document.getElementById('load_icon').style.display = 'none';
+                                    document.getElementById('profil_picture').style.display = 'block';
+                                    e.target.value = "";
+                                });
+                        });
+                    });
+            }
+            // No uid found for connected user in Firestore
+            else {
+                console.log("no user");
 
                 swal({
                     toast: true,
                     position: 'top-start',
                     showConfirmButton: false,
-                    timer: 3000,
-                    type: 'success',
-                    title: 'Image enregistrée'
+                    timer: 4500,
+                    type: 'error',
+                    title: 'Lie ton compte pour ajouter une photo de profil <i class="em em-wink"></i>'
                 });
-            });
+
+                e.target.value = "";
+
+                document.getElementById('load_icon').style.display = 'none';
+                document.getElementById('profil_picture').style.display = 'block';
+            }
         });
+
+
+
+
 })
 
 

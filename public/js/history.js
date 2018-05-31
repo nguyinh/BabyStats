@@ -4,7 +4,7 @@ var db = firebase.firestore();
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="../blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
-        document.getElementById('profile_picture').src = user.photoURL;
+        document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
     }
 });
 
@@ -310,46 +310,69 @@ function deleteMatch(e) {
             if (result.dismiss == "cancel")
                 return;
             else if (result.value) {
-                db.collection("matches")
-                    .doc(match_id)
-                    .get()
-                    .then(function(doc) {
-                        if (doc.exists) {
-                            submitted_match = doc.data();
-                            submitted_match.reason = result.value;
-                            db.collection("deleted_matchs")
-                                .doc(match_id)
-                                .set(submitted_match)
-                                .then(function(docRef) {
-                                    db.collection("matches")
-                                        .doc(match_id)
-                                        .update({
-                                            reason: submitted_match.reason
+                var user = firebase.auth().currentUser;
+
+                // Check if user is connected in order to delete matchs
+                if (user) {
+                    db.collection("matches")
+                        .doc(match_id)
+                        .get()
+                        .then(function(doc) {
+                            if (doc.exists) {
+                                submitted_match = doc.data();
+                                submitted_match.reason = result.value;
+                                db.collection("deleted_matchs")
+                                    .doc(match_id)
+                                    .set(submitted_match)
+                                    .then(function(docRef) {
+                                        db.collection("matches")
+                                            .doc(match_id)
+                                            .update({
+                                                reason: submitted_match.reason
+                                            });
+
+                                        swal({
+                                            html: 'Le match a été soumis à un modérateur ! Il sera supprimé si la justification est valide',
+                                            type: 'success',
+                                            toast: true,
+                                            position: 'top-start',
+                                            timer: 4500,
+                                            showConfirmButton: false,
                                         });
 
-                                    swal(
-                                        'Succès',
-                                        'Le match a été soumis à un modérateur ! Il sera supprimé sous peu si la justification est valide',
-                                        'success'
-                                    );
+                                        // Add cross icon
+                                        $("#" + match_id + " .cross_icon")[0].style.display = "block";
 
-                                    // Add cross icon
-                                    $("#" + match_id + " .cross_icon")[0].style.display = "block";
-
-                                }).catch(function(error) {
-                                    swal({
-                                        type: 'error',
-                                        title: 'Erreur',
-                                        text: 'Il y a eu un problème lors de la suppression du match'
+                                    }).catch(function(error) {
+                                        swal({
+                                            type: 'error',
+                                            text: 'Il y a eu un problème lors de la suppression du match',
+                                            toast: true,
+                                            position: 'top-start',
+                                            timer: 3000,
+                                            showConfirmButton: false
+                                        });
                                     });
-                                });
-                        }
+                            }
+                        });
+                } else {
+                    swal({
+                        type: 'error',
+                        html: 'Vous devez vous authentifier pour supprimer des matchs <i class="em em-man-gesturing-no"></i>',
+                        toast: true,
+                        position: 'top-start',
+                        timer: 4500,
+                        showConfirmButton: false
                     });
+                }
             } else {
                 swal({
                     type: 'error',
-                    title: 'Erreur',
-                    text: 'Veuillez ajouter une raison pour cette suppression'
+                    text: 'Veuillez ajouter une raison pour cette suppression',
+                    toast: true,
+                    position: 'top-start',
+                    timer: 3000,
+                    showConfirmButton: false
                 });
             }
         })
