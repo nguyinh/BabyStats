@@ -422,6 +422,7 @@ function linkToPlayer() {
 
                 document.getElementById("link_button").innerHTML = 'Lier le compte';
                 document.getElementById("link_button").disabled = false;
+                document.getElementById("link_button").style.display = 'none';
             }
             // No uid found for connected user in Firestore
             else {
@@ -476,6 +477,24 @@ function linkToPlayer() {
                                 for (var i = 0; i < player_buffer.length; i++) {
                                     $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerRadiobox(player_buffer[i], n++));
                                 }
+
+
+                                // Container for a new player not in database
+                                $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">Nouveau joueur</h2>');
+                                $("#sw_container")[0].insertAdjacentHTML('beforeend', '<div class="container mt-2">' +
+                                    '<div class="row mb-2">' +
+                                    '<label>' +
+                                    '<input type="radio" class="option-input radio" name="player_selection" id="rb_new_player"/>' +
+                                    '<span style="font-weight: bold; font-size: 1.5rem;">Créer un profil <i class="em em-baby"></i></span>' +
+                                    '</label>' +
+                                    '</div>' +
+                                    '<div class="row mb-2">' +
+                                    '<input type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon1" id="rb_name_input">' +
+                                    '<input type="text" class="form-control" placeholder="Nom" aria-describedby="basic-addon1" id="rb_lastname_input">' +
+                                    '<input type="text" class="form-control" placeholder="Service (SCFH, SFTA ...)" aria-describedby="basic-addon1" id="rb_team_input">' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<hr/>');
                             })
                             .catch(function(error) {
                                 console.log("Error getting documents: ", error);
@@ -494,34 +513,192 @@ function linkToPlayer() {
                             }
                         }
 
-                        // Update player's UID (in Firestore) with actual connected user
-                        var user = firebase.auth().currentUser;
-                        db.collection("players")
-                            .where("name", "==", buttonName.split('_')[2])
-                            .get()
-                            .then(function(querySnapshot) {
-                                querySnapshot.forEach(function(doc) {
-                                    db.collection("players")
-                                        .doc(doc.id)
-                                        .update({
-                                            uid: user.uid
-                                        })
-                                        .then(function(querySnapshot) {
-                                            swal({
-                                                toast: true,
-                                                position: 'top-start',
-                                                showConfirmButton: false,
-                                                timer: 3000,
-                                                type: 'success',
-                                                title: 'Lié pour la vie <i class="em em-link"></i> <i class="em em-heart"></i>'
-                                            });
-                                            document.getElementById("link_button").innerHTML = 'Lier le compte';
-                                            document.getElementById("link_button").disabled = false;
-                                            document.getElementById("link_button").style.display = 'none';
-                                            // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
-                                        });
-                                })
+                        // If no radio box is selected, display warning
+                        if (buttonName == null) {
+                            swal({
+                                toast: true,
+                                position: 'top-start',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                type: 'warning',
+                                title: 'Selectionnez ou créez un joueur'
                             });
+
+                            document.getElementById("link_button").innerHTML = 'Lier le compte';
+                            document.getElementById("link_button").disabled = false;
+                            return false;
+                        }
+
+                        // If create player radio button is checked
+                        if (buttonName === 'rb_new_player') {
+                            var name = document.getElementById("rb_name_input").value.trim();
+                            var lastname = document.getElementById("rb_lastname_input").value.trim();
+                            var team = document.getElementById("rb_team_input").value.toUpperCase().trim();
+
+                            // If inputs are not empty( = valid)
+                            if (name != "" && lastname != "" && team != "") {
+                                name = name.charAt(0).toUpperCase() + name.slice(1);
+                                var fullname = name + " " + lastname.charAt(0).toUpperCase() + ".";
+
+                                // Add player to database
+                                db.collection("players")
+                                    .orderBy("number")
+                                    .get()
+                                    .then(docSnapshot => {
+
+                                        // Change name if already present
+                                        sorted_names = [];
+                                        for (i = 0; i < docSnapshot.docs.length; i++) {
+                                            sorted_names.push(docSnapshot.docs[i].data().name); // get all names
+                                        }
+                                        sorted_names = sorted_names.sort(); // sort alphabetically
+
+                                        var past_names = [];
+                                        var n = lastname.length - 2;
+                                        for (i = 0; i < sorted_names.length; i++) {
+                                            if (!past_names.includes(sorted_names[i])) { // if name has already been compared, pass
+                                                while (sorted_names[i] == fullname) {
+                                                    // Add a letter to the last name until it is different from others
+                                                    if (lastname.slice(lastname.length - n - 1, lastname.length - n) == " ")
+                                                        n--;
+                                                    fullname = name.charAt(0).toUpperCase() + name.slice(1) + " " + lastname.charAt(0).toUpperCase() + lastname.slice(1, lastname.length - n--) + ".";
+                                                    if (n < 0) { // if all letters failed, return error
+                                                        swal({
+                                                            html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                                            type: 'error',
+                                                            toast: true,
+                                                            position: 'top-start',
+                                                            timer: 3000,
+                                                            showConfirmButton: false
+                                                        });
+
+                                                        // Remove loading button
+                                                        document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                        document.getElementById("link_button").disabled = false;
+                                                        return;
+                                                    }
+                                                }
+                                                past_names.push(sorted_names[i]);
+                                            }
+                                        }
+
+                                        // New player object
+                                        var added_player = {
+                                            number: 1, // used to sort data when is get
+                                            invert_number: -1,
+                                            name: fullname,
+                                            last_name: lastname,
+                                            first_name: name,
+                                            team: team,
+                                            goals: 0,
+                                            gamelles: 0,
+                                            betrays: 0,
+                                            wins: 0,
+                                            defeats: 0,
+                                            isActive: true,
+                                            uid: firebase.auth().currentUser.uid,
+                                            photoURL: firebase.auth().currentUser.photoURL,
+                                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                                        };
+
+                                        // If there is at least one player in "players" collection
+                                        if (docSnapshot.docs.length != 0) {
+                                            // Get the last visible document (= last match played)
+                                            added_player.number = docSnapshot.docs[docSnapshot.docs.length - 1].data().number + 1;
+                                            added_player.invert_number = -docSnapshot.docs[docSnapshot.docs.length - 1].data().number - 1;
+                                        }
+
+                                        db.collection("players")
+                                            .doc("player" + added_player.number)
+                                            .set(added_player)
+                                            .then(function() {
+                                                // Remove loading button
+                                                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                document.getElementById("link_button").disabled = false;
+
+                                                var quotes = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
+                                                    "Salut " + name + ", que la force soit avec toi <i class=\"em em-pray\"></i>",
+                                                    "Ah " + name + " ! On t'attendait <i class=\"em em-wink\"></i>",
+                                                    "Penses à bien t'échauffer les poignets " + name + " <i class=\"em em-raised_hands\"></i>"
+                                                ]
+
+                                                swal({
+                                                    html: quotes[Math.floor(Math.random() * quotes.length)],
+                                                    type: 'success',
+                                                    toast: true,
+                                                    position: 'top-start',
+                                                    timer: 3000,
+                                                    showConfirmButton: false
+                                                });
+
+                                                document.getElementById("link_button").style.display = 'none';
+                                            })
+                                            .catch(function(error) {
+                                                console.error("Error writing document: ", error);
+                                                swal({
+                                                    html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                                    type: 'error',
+                                                    toast: true,
+                                                    position: 'top-start',
+                                                    timer: 3000,
+                                                    showConfirmButton: false
+                                                });
+                                            });
+
+
+
+                                    })
+                                    .catch(function(error) {
+                                        console.log("Error getting document:", error);
+                                        swal({
+                                            html: 'L\'ajout du joueur a échoué <i class=\"em em-confused\"></i>',
+                                            type: 'error',
+                                            toast: true,
+                                            position: 'top-start',
+                                            timer: 3000,
+                                            showConfirmButton: false
+                                        });
+                                    });
+
+                            } else {
+                                // Put inputs in red if missing
+                                if (name == "")
+                                    $("#name_input").addClass("is-invalid");
+                                if (name == "")
+                                    $("#lastname_input").addClass("is-invalid");
+                                if (team == "")
+                                    $("#team_input").addClass("is-invalid");
+                            }
+                        } else {
+                            // Update player's UID (in Firestore) with actual connected user
+                            var user = firebase.auth().currentUser;
+                            db.collection("players")
+                                .where("name", "==", buttonName.split('_')[2])
+                                .get()
+                                .then(function(querySnapshot) {
+                                    querySnapshot.forEach(function(doc) {
+                                        db.collection("players")
+                                            .doc(doc.id)
+                                            .update({
+                                                uid: user.uid
+                                            })
+                                            .then(function(querySnapshot) {
+                                                swal({
+                                                    toast: true,
+                                                    position: 'top-start',
+                                                    showConfirmButton: false,
+                                                    timer: 3000,
+                                                    type: 'success',
+                                                    title: 'Lié pour la vie <i class="em em-link"></i> <i class="em em-heart"></i>'
+                                                });
+                                                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                document.getElementById("link_button").disabled = false;
+                                                document.getElementById("link_button").style.display = 'none';
+                                                // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
+                                            });
+                                    })
+                                });
+                        }
                     }
                 }).then((result) => {
                     if (result.dismiss === swal.DismissReason.backdrop ||
