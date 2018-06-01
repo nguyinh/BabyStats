@@ -53,16 +53,17 @@ function compareNombres(a, b) {
 }
 
 
-
+// db.collection("matches");
 
 // Récupération des matches et ré-organisation par ordre croissant
-db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
+db.collection("matches").where("season", "==", "season2").orderBy("number").get().then(function(querySnapshot) {
     var data = querySnapshot.docs.map(function(documentSnapshot) {
         return documentSnapshot.data();
     });
-
+    console.log("nombre de matches: ", data.length)
+    console.log(data)
     // Avoir les statistiques descriptives à partir du match nº18 par joueur
-    for (i = 18; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
 
         // Stock in temporary variables to compute ELOs
 
@@ -358,14 +359,16 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
         change_player3 = players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k * (Sa - Ec)
         change_player4 = players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k * (Sa - Ed)
 
-        console.log(i + ", " + "TEAM1 :" + data[i].player1 + ", " + data[i].player2 + ", " +
-            "TEAM2 :" + data[i].player3 + ", " + data[i].player4 + ", " + ", " + "P1v2:" + Ea + ", " + "P2v1:" + Ec + ", " +
-            "SCORE_TEAM1 :" + data[i].score1 + ", " + "SCORE_TEAM2 :" + data[i].score2 + ", " + "ELO1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo +
-            ", " + "ELO2:" + players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo + ", " + "ELO3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo +
-            ", " + "ELO4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo, ", " + "Sa :" + Sa + ", " +
-            "K1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K2:" +
-            players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k + ", " +
-            "K4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k)
+        // console.log(i + ", " + "TEAM1 :" + data[i].player1 + ", " + data[i].player2 + ", " +
+        //     "TEAM2 :" + data[i].player3 + ", " + data[i].player4 + ", " + ", " + "P1v2:" + Ea + ", " + "P2v1:" + Ec + ", " +
+        //     "SCORE_TEAM1 :" + data[i].score1 + ", " + "SCORE_TEAM2 :" + data[i].score2 + ", " + "ELO1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo +
+        //     ", " + "ELO2:" + players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo + ", " + "ELO3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].elo +
+        //     ", " + "ELO4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].elo, ", " + "Sa :" + Sa + ", " +
+        //     "K1:" + players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K2:" +
+        //     players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].k + ", " + "K3:" + players[String(data[i].player3.replace(/ /g, "_").replace(/\./g, ''))].k + ", " +
+        //     "K4:" + players[String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))].k)
+
+
         if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
             players[String(data[i].player1.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player1
             players[String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))].elo += change_player2
@@ -423,7 +426,7 @@ db.collection("matches").orderBy("number").get().then(function(querySnapshot) {
 
     // Display ELO Classification
     var classification = document.getElementById("classification")
-
+    console.log(names)
     // Sort players according to their ELO
     var sort_elo = []
     for (j = 0; j < names.length; j++) {
@@ -871,129 +874,3 @@ function reply_click(clicked_id) {
         confirmButtonText: 'OK',
     })
 }
-
-
-
-// document.getElementById('palmares').addEventListener('click', function() {
-//     document.getElementById('ranking').style.display = "none";
-//     document.getElementById('palmares_number_wins').style.display = "";
-//     document.getElementById('best_player').style.display = "";
-//     document.getElementById('second_best_player').style.display = "";
-//     document.getElementById('third_best_player').style.display = "";
-//
-//     document.getElementById('palmares_ratio_wins').style.display = "";
-//     document.getElementById('best_player_wins').style.display = "";
-//     document.getElementById('second_best_player_wins').style.display = "";
-//     document.getElementById('third_best_player_wins').style.display = "";
-//
-//     document.getElementById('palmares_meilleur_buteur').style.display = "";
-//     document.getElementById('best_player_goals').style.display = "";
-//     document.getElementById('second_best_player_goals').style.display = "";
-//     document.getElementById('third_best_player_goals').style.display = "";
-//
-//
-//     document.getElementById('chartNumberofPlays').style.display = "none";
-//     document.getElementById('chartGoalslastPlay').style.display = "none";
-//     document.getElementById('chartNumberofWins').style.display = "none";
-//     document.getElementById('chartRatioWinLoss').style.display = "none";
-//     document.getElementById('chartTotalGoals').style.display = "none";
-//     document.getElementById('chartGoalsperPlay').style.display = "none";
-// });
-//
-// document.getElementById('graphs').addEventListener('click', function() {
-//     document.getElementById('ranking').style.display = "none";
-//     document.getElementById('chartNumberofPlays').style.display = "";
-//     document.getElementById('chartGoalslastPlay').style.display = "";
-//     document.getElementById('chartNumberofWins').style.display = "";
-//     document.getElementById('chartRatioWinLoss').style.display = "";
-//     document.getElementById('chartTotalGoals').style.display = "";
-//     document.getElementById('chartGoalsperPlay').style.display = "";
-//
-//
-//     document.getElementById('palmares_number_wins').style.display = "none";
-//     document.getElementById('best_player').style.display = "none";
-//     document.getElementById('second_best_player').style.display = "none";
-//     document.getElementById('third_best_player').style.display = "none";
-//
-//     document.getElementById('palmares_ratio_wins').style.display = "none";
-//     document.getElementById('best_player_wins').style.display = "none";
-//     document.getElementById('second_best_player_wins').style.display = "none";
-//     document.getElementById('third_best_player_wins').style.display = "none";
-//
-//     document.getElementById('palmares_meilleur_buteur').style.display = "none";
-//     document.getElementById('best_player_goals').style.display = "none";
-//     document.getElementById('second_best_player_goals').style.display = "none";
-//     document.getElementById('third_best_player_goals').style.display = "none";
-// });
-//
-// document.getElementById('classement').addEventListener('click', function() {
-//     document.getElementById('ranking').style.display = "";
-//     document.getElementById('palmares_number_wins').style.display = "none";
-//     document.getElementById('best_player').style.display = "none";
-//     document.getElementById('second_best_player').style.display = "none";
-//     document.getElementById('third_best_player').style.display = "none";
-//
-//     document.getElementById('palmares_ratio_wins').style.display = "none";
-//     document.getElementById('best_player_wins').style.display = "none";
-//     document.getElementById('second_best_player_wins').style.display = "none";
-//     document.getElementById('third_best_player_wins').style.display = "none";
-//
-//     document.getElementById('palmares_meilleur_buteur').style.display = "none";
-//     document.getElementById('best_player_goals').style.display = "none";
-//     document.getElementById('second_best_player_goals').style.display = "none";
-//     document.getElementById('third_best_player_goals').style.display = "none";
-//
-//     document.getElementById('chartNumberofPlays').style.display = "none";
-//     document.getElementById('chartGoalslastPlay').style.display = "none";
-//     document.getElementById('chartNumberofWins').style.display = "none";
-//     document.getElementById('chartRatioWinLoss').style.display = "none";
-//     document.getElementById('chartTotalGoals').style.display = "none";
-//     document.getElementById('chartGoalsperPlay').style.display = "none";
-// });
-
-
-
-
-
-
-
-
-
-// Ajouter des choses à la base de données
-// db.collection("players_jeremy")
-//     .doc("player1")
-//     .set({username: "test"});
-
-// Comment faire rentrer des variables dans le code R ?
-// ocpu.seturl("//public.opencpu.org/ocpu/library/base/R")
-// var code_R = $("#code_R").load("test.txt", function() {
-//   // console.log(code_R.innerHTML);
-// })[0];
-//
-// var mysnippet = new ocpu.Snippet("");
-// var req = ocpu.call("identity", {
-//   "x": mysnippet
-// }, function(session) {
-//   session.getConsole(function(outtxt) {
-//     $("#output").text(outtxt);
-//   });
-// });
-
-
-//because identity is in base
-
-
-//document.getElementbyId("submitbutton").addEventListener("click", function {})
-
-
-
-//if R returns an error, alert the error message
-// req.fail(function() {
-//   alert("Server error: " + req.responseText);
-// });
-//
-// req.always(function() {
-//   $("button").removeAttr("disabled");
-// });
-
-// setTimeout(function(){  }, 5000);
