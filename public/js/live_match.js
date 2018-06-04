@@ -68,6 +68,8 @@ db.collection("players")
                 opt.innerHTML = player_buffer[i];
                 selectsElements[j].appendChild(opt);
             }
+            selectsElements[j].disabled = false;
+            selectsElements[j].options[0].innerHTML = "Joueur " + (j + 1);
         }
     })
     .catch(function(error) {
