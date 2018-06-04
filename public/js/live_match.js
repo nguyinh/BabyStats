@@ -21,6 +21,16 @@ var player4select = document.getElementById('player4_input');
 
 var selectsElements = [player1select, player2select, player3select, player4select];
 
+var dotLoadingInterval = setInterval(function() {
+    for (var s = 0; s < selectsElements.length; s++) { // Foreach option boxes
+        var elmt = selectsElements[s].options[0].innerHTML;
+
+        selectsElements[s].options[0].innerHTML = (elmt == "" ? "." : (elmt == "." ? ".." : (elmt == ".." ? "..." : (elmt == "..." ? "" : ""))));
+    }
+}, 350);
+
+
+
 
 // Get all players from database and PSA teams then fill 'select' elements with it
 db.collection("players")
@@ -71,6 +81,8 @@ db.collection("players")
             selectsElements[j].disabled = false;
             selectsElements[j].options[0].innerHTML = "Joueur " + (j + 1);
         }
+
+        clearInterval(dotLoadingInterval);
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
