@@ -339,7 +339,7 @@ document.getElementById("imageUploadButton").addEventListener('change', function
             }
             // No uid found for connected user in Firestore
             else {
-                console.log("no user");
+                // console.log("no user");
 
                 swal({
                     toast: true,
@@ -644,9 +644,6 @@ function linkToPlayer() {
                                                     showConfirmButton: false
                                                 });
                                             });
-
-
-
                                     })
                                     .catch(function(error) {
                                         console.log("Error getting document:", error);
