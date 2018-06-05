@@ -98,16 +98,34 @@
                 <div class="col-9">
                     <h3 style="text-align: left; vertical-align: bottom;" class="m-0 mt-1" id="welcome_message">Bienvenue </h3>
                 </div>
+
+                <div class="col-12">
+                    <hr class="mx-1 mt-3" />
+                </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="row mt-3" id="link_button_container" style="display: none;">
                 <div class="col-10 offset-1">
-                    <button type='button' class='btn btn-primary btn-lg btn-block' onclick="linkToPlayer()" id="link_button" style="display: none;">Lier le compte à un joueur</button>
+                    <button type='button' class='btn btn-primary btn-lg btn-block' onclick="linkToPlayer()" id="link_button">Lier le compte à un joueur</button>
+                </div>
+            </div>
+
+            <div class="row mt-3" id="is_active_container" style="display: none;">
+                <div class="col-10 ml-4 mb-3">
+                    <h4 style="text-align: left;">Vous êtes inactif</h4>
+                </div>
+
+                <div class="col-10 offset-1">
+                    <button type='button' class='btn btn-dark btn-lg btn-block' onclick="setPlayerActive()" id="set_active_button" style="height: 4rem;">Revenir dans le game <i class="em em-muscle"></i><i class="em em-anger"></i></button>
+                </div>
+
+                <div class="col-12">
+                    <hr class="mx-3 mt-3" />
                 </div>
             </div>
 
             <div class='row mt-3'>
-                <div class='col-12'>
+                <div class='col-10 offset-1'>
                     <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;"><strong>Se déconnecter</strong></button>
                 </div>
             </div>

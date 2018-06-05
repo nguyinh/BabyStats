@@ -195,11 +195,16 @@ firebase.auth().onAuthStateChanged(function(user) {
             .then(function(querySnapshot) {
                 // Firestore player already has uid
                 if (querySnapshot.docs.length != 0) {
-                    document.getElementById('link_button').style.display = 'none';
+                    document.getElementById("link_button_container").style.display = 'none';
+                    if (!querySnapshot.docs[0].data().isActive) {
+                        document.getElementById("is_active_container").style.display = 'block';
+                    } else {
+                        document.getElementById("is_active_container").style.display = 'none';
+                    }
                 }
                 // Firestore player already has not uid
                 else {
-                    document.getElementById('link_button').style.display = 'block';
+                    document.getElementById("link_button_container").style.display = 'block';
                 }
             });
     }
@@ -422,7 +427,7 @@ function linkToPlayer() {
 
                 document.getElementById("link_button").innerHTML = 'Lier le compte';
                 document.getElementById("link_button").disabled = false;
-                document.getElementById("link_button").style.display = 'none';
+                document.getElementById("link_button_container").style.display = 'none';
             }
             // No uid found for connected user in Firestore
             else {
@@ -631,7 +636,7 @@ function linkToPlayer() {
                                                     showConfirmButton: false
                                                 });
 
-                                                document.getElementById("link_button").style.display = 'none';
+                                                document.getElementById("link_button_container").style.display = 'none';
                                             })
                                             .catch(function(error) {
                                                 console.error("Error writing document: ", error);
@@ -690,7 +695,7 @@ function linkToPlayer() {
                                                 });
                                                 document.getElementById("link_button").innerHTML = 'Lier le compte';
                                                 document.getElementById("link_button").disabled = false;
-                                                document.getElementById("link_button").style.display = 'none';
+                                                document.getElementById("link_button_container").style.display = 'none';
                                                 // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
                                             });
                                     })
@@ -714,9 +719,60 @@ function linkToPlayer() {
 }
 
 
+function setPlayerActive() {
+    document.getElementById('set_active_button').innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin fa-lg\"></i>";
+    document.getElementById('set_active_button').disabled = true;
+
+    var user = firebase.auth().currentUser;
+
+    // Get player with uid
+    db.collection("players")
+        .where("uid", "==", user.uid)
+        .get()
+        .then(function(querySnapshot) {
+            // Update isActive property
+            db.collection("players")
+                .doc(querySnapshot.docs[0].id)
+                .update({
+                    isActive: true
+                })
+                .then(function() {
+                    swal({
+                        toast: true,
+                        position: 'top-start',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        type: 'success',
+                        title: 'Back in the game <i class="em em-i_love_you_hand_sign"></i>'
+                    });
+
+                    document.getElementById('set_active_button').innerHTML = 'Revenir dans le game <i class="em em-muscle"></i><i class="em em-anger"></i>';
+                    document.getElementById('set_active_button').disabled = false;
+                    document.getElementById('is_active_container').style.display = 'none';
+                });
+        })
+        .catch(function(error) {
+            swal({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000,
+                type: 'error',
+                title: 'Il y a eu un problème durant le changement de statut'
+            });
+
+            document.getElementById('set_active_button').innerHTML = 'Revenir dans le game <i class="em em-muscle"></i><i class="em em-anger"></i>';
+            document.getElementById('set_active_button').disabled = false;
+        })
+}
+
+// TODO: tester logout
+
 function logMode() {
     document.getElementById('log_user_container').style.display = 'block';
     document.getElementById('connected_container').style.display = 'none';
+    document.getElementById('is_active_container').style.display = 'none';
+    document.getElementById('link_button_container').style.display = 'none';
 }
 
 
