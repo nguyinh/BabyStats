@@ -58,7 +58,7 @@ document.getElementById('log_out').addEventListener('click', function() {
         document.getElementById('affiche_connect').style.display = 'block';
         clearArea();
         console.log("logout");
-        document.getElementById('welcome_message').innerHTML = "Bienvenue ";
+        document.getElementById('welcome_message').innerHTML = "Hey ";
         this.style.display = "none";
         document.getElementById('signup').style.display = "block";
         document.getElementById('error_info').style.display = 'none';
@@ -118,7 +118,7 @@ document.getElementById('log_in').addEventListener('click', function() {
                     user.updateProfile({
                         displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value
                     }).then(function() {
-                        document.getElementById('welcome_message').innerHTML += user.displayName;
+                        document.getElementById('welcome_message').innerHTML += user.displayName + ' <i class="em em-wave"></i>';
                     });
                     document.getElementById("log_in").disabled = false;
                     document.getElementById("log_in").innerHTML = "Créer un compte";
@@ -182,7 +182,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         // Check for user name
         if (user.displayName != null)
-            document.getElementById('welcome_message').innerHTML += user.displayName;
+            document.getElementById('welcome_message').innerHTML += user.displayName + ' <i class="em em-wave"></i>';
 
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
