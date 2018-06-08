@@ -76,3 +76,9 @@ hr {
     text-justify: inter-word;
     background: rgb(250, 251, 208);
 }
+
+.profile_title {
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+}

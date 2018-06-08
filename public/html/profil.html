@@ -11,6 +11,7 @@
     <link rel='stylesheet' type='text/css' href='../css/profil.css'>
     <link rel='stylesheet' type='text/css' href='../css/radiobutton.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <!-- https://afeld.github.io/emoji-css/ -->
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
@@ -90,13 +91,14 @@
     <!-- CONNECTED -->
     <div class='row mt-4' style='display: none;' id='connected_container'>
         <div class='col-xl-4 offset-xl-4'>
+            <!-- Welcome header -->
             <div class="row m-0">
                 <div class="col-3 px-1">
                     <img id="profil_picture" src="../blank_profile.png" alt="pp" onclick="$('#imageUploadButton').click()" width="100%;" style="border-radius: 50%;">
                     <i class="fa fa-circle-o-notch fa-spin" style="font-size: 4rem; display: none;" id="load_icon"></i>
                 </div>
                 <div class="col-9">
-                    <h3 style="text-align: left; vertical-align: bottom;" class="m-0 mt-1" id="welcome_message">Hey </h3>
+                    <h3 style="text-align: left; vertical-align: bottom; font-family: 'Roboto', sans-serif; font-weight: Regular;" class="m-0 mt-1" id="welcome_message">Hey </h3>
                 </div>
 
                 <div class="col-12">
@@ -104,15 +106,17 @@
                 </div>
             </div>
 
+            <!-- Link to player -->
             <div class="row mt-3" id="link_button_container" style="display: none;">
                 <div class="col-10 offset-1">
                     <button type='button' class='btn btn-primary btn-lg btn-block' onclick="linkToPlayer()" id="link_button">Lier le compte à un joueur</button>
                 </div>
             </div>
 
+            <!-- Re-activate player -->
             <div class="row mt-3" id="is_active_container" style="display: none;">
                 <div class="col-10 ml-4 mb-3">
-                    <h4 style="text-align: left;">Vous êtes inactif</h4>
+                    <h4 style="text-align: left;" class="profil_title">Vous êtes inactif</h4>
                 </div>
 
                 <div class="col-10 offset-1">
@@ -124,9 +128,30 @@
                 </div>
             </div>
 
-            <div class='row mt-3'>
+            <div class="row mt-3" id="players_infos_container">
+                <div class="col-10 ml-3 mb-3">
+                    <h4 class="profile_title">Informations</h4>
+                </div>
+
+                <div class="col-12">
+                    <hr class="mx-3 mt-3" />
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-10 ml-3 mb-3">
+                    <h4 class="profile_title">Se déconnecter</h4>
+                </div>
+            </div>
+
+            <!-- Log out -->
+            <div class='row'>
                 <div class='col-10 offset-1'>
-                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;"><strong>Se déconnecter</strong></button>
+                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;"><strong>Byebye <i class="em em-man-raising-hand"></i></strong></button>
+                </div>
+
+                <div class="col-12">
+                    <hr class="mx-3 mt-3" />
                 </div>
             </div>
         </div>
@@ -138,9 +163,44 @@
 
 
 
-    <div class="row mt-4" style="margin-right: 2px; margin-left: 2px; display:none;" id="new_season_container">
-        <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
-            <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
+    <div class='row'>
+        <div class='col-xl-4 offset-xl-4'>
+            <div class="row mt-3">
+                <div class="col-10 ml-3 mb-3">
+                    <h4 class="profile_title">Administrateur <i class="em em-crown"></i></h4>
+                </div>
+            </div>
+
+            <!-- New season -->
+            <div class='row' style="display:none;" id="new_season_container">
+                <div class='col-10 offset-1'>
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
+                </div>
+            </div>
+
+            <!-- Players active/inactive -->
+            <div class="row mt-3" style="display:none;" id="players_status_container">
+                <div class="col-10 offset-1">
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button' style="height: 4rem;"><strong>Changer statut joueurs</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="row mt-4" style="display:none;" id="new_season_container">
+        <div class="col-10 ml-3 mb-3">
+            <h4 style="text-align: left; font-family: 'Roboto', sans-serif; font-weight: 500;" class="profil_title">Administrateur</h4>
+        </div>
+
+        <div class='row mt-3'>
+            <div class='col-10 offset-1'>
+                <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -148,7 +208,8 @@
         <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
             <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button' style="height: 4rem;"><strong>Changer statut joueurs</strong></button>
         </div>
-    </div>
+    </div> -->
+
 
     <!--  HISTORY  -->
     <div class="row mt-4" style="margin-right: 2px; margin-left: 2px; display:none;" id="submit_card">
