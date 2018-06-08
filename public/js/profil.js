@@ -1168,9 +1168,12 @@ function reportMatch(match, addToEnd) {
 GetPlayersInfo();
 
 function GetPlayersInfo() {
-    var chart = document.getElementById("doughnut_chart");
+    var chart = document.getElementById("VD_ratio");
+
+    var curve = document.getElementById("ELO_curve");
 
     chart.height = 250;
+    curve.height = 128;
 
     new Chart(chart, {
         type: 'doughnut',
@@ -1181,19 +1184,52 @@ function GetPlayersInfo() {
                     60
                 ],
                 backgroundColor: [
-                    'rgb(215, 111, 125)',
-                    'rgb(80, 223, 90)'
+                    'rgb(194, 33, 33)',
+                    'rgb(29, 184, 40)'
                 ]
             }],
             labels: [
-                "J4",
-                "J3"
+                "Défaites",
+                "Victoires"
             ]
         },
         options: {
             legend: {
                 display: false
             }
+        }
+    });
+
+
+    new Chart(curve, {
+        type: 'line',
+        data: {
+            labels: ['1w', '6d', '5d', '4d', '3d', '2d', '1d', 'now'],
+            // labels: ['1w', '6d', '5d', '4d', '3d', '2d', '1d', 'now', '6d', '5d', '4d', '3d', '2d', '1d', 'now'],
+            datasets: [{
+                data: [1052, 1036, 1022, 1030, 1015, 1025, 1045, 1035],
+                // data: [1052, 1036, 1022, 1030, 1015, 1025, 1045, 1035, 1036, 1022, 1030, 1015, 1025, 1045, 1035],
+                label: "ELO",
+                borderColor: "#bf72f5",
+                fill: false
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            elements: {
+                line: {
+                    tension: 0, // disables bezier curves
+                }
+            },
+            animation: {
+                duration: 0, // general animation time
+            },
+            hover: {
+                animationDuration: 0, // duration of animations when hovering an item
+            },
+            responsiveAnimationDuration: 0, // animation duration after a resize
         }
     });
 }
