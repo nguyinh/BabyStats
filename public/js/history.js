@@ -311,6 +311,7 @@ function deleteMatch(e) {
                 return;
             else if (result.value) {
                 var user = firebase.auth().currentUser;
+                $("#" + match_id + " .load_icon")[0].style.display = "block";
 
                 // Check if user is connected in order to delete matchs
                 if (user) {
@@ -342,6 +343,7 @@ function deleteMatch(e) {
 
                                         // Add cross icon
                                         $("#" + match_id + " .cross_icon")[0].style.display = "block";
+                                        $("#" + match_id + " .load_icon")[0].style.display = "none";
 
                                     }).catch(function(error) {
                                         swal({
@@ -352,6 +354,7 @@ function deleteMatch(e) {
                                             timer: 3000,
                                             showConfirmButton: false
                                         });
+                                        $("#" + match_id + " .load_icon")[0].style.display = "none";
                                     });
                             }
                         });
