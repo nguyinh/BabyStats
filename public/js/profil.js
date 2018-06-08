@@ -50,6 +50,7 @@ document.getElementById('log_out').addEventListener('click', function() {
         // Sign-out successful.
         logMode();
         document.getElementById("admin_container").style.display = "none";
+        document.getElementById("submit_card").style.display = "none";
         document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
         $("#signin").removeClass("mb-3");
@@ -1011,7 +1012,7 @@ function refreshHistory(previous_matchs_number) {
         .then(function(querySnapshot) {
             // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
             document.getElementById("admin_container").style.display = "block";
-
+            document.getElementById("submit_card").style.display = "block";
 
             matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {

@@ -1,7 +1,7 @@
 body {
     background-color: rgb(235, 240, 240);
     padding-bottom: 1rem;
-    font-family: Roboto, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 html, body {
@@ -85,9 +85,13 @@ hr {
 }
 
 .information_box {
-    /* border-style: solid; */
+    border-style: solid;
     border-width: 1px;
     border-color: rgba(0, 0, 0, .1);
+}
+
+.top_box {
+    border-width: 2px 1px 1px 1px;
 }
 
 #victories_number, #total_games, #ranking, #total_goals, #sweat_amount {
