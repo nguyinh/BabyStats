@@ -1164,3 +1164,36 @@ function reportMatch(match, addToEnd) {
     // Add match to bottom of history
     history.insertBefore(match_template, history.lastChild);
 }
+
+GetPlayersInfo();
+
+function GetPlayersInfo() {
+    var chart = document.getElementById("doughnut_chart");
+
+    chart.height = 250;
+
+    new Chart(chart, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    20,
+                    60
+                ],
+                backgroundColor: [
+                    'rgb(215, 111, 125)',
+                    'rgb(80, 223, 90)'
+                ]
+            }],
+            labels: [
+                "J4",
+                "J3"
+            ]
+        },
+        options: {
+            legend: {
+                display: false
+            }
+        }
+    });
+}
