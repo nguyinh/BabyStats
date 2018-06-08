@@ -49,9 +49,7 @@ document.getElementById('log_out').addEventListener('click', function() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
         logMode();
-        document.getElementById("submit_card").style.display = "none";
-        document.getElementById("new_season_container").style.display = "none";
-        document.getElementById("players_status_container").style.display = "none";
+        document.getElementById("admin_container").style.display = "none";
         document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
         $("#signin").removeClass("mb-3");
@@ -425,7 +423,7 @@ function linkToPlayer() {
                     title: 'Déjà lié'
                 });
 
-                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                document.getElementById("link_button").innerHTML = 'Lier mon compte';
                 document.getElementById("link_button").disabled = false;
                 document.getElementById("link_button_container").style.display = 'none';
             }
@@ -529,7 +527,7 @@ function linkToPlayer() {
                                 title: 'Selectionnez ou créez un joueur'
                             });
 
-                            document.getElementById("link_button").innerHTML = 'Lier le compte';
+                            document.getElementById("link_button").innerHTML = 'Lier mon compte';
                             document.getElementById("link_button").disabled = false;
                             return false;
                         }
@@ -578,7 +576,7 @@ function linkToPlayer() {
                                                         });
 
                                                         // Remove loading button
-                                                        document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                        document.getElementById("link_button").innerHTML = 'Lier mon compte';
                                                         document.getElementById("link_button").disabled = false;
                                                         return;
                                                     }
@@ -618,7 +616,7 @@ function linkToPlayer() {
                                             .set(added_player)
                                             .then(function() {
                                                 // Remove loading button
-                                                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                document.getElementById("link_button").innerHTML = 'Lier mon compte';
                                                 document.getElementById("link_button").disabled = false;
 
                                                 var quotes = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
@@ -693,7 +691,7 @@ function linkToPlayer() {
                                                     type: 'success',
                                                     title: 'Lié pour la vie <i class="em em-link"></i> <i class="em em-heart"></i>'
                                                 });
-                                                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                document.getElementById("link_button").innerHTML = 'Lier mon compte';
                                                 document.getElementById("link_button").disabled = false;
                                                 document.getElementById("link_button_container").style.display = 'none';
                                                 // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
@@ -707,7 +705,7 @@ function linkToPlayer() {
                         result.dismiss === swal.DismissReason.cancel ||
                         result.dismiss === swal.DismissReason.close ||
                         result.dismiss === swal.DismissReason.esc) {
-                        document.getElementById("link_button").innerHTML = 'Lier le compte';
+                        document.getElementById("link_button").innerHTML = 'Lier mon compte';
                         document.getElementById("link_button").disabled = false;
                     }
                 });
@@ -1012,9 +1010,8 @@ function refreshHistory(previous_matchs_number) {
         .get()
         .then(function(querySnapshot) {
             // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
-            document.getElementById("submit_card").style.display = "block";
-            document.getElementById("new_season_container").style.display = "block";
-            document.getElementById("players_status_container").style.display = "block";
+            document.getElementById("admin_container").style.display = "block";
+
 
             matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {

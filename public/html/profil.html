@@ -108,15 +108,23 @@
 
             <!-- Link to player -->
             <div class="row mt-3" id="link_button_container" style="display: none;">
+                <div class="col-10 ml-4 mb-3">
+                    <h4 style="text-align: left;" class="profile_title">Vous n'avez pas de profil joueur</h4>
+                </div>
+
                 <div class="col-10 offset-1">
-                    <button type='button' class='btn btn-primary btn-lg btn-block' onclick="linkToPlayer()" id="link_button">Lier le compte à un joueur</button>
+                    <button type='button' class='btn btn-success btn-lg btn-block' onclick="linkToPlayer()" id="link_button" style="height: 4rem; font-weight: bold;">Lier mon compte</button>
+                </div>
+
+                <div class="col-12">
+                    <hr class="mx-3 mt-3" />
                 </div>
             </div>
 
             <!-- Re-activate player -->
             <div class="row mt-3" id="is_active_container" style="display: none;">
                 <div class="col-10 ml-4 mb-3">
-                    <h4 style="text-align: left;" class="profil_title">Vous êtes inactif</h4>
+                    <h4 style="text-align: left;" class="profile_title">Vous êtes inactif</h4>
                 </div>
 
                 <div class="col-10 offset-1">
@@ -163,7 +171,7 @@
 
 
 
-    <div class='row'>
+    <div class='row' id="admin_container" style="display:none;">
         <div class='col-xl-4 offset-xl-4'>
             <div class="row mt-3">
                 <div class="col-10 ml-3 mb-3">
@@ -172,14 +180,14 @@
             </div>
 
             <!-- New season -->
-            <div class='row' style="display:none;" id="new_season_container">
+            <div class='row' id="new_season_container">
                 <div class='col-10 offset-1'>
                     <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
                 </div>
             </div>
 
             <!-- Players active/inactive -->
-            <div class="row mt-3" style="display:none;" id="players_status_container">
+            <div class="row mt-3" id="players_status_container">
                 <div class="col-10 offset-1">
                     <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button' style="height: 4rem;"><strong>Changer statut joueurs</strong></button>
                 </div>
