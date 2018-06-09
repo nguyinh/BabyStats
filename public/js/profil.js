@@ -195,6 +195,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 // Firestore player already has uid
                 if (querySnapshot.docs.length != 0) {
                     document.getElementById("link_button_container").style.display = 'none';
+                    document.getElementById('players_infos_container').style.display = 'flex';
                     if (!querySnapshot.docs[0].data().isActive) {
                         document.getElementById("is_active_container").style.display = 'block';
                     } else {
@@ -204,6 +205,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 // Firestore player already has not uid
                 else {
                     document.getElementById("link_button_container").style.display = 'block';
+                    document.getElementById('players_infos_container').style.display = 'none';
                 }
             });
     }
@@ -636,6 +638,7 @@ function linkToPlayer() {
                                                 });
 
                                                 document.getElementById("link_button_container").style.display = 'none';
+                                                document.getElementById('players_infos_container').style.display = 'flex';
                                             })
                                             .catch(function(error) {
                                                 console.error("Error writing document: ", error);
@@ -765,13 +768,13 @@ function setPlayerActive() {
         })
 }
 
-// TODO: tester logout
 
 function logMode() {
     document.getElementById('log_user_container').style.display = 'block';
     document.getElementById('connected_container').style.display = 'none';
     document.getElementById('is_active_container').style.display = 'none';
     document.getElementById('link_button_container').style.display = 'none';
+    document.getElementById('players_infos_container').style.display = 'none';
 }
 
 
