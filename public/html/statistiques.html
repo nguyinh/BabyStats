@@ -7,21 +7,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+
     <!-- Bootstrap CSS -->
+    <!-- Cette ligne permet d'obtenir la navbar toute belle -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/statistiques.css">
 
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
-    <!-- <script src="https://npmcdn.com/Chart.Zoom.js@latest/Chart.Zoom.min.js"></script> -->
-    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+
     <script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
-
-    <title>Statistiques | BabyStats</title>
 </head>
 
+
 <body>
+
+
+
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
         <a class="navbar-brand" href="#">BabyStats</a>
@@ -32,7 +37,15 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link" href="../index.html">Live match</a>
                 <a class="nav-item nav-link" href="history.html">Historique</a>
-                <a class="nav-item nav-link active" href="statistiques.html">Statistiques<span class="sr-only">(current)</span></a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Statistiques
+                    </a>
+                    <div id="demolist2" class="dropdown-menu">
+                        <p><li><a class="dropdown-item" href="#">Saison 1</a></li></p>
+                        <p><li><a class="dropdown-item" href="#">Saison 2</a></li></p>
+                    </div>
+                </div>
                 <a class="nav-item nav-link" href="parametres.html">Paramètres</a>
             </div>
         </div>
@@ -45,157 +58,72 @@
         </div>
     </nav>
 
-<!-- Bouton de test -->
-    <!-- <div class="container pr-0 pl-0 mt-4">
-        <div class="row no-gutters mt-1" id="TEST">
-            <div class="col-xl-2 offset-xl-5 col-8 offset-2">
-                <button type="button" class="btn btn-success btn-block" id="validate_button">Test</button>
-            </div>
-        </div>
-    </div> -->
+    <!-- TEST TEXT -->
 
+    <!-- Switch équipe/individuel -->
+    <div id="toggles">
+        <input type="checkbox" name="checkbox1" id="checkbox1" class="ios-toggle" checked/>
+        <label for="checkbox1" class="checkbox-label" data-off="Individuel" data-on="Équipes"></label>
+    </div>
 
-
-    <div id="container">
-        <div class="row">
-            <div class="col-12 col-xl-8 offset-xl-2">
-                <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Classement</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Top 3</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Graphiques</a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="myTabContent">
-                    <!-- RANKING -->
-                    <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        <div class="wrapper">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Rang</th>
-                                        <th>Joueur</th>
-                                        <th>Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="classification">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- TOP 3 -->
-                    <div class="tab-pane fade mt-3" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <!-- Palmarès nombre de victoires -->
-                        <div class="col-12 col-xl-8 offset-xl-2">
-                            <div style="margin-top:20px"></div>
-                            <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_number_wins">Palmarès Nombre de Victoires</font></b></p>
-                            <div class="podium">
-
-                                <div id="best_player_wins"><span></span></div>
-                                <div id="second_best_player_wins"><span></span></div>
-                                <div id="third_best_player_wins"><span></span></div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-xl-8 offset-xl-2">
-                            <!-- Palmarès ratio victoires/défaites -->
-                            <div style="margin-top:20px"></div>
-                            <p class="text-center" text-align:center><b><font color="#4169E1" id="palmares_ratio_wins">Palmarès Ratio Victoires/Défaites</font></b></p>
-                            <div class="podium">
-
-                                <div id="best_player"><span></span></div>
-                                <div id="second_best_player"><span></span></div>
-                                <div id="third_best_player"><span></span></div>
-                            </div>
-                        </div>
-
-
-
-                        <!-- Palmarès meilleur buteur -->
-                        <div class="col-12 col-xl-8 offset-xl-2">
-                            <div style="margin-top:20px"></div>
-                            <p class="text-center" text-align:center id="palmares_meilleur_buteur"><b><font color="#4169E1">Palmarès Meilleur Buteur</font></b></p>
-                            <div class="podium">
-
-                                <div id="best_player_goals"><span></span></div>
-                                <div id="second_best_player_goals"><span></span></div>
-                                <div id="third_best_player_goals"><span></span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- GRAPHS -->
-                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                        <!-- Graphiques -->
-                        <div class="row pt-2 pb-2 odd-graph">
-                            <div class="col-12 col-xl-8 offset-xl-2">
-                                <canvas id="chartGoalslastPlay"></canvas>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="row pt-2 pb-2 even-graph">
-                            <div class="col-12 col-xl-8 offset-xl-2">
-                                <canvas id="chartNumberofWins"></canvas>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="row pt-2 pb-2 odd-graph">
-                            <div class="col-12 col-xl-8 offset-xl-2">
-                                <canvas id="chartRatioWinLoss"></canvas>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="row pt-2 pb-2 even-graph">
-                            <div class="col-12 col-xl-8 offset-xl-2">
-                                <canvas id="chartTotalGoals"></canvas>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="row pt-2 pb-2 odd-graph">
-                            <div class="col-12 col-xl-8 offset-xl-2">
-                                <canvas id="chartGoalsperPlay"></canvas>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="row pt-2 even-graph">
-                            <div class="col-12 col-xl-8 offset-xl-2">
-                                <!-- <div class="chartAreaWrapper"> -->
-                                <canvas id="chartNumberofPlays"></canvas>
-                                <!-- </div> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- ELO RANKING -->
+    <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="wrapper">
+            <table class="table table-striped" id="elo">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0, 'elo')">Rang</th>
+                        <th onclick="sortTable(1, 'elo')">Joueur</th>
+                        <th onclick="sortTable(2, 'elo')">Points</th>
+                        <th onclick="sortTable(3, 'elo')">Joués</th>
+                        <th onclick="sortTable(4, 'elo')"><font size="3" color="green">Gagnés</font></th>
+                        <th onclick="sortTable(5, 'elo')"><font size="3" color="red">Perdus</font></th>
+                        <th onclick="sortTable(6, 'elo')"><font size="3" color="blue">Buts/Match</font></th>
+                        <th onclick="sortTable(7, 'elo')"><font size="3" color="blue">Gamelles/Match</font></th>
+                        <th onclick="sortTable(8, 'elo')"><font size="3" color="blue">CSC/Match</font></th>
+                    </tr>
+                </thead>
+                <tbody id="classification">
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Boîte de texte pour code R -->
-    <!-- <textarea id="input" rows="4" cols="50"> -->
-    <!-- </textarea> -->
+    <!-- ELO RANKING TEAMS VERSION -->
+    <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="wrapper">
+            <table class="table table-striped" id="elo_team">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0, 'elo_team')">Rang</th>
+                        <th onclick="sortTable(1, 'elo_team')">Équipe</th>
+                        <th onclick="sortTable(2, 'elo_team')">Points</th>
+                        <th onclick="sortTable(3, 'elo_team')">Joués</th>
+                        <th onclick="sortTable(4, 'elo_team')">Gagnés</th>
+                        <th onclick="sortTable(5, 'elo_team')">Perdus</th>
+                    </tr>
+                </thead>
+                <tbody id="classification_team">
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <!-- Bouton pour soumettre le code R -->
-    <!-- <br /> <button id="submitbutton" type="button">Call R</button> -->
+    <!-- Choix des courbes à afficher -->
+    <div class="form-group">
+        <label for="sel1">Sélectionnez un joueur à afficher:</label>
+        <select class="form-control" id="sel1">
+        </select>
+    </div>
 
-    <!-- <pre><code id="output"></code></pre> -->
+    <div class="row pt-2 pb-2 even-graph">
+        <div class="col-12 col-xl-8 offset-xl-2">
+            <canvas id="line"></canvas>
+        </div>
+    </div>
 
 
-    <!-- <code id="code_R" style="display: none;"></code> -->
+
 
     <!-- SCRIPTS -->
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
@@ -219,6 +147,92 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="../js/statistiques.js"></script>
     <script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
-</body>
 
-</html>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+    function sortTable(n, id) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById(id);
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc";
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.getElementsByTagName("TR");
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+              if (Number(x.innerHTML).isInteger){
+                  if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                      shouldSwitch = true;
+                      break;
+                  }
+              }
+              else {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+        }
+
+          } else if (dir == "desc") {
+              if (Number(x.innerHTML).isInteger){
+              if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                  shouldSwitch = true;
+                  break;
+              }
+          }
+          else {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+        }
+
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++;
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+    </script>
+
+
+</body>
