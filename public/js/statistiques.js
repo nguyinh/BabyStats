@@ -4,6 +4,15 @@
 // Courbe de progression de l'ELO en fonction du temps
 // Graphiques avec joueurs au choix : systeme de dropdown avec choix multiple
 
+// User authentication
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="../blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
+        document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
+    }
+});
+
+
 // Fonction de classement
 function compareNombres(a, b) {
     return a[0] - b[0];
@@ -11,23 +20,21 @@ function compareNombres(a, b) {
 
 // Checkbox si l'on souhaite les statistiques par équipe ou par joueur
 var checkedValue = $('.ios-toggle:checked').val();
-if (String(checkedValue) == "on"){
+if (String(checkedValue) == "on") {
     document.getElementById("elo").style.display = "none"
     document.getElementById("elo_team").style.display = "inline-table"
-}
-else if (String(checkedValue) != "on"){
+} else if (String(checkedValue) != "on") {
     document.getElementById("elo").style.display = "inline-table"
     document.getElementById("elo_team").style.display = "none"
 }
 
-$('.ios-toggle:checked').on('click', function(){
+$('.ios-toggle:checked').on('click', function() {
     var checkedValue = $('.ios-toggle:checked').val();
     console.log(checkedValue)
-    if (String(checkedValue) == "on"){
+    if (String(checkedValue) == "on") {
         document.getElementById("elo").style.display = "none"
         document.getElementById("elo_team").style.display = "inline-table"
-    }
-    else if (String(checkedValue) != "on"){
+    } else if (String(checkedValue) != "on") {
         console.log(checkedValue)
         document.getElementById("elo").style.display = "inline-table"
         document.getElementById("elo_team").style.display = "none"
@@ -39,8 +46,8 @@ $('.ios-toggle:checked').on('click', function(){
 var db = firebase.firestore();
 
 // Déclaration de variables
-$('#demolist2 li').on('click', function(){
-    selected_season = "season"+$(this).text().split(" ")[1]
+$('#demolist2 li').on('click', function() {
+    selected_season = "season" + $(this).text().split(" ")[1]
     statistics(selected_season)
 });
 
@@ -55,7 +62,7 @@ statistics('season2')
 
 // Liste déroulante des saisons
 
-function statistics(selected_season){
+function statistics(selected_season) {
 
     // Initialisation des variables
     var matches
@@ -81,10 +88,9 @@ function statistics(selected_season){
     var start = 0
     var elo_over_time = {}
 
-    if (selected_season=="season1"){
+    if (selected_season == "season1") {
         start = 18;
-    }
-    else if (selected_season!="season1"){
+    } else if (selected_season != "season1") {
         start = 0;
     }
 
@@ -494,9 +500,9 @@ function statistics(selected_season){
 
         // Liste déroulante des joueurs affin d'afficher la progression de l'ELO
         var min = 0,
-        max = names.length,
+            max = names.length,
             select = document.getElementById('sel1');
-        for (var i = min; i<=max; i++){
+        for (var i = min; i <= max; i++) {
             var opt = document.createElement('option');
             opt.value = String(names[i]).replace("_", " ");
             opt.innerHTML = String(names[i]).replace("_", " ");
@@ -505,53 +511,53 @@ function statistics(selected_season){
 
         // Code permettant d'obtenir la valeur du choix effectué dans la liste déroulante
         var liste_joueurs = document.getElementById("sel1");
-        liste_joueurs.onchange = function(){
+        liste_joueurs.onchange = function() {
             var strUser = liste_joueurs.options[liste_joueurs.selectedIndex].value.replace(" ", "_");
-            display_elo_evolution (strUser);
+            display_elo_evolution(strUser);
         }
 
-        function display_elo_evolution (strUser){
-        console.log(elo_over_time[strUser].elo)
-        var size = elo_over_time[strUser].elo.length
-        indexes = [...Array(size).keys()]
-        // Display ELO Evolution
-        new Chart(document.getElementById("line"), {
-                  type: 'line',
-                  data: {
+        function display_elo_evolution(strUser) {
+            console.log(elo_over_time[strUser].elo)
+            var size = elo_over_time[strUser].elo.length
+            indexes = [...Array(size).keys()]
+            // Display ELO Evolution
+            new Chart(document.getElementById("line"), {
+                type: 'line',
+                data: {
                     labels: indexes,
                     datasets: [{
                         label: strUser.replace("_", " "),
                         data: elo_over_time[strUser].elo,
                         borderColor: "#3e95cd",
                         fill: false
-                      }]
-                  },
-                  options: {
-                      legends:{
-                          display:true
-                      },
+                    }]
+                },
+                options: {
+                    legends: {
+                        display: true
+                    },
                     title: {
-                      display: true,
-                      text: 'Points'
-                  },
-                  scales: {
-                      yAxes: [{
-                          scaleLabel: {
-                              display: true,
-                              labelString: 'Points'
-                          }
-                      }],
-                      xAxes: [{
+                        display: true,
+                        text: 'Points'
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Points'
+                            }
+                        }],
+                        xAxes: [{
                             display: true,
                             scaleLabel: {
                                 display: true,
                                 labelString: '# Match'
                             }
                         }]
-                  }
-                  }
-                });
-            }
+                    }
+                }
+            });
+        }
 
 
         // Display ELO Classification
@@ -565,8 +571,7 @@ function statistics(selected_season){
             for (i = 0; i < data.length; i++) {
                 if (players_names.hasOwnProperty(String(data[i].name.replace(/ /g, "_").replace(/\./g, '')))) {
                     players_names.isActive = data[i].isActive;
-                }
-                else players_names[String(data[i].name.replace(/ /g, "_").replace(/\./g, ''))] = {}
+                } else players_names[String(data[i].name.replace(/ /g, "_").replace(/\./g, ''))] = {}
                 players_names[String(data[i].name.replace(/ /g, "_").replace(/\./g, ''))].isActive = data[i].isActive;
             }
             var classification = document.getElementById("classification")
@@ -574,32 +579,32 @@ function statistics(selected_season){
             // Sort players according to their ELO
             var sort_elo = []
             for (j = 0; j < names.length; j++) {
-                if (players_names.hasOwnProperty(names[j])){
+                if (players_names.hasOwnProperty(names[j])) {
 
-                    if (players_names[names[j]].isActive==true){
-                    var temp = []
-                    temp.push(elo[j])
-                    temp.push(names[j])
-                    temp.push(number_of_plays[j])
-                    temp.push(total_wins[j])
-                    temp.push(total_losses[j])
-                    temp.push(goals_per_play[j])
-                    temp.push(gamelles_per_play[j])
-                    temp.push(betray_per_play[j])
+                    if (players_names[names[j]].isActive == true) {
+                        var temp = []
+                        temp.push(elo[j])
+                        temp.push(names[j])
+                        temp.push(number_of_plays[j])
+                        temp.push(total_wins[j])
+                        temp.push(total_losses[j])
+                        temp.push(goals_per_play[j])
+                        temp.push(gamelles_per_play[j])
+                        temp.push(betray_per_play[j])
 
-                    sort_elo.push(temp)
-                    temp = []
-                }
+                        sort_elo.push(temp)
+                        temp = []
+                    }
                 }
             }
             sort_elo.sort(compareNombres).reverse()
             for (i = 0; i < sort_elo.length; i++) {
                 classification.insertAdjacentHTML('beforeend', '<tr><td class="rank">' + String(i + 1) + '</td><td class="team">' + '<button onClick="reply_click(this.id)" style="background:transparent; border:none; cursor:pointer;""   ' + '  id=' + String(sort_elo[i][1]) + '>' +
-                String(sort_elo[i][1]).replace("_", " ") + '</button>' + '</td><td class="points">' +
-                String(Math.round(sort_elo[i][0])) + '</td><td class="points">' + String(Math.round(sort_elo[i][2])) +
-                '</td><td class="points">' + '<font size="3" color="green">' + String(Math.round(sort_elo[i][3])) +  '</font>' + '</td><td class="points">' + '<font size="3" color="red">' + String(Math.round(sort_elo[i][4])) +  '</font>' + '</td><td class="points">' + '<font size="3" color="blue">' +
-                String(Math.round(sort_elo[i][5]*10)/10) + '</font>' + '</td><td class="points">' + '<font size="3" color="blue">' + String(Math.round(sort_elo[i][6]*10)/10)+ '</font>' + '</td><td class="points">' + '<font size="3" color="blue">' + String(Math.round(sort_elo[i][7]*10)/10) +
-                '</font>' + '</td></tr>')
+                    String(sort_elo[i][1]).replace("_", " ") + '</button>' + '</td><td class="points">' +
+                    String(Math.round(sort_elo[i][0])) + '</td><td class="points">' + String(Math.round(sort_elo[i][2])) +
+                    '</td><td class="points">' + '<font size="3" color="green">' + String(Math.round(sort_elo[i][3])) + '</font>' + '</td><td class="points">' + '<font size="3" color="red">' + String(Math.round(sort_elo[i][4])) + '</font>' + '</td><td class="points">' + '<font size="3" color="blue">' +
+                    String(Math.round(sort_elo[i][5] * 10) / 10) + '</font>' + '</td><td class="points">' + '<font size="3" color="blue">' + String(Math.round(sort_elo[i][6] * 10) / 10) + '</font>' + '</td><td class="points">' + '<font size="3" color="blue">' + String(Math.round(sort_elo[i][7] * 10) / 10) +
+                    '</font>' + '</td></tr>')
             }
         });
         return elo_over_time
@@ -625,180 +630,180 @@ function statistics(selected_season){
 
 
     db.collection("matches").where("season", "==", selected_season).orderBy("number").get().then(function(querySnapshot) {
-        var data = querySnapshot.docs.map(function(documentSnapshot) {
-            return documentSnapshot.data();
-        });
-        for (i = 0; i < data.length; i++) {
-            var team1 = [String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')), String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))]
-            var team2 = [String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')), String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))]
-            var player1 = team1.sort()[0]
-            var player2 = team1.sort()[1]
-            var player3 = team2.sort()[0]
-            var player4 = team2.sort()[1]
+            var data = querySnapshot.docs.map(function(documentSnapshot) {
+                return documentSnapshot.data();
+            });
+            for (i = 0; i < data.length; i++) {
+                var team1 = [String(data[i].player1.replace(/ /g, "_").replace(/\./g, '')), String(data[i].player2.replace(/ /g, "_").replace(/\./g, ''))]
+                var team2 = [String(data[i].player3.replace(/ /g, "_").replace(/\./g, '')), String(data[i].player4.replace(/ /g, "_").replace(/\./g, ''))]
+                var player1 = team1.sort()[0]
+                var player2 = team1.sort()[1]
+                var player3 = team2.sort()[0]
+                var player4 = team2.sort()[1]
 
-            // Stock in temporary variables to compute ELOs
-            // Team 1
-            if (team.hasOwnProperty(player1+" "+player2)) {
-                // Si le joueur existe déjà dans le vecteur
-                // Ajouter les buts, gamelles et csc marqués par ce joueur au nombre de buts existants
-                // Ajout au nombre de buts, gamelles et csc totaux
+                // Stock in temporary variables to compute ELOs
+                // Team 1
+                if (team.hasOwnProperty(player1 + " " + player2)) {
+                    // Si le joueur existe déjà dans le vecteur
+                    // Ajouter les buts, gamelles et csc marqués par ce joueur au nombre de buts existants
+                    // Ajout au nombre de buts, gamelles et csc totaux
+                    if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
+                        total_wins_team[Object.keys(team).indexOf(player1 + " " + player2)] += 1
+                    } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
+                        total_losses_team[Object.keys(team).indexOf(player1 + " " + player2)] += 1
+                    }
+
+                    // Dans tous les cas augmenter le nombre de parties jouées de 1
+                    number_of_plays_team[Object.keys(team).indexOf(player1 + " " + player2)] += 1
+
+                    // K coefficient
+                    // Si le nombre de parties jouées est supérieur à 30, K vaut 20
+                    // Si l'ELO du joueur est supérieur à 2400, K vaut 10.
+                    if (number_of_plays_team[Object.keys(team).indexOf(team[player1 + " " + player2])] > 30) {
+                        team[Object.keys(team).indexOf(team[player1 + " " + player2])].k = 20
+                    }
+                    if (team[player1 + " " + player2].elo >= 2400) {
+                        team[player1 + " " + player2].k = 10
+                    }
+
+                    // Ajout des statistiques par match
+                    ratio_wins_team[Object.keys(team).indexOf(team[player1 + " " + player2])] = total_wins_team[Object.keys(team).indexOf([player1 + " " + player2])] / number_of_plays_team[Object.keys(team).indexOf(team[player1 + " " + player2])]
+                    ratio_losses_team[Object.keys(team).indexOf(team[player1 + " " + player2])] = total_losses_team[Object.keys(team).indexOf(team[player1 + " " + player2])] / number_of_plays_team[Object.keys(team).indexOf(team[player1 + " " + player2])]
+
+                } else {
+
+                    // Si le joueur n'existait pas création du joueur
+                    team[player1 + " " + player2] = {}
+
+
+                    // Crediting an initial 1000-point ELO
+                    // K initial vaut 40
+                    team[player1 + " " + player2].elo = 1000;
+                    team[player1 + " " + player2].k = 40;
+
+                    // Création de tous les attributs, totaux et par match
+                    names_team.push(player1 + " " + player2);
+                    number_of_plays_team[Object.keys(team).indexOf(player1 + " " + player2)] = 1
+
+                    // Si l'équipe du joueur a gagné ou perdu
+                    if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
+                        total_wins_team[Object.keys(team).indexOf(player1 + " " + player2)] = 1
+                        total_losses_team[Object.keys(team).indexOf(player1 + " " + player2)] = 0
+                    } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
+                        total_wins_team[Object.keys(team).indexOf(player1 + " " + player2)] = 0
+                        total_losses_team[Object.keys(team).indexOf(player1 + " " + player2)] = 1
+                    }
+                    ratio_wins_team[Object.keys(team).indexOf(team[player1 + " " + player2])] = total_wins_team[Object.keys(team).indexOf(team[player1 + " " + player2])] / number_of_plays_team[Object.keys(team).indexOf(team[player1 + " " + player2])]
+                    ratio_losses_team[Object.keys(team).indexOf(team[player1 + " " + player2])] = total_wins_team[Object.keys(team).indexOf(team[player1 + " " + player2])] / number_of_plays_team[Object.keys(team).indexOf(team[player1 + " " + player2])]
+
+                }
+
+
+
+                // Team 2
+                if (team.hasOwnProperty(player3 + " " + player4)) {
+                    // Si le joueur existe déjà dans le vecteur
+                    // Ajouter les buts, gamelles et csc marqués par ce joueur au nombre de buts existants
+                    // Ajout au nombre de buts, gamelles et csc totaux
+                    if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
+                        total_wins_team[Object.keys(team).indexOf(player3 + " " + player4)] += 1
+                    } else if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
+                        total_losses_team[Object.keys(team).indexOf(player3 + " " + player4)] += 1
+                    }
+
+                    // Dans tous les cas augmenter le nombre de parties jouées de 1
+                    number_of_plays_team[Object.keys(team).indexOf(player3 + " " + player4)] += 1
+
+                    //K coefficient
+                    //Si le nombre de parties jouées est supérieur à 30, K vaut 20
+                    // Si l'ELO du joueur est supérieur à 2400, K vaut 10.
+                    if (number_of_plays_team[Object.keys(team).indexOf(team[player3 + " " + player4])] > 30) {
+                        team[Object.keys(team).indexOf(team[player3 + " " + player4])].k = 20
+                    }
+                    if (team[player3 + " " + player4].elo >= 2400) {
+                        team[player3 + " " + player4].k = 10
+                    }
+
+                    // Ajout des statistiques par match
+                    ratio_wins_team[Object.keys(team).indexOf(team[player3 + " " + player4])] = total_wins_team[Object.keys(team).indexOf([player3 + " " + player4])] / number_of_plays_team[Object.keys(team).indexOf(team[player3 + " " + player4])]
+                    ratio_losses_team[Object.keys(team).indexOf(team[player3 + " " + player4])] = total_losses_team[Object.keys(team).indexOf(team[player3 + " " + player4])] / number_of_plays_team[Object.keys(team).indexOf(team[player3 + " " + player4])]
+
+                } else {
+
+                    // Si le joueur n'existait pas création du joueur
+                    team[player3 + " " + player4] = {}
+
+
+                    // Crediting an initial 1000-point ELO
+                    // K initial vaut 40
+                    team[player3 + " " + player4].elo = 1000;
+                    team[player3 + " " + player4].k = 40;
+
+                    // Création de tous les attributs, totaux et par match
+                    names_team.push(player3 + " " + player4);
+                    number_of_plays_team[Object.keys(team).indexOf(player3 + " " + player4)] = 1
+
+                    // Si l'équipe du joueur a gagné ou perdu
+                    if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
+                        total_wins_team[Object.keys(team).indexOf(player3 + " " + player4)] = 1
+                        total_losses_team[Object.keys(team).indexOf(player3 + " " + player4)] = 0
+                    } else if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
+                        total_wins_team[Object.keys(team).indexOf(player3 + " " + player4)] = 0
+                        total_losses_team[Object.keys(team).indexOf(player3 + " " + player4)] = 1
+                    }
+                    ratio_wins_team[Object.keys(team).indexOf(team[player3 + " " + player4])] = total_wins_team[Object.keys(team).indexOf(team[player3 + " " + player4])] / number_of_plays_team[Object.keys(team).indexOf(team[player3 + " " + player4])]
+                    ratio_losses_team[Object.keys(team).indexOf(team[player3 + " " + player4])] = total_wins_team[Object.keys(team).indexOf(team[player3 + " " + player4])] / number_of_plays_team[Object.keys(team).indexOf(team[player3 + " " + player4])]
+
+                }
+                // console.log(total_wins_team)
+                // Computation of winning probabilities
+
+                D_team1 = team[player1 + " " + player2].elo;
+                D_team2 = team[player1 + " " + player2].elo;
+                difference = D_team2 - D_team1;
+
+
+                if (D_team2 - D_team1 > 400) {
+                    difference = 400
+                } else if (D_team2 - D_team1 < -400) {
+                    difference = -400
+                }
+
+                power = difference / 400;
+
+                // Expected scores
+                Ea = 1 / (1 + Math.pow(10, power));
+                Ec = 1 - Ea;
+
+                Sa = 10 / (10 + Math.min(data[i].score1, data[i].score2));
+
+                change_team1 = team[player1 + " " + player2].k * (Sa - Ea)
+                change_team2 = team[player3 + " " + player4].k * (Sa - Ec)
+
                 if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
-                    total_wins_team[Object.keys(team).indexOf(player1+" "+player2)] += 1
+                    team[player1 + " " + player2].elo += change_team1
+                    team[player3 + " " + player4].elo -= change_team2
                 } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
-                    total_losses_team[Object.keys(team).indexOf(player1+" "+player2)] += 1
+                    team[player1 + " " + player2].elo -= change_team1
+                    team[player3 + " " + player4].elo += change_team2
                 }
+                elo_team[Object.keys(team).indexOf(player1 + " " + player2)] = team[player1 + " " + player2].elo
+                elo_team[Object.keys(team).indexOf(player3 + " " + player4)] = team[player3 + " " + player4].elo
 
-                // Dans tous les cas augmenter le nombre de parties jouées de 1
-                number_of_plays_team[Object.keys(team).indexOf(player1+" "+player2)]  += 1
-
-                // K coefficient
-                // Si le nombre de parties jouées est supérieur à 30, K vaut 20
-                // Si l'ELO du joueur est supérieur à 2400, K vaut 10.
-                if (number_of_plays_team[Object.keys(team).indexOf(team[player1+" "+player2])] > 30) {
-                    team[Object.keys(team).indexOf(team[player1+" "+player2])].k = 20
-                }
-                if (team[player1+" "+player2].elo >= 2400) {
-                    team[player1+" "+player2].k = 10
-                }
-
-                // Ajout des statistiques par match
-                ratio_wins_team[Object.keys(team).indexOf(team[player1+" "+player2])] = total_wins_team[Object.keys(team).indexOf([player1+" "+player2])]  / number_of_plays_team[Object.keys(team).indexOf(team[player1+" "+player2])]
-                ratio_losses_team[Object.keys(team).indexOf(team[player1+" "+player2])] = total_losses_team[Object.keys(team).indexOf(team[player1+" "+player2])]  / number_of_plays_team[Object.keys(team).indexOf(team[player1+" "+player2])]
-
-            } else {
-
-                // Si le joueur n'existait pas création du joueur
-                team[player1+" "+player2] = {}
-
-
-                // Crediting an initial 1000-point ELO
-                // K initial vaut 40
-                team[player1+" "+player2].elo = 1000;
-                team[player1+" "+player2].k = 40;
-
-                // Création de tous les attributs, totaux et par match
-                names_team.push(player1+" "+player2);
-                number_of_plays_team[Object.keys(team).indexOf(player1+" "+player2)] = 1
-
-                // Si l'équipe du joueur a gagné ou perdu
-                if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
-                    total_wins_team[Object.keys(team).indexOf(player1+" "+player2)] = 1
-                    total_losses_team[Object.keys(team).indexOf(player1+" "+player2)] = 0
-                } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
-                    total_wins_team[Object.keys(team).indexOf(player1+" "+player2)] = 0
-                    total_losses_team[Object.keys(team).indexOf(player1+" "+player2)] = 1
-                }
-                ratio_wins_team[Object.keys(team).indexOf(team[player1+" "+player2])] = total_wins_team[Object.keys(team).indexOf(team[player1+" "+player2])]  / number_of_plays_team[Object.keys(team).indexOf(team[player1+" "+player2])]
-                ratio_losses_team[Object.keys(team).indexOf(team[player1+" "+player2])] = total_wins_team[Object.keys(team).indexOf(team[player1+" "+player2])]  / number_of_plays_team[Object.keys(team).indexOf(team[player1+" "+player2])]
-
+                // console.log(i + ", " + "TEAM1 :" + player1+"_"+player2 + ", " +
+                // "TEAM2 :" + player3+"_"+player4 + ", " + "P1v2:" + Ea + ", " + "P2v1:" + Ec + ", " +
+                // "SCORE_TEAM1 :" + data[i].score1 + ", " + "SCORE_TEAM2 :" + data[i].score2 + ", " + "change1: " + change_team1 +
+                // ", " + "change2: " + change_team2 +
+                // "ELO1:" + team[player1+" "+player2].elo +
+                // ", " + "ELO2:" + team[player3+" "+player4].elo)
             }
-
-
-
-            // Team 2
-            if (team.hasOwnProperty(player3+" "+player4)) {
-                // Si le joueur existe déjà dans le vecteur
-                // Ajouter les buts, gamelles et csc marqués par ce joueur au nombre de buts existants
-                // Ajout au nombre de buts, gamelles et csc totaux
-                if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
-                    total_wins_team[Object.keys(team).indexOf(player3+" "+player4)] += 1
-                } else if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
-                    total_losses_team[Object.keys(team).indexOf(player3+" "+player4)] += 1
-                }
-
-                // Dans tous les cas augmenter le nombre de parties jouées de 1
-                number_of_plays_team[Object.keys(team).indexOf(player3+" "+player4)]  += 1
-
-                //K coefficient
-                //Si le nombre de parties jouées est supérieur à 30, K vaut 20
-                // Si l'ELO du joueur est supérieur à 2400, K vaut 10.
-                if (number_of_plays_team[Object.keys(team).indexOf(team[player3+" "+player4])] > 30) {
-                    team[Object.keys(team).indexOf(team[player3+" "+player4])].k = 20
-                }
-                if (team[player3+" "+player4].elo >= 2400) {
-                    team[player3+" "+player4].k = 10
-                }
-
-                // Ajout des statistiques par match
-                ratio_wins_team[Object.keys(team).indexOf(team[player3+" "+player4])] = total_wins_team[Object.keys(team).indexOf([player3+" "+player4])]  / number_of_plays_team[Object.keys(team).indexOf(team[player3+" "+player4])]
-                ratio_losses_team[Object.keys(team).indexOf(team[player3+" "+player4])] = total_losses_team[Object.keys(team).indexOf(team[player3+" "+player4])]  / number_of_plays_team[Object.keys(team).indexOf(team[player3+" "+player4])]
-
-            } else {
-
-                // Si le joueur n'existait pas création du joueur
-                team[player3+" "+player4] = {}
-
-
-                // Crediting an initial 1000-point ELO
-                // K initial vaut 40
-                team[player3+" "+player4].elo = 1000;
-                team[player3+" "+player4].k = 40;
-
-                // Création de tous les attributs, totaux et par match
-                names_team.push(player3+" "+player4);
-                number_of_plays_team[Object.keys(team).indexOf(player3+" "+player4)] = 1
-
-                // Si l'équipe du joueur a gagné ou perdu
-                if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
-                    total_wins_team[Object.keys(team).indexOf(player3+" "+player4)] = 1
-                    total_losses_team[Object.keys(team).indexOf(player3+" "+player4)] = 0
-                } else if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
-                    total_wins_team[Object.keys(team).indexOf(player3+" "+player4)] = 0
-                    total_losses_team[Object.keys(team).indexOf(player3+" "+player4)] = 1
-                }
-                ratio_wins_team[Object.keys(team).indexOf(team[player3+" "+player4])] = total_wins_team[Object.keys(team).indexOf(team[player3+" "+player4])]  / number_of_plays_team[Object.keys(team).indexOf(team[player3+" "+player4])]
-                ratio_losses_team[Object.keys(team).indexOf(team[player3+" "+player4])] = total_wins_team[Object.keys(team).indexOf(team[player3+" "+player4])]  / number_of_plays_team[Object.keys(team).indexOf(team[player3+" "+player4])]
-
-            }
-            // console.log(total_wins_team)
-            // Computation of winning probabilities
-
-            D_team1 = team[player1+" "+player2].elo;
-            D_team2 = team[player1+" "+player2].elo;
-            difference = D_team2 - D_team1;
-
-
-            if (D_team2 - D_team1 > 400) {
-                difference = 400
-            } else if (D_team2 - D_team1 < -400) {
-                difference = -400
-            }
-
-            power = difference / 400;
-
-            // Expected scores
-            Ea = 1 / (1 + Math.pow(10, power));
-            Ec = 1 - Ea;
-
-            Sa = 10 / (10 + Math.min(data[i].score1, data[i].score2));
-
-            change_team1 = team[player1+" "+player2].k * (Sa - Ea)
-            change_team2 = team[player3+" "+player4].k * (Sa - Ec)
-
-            if (data[i].score1 == 10 || (data[i].score1 == 5 && data[i].score2 < 5)) {
-                team[player1+" "+player2].elo += change_team1
-                team[player3+" "+player4].elo -= change_team2
-            } else if (data[i].score2 == 10 || (data[i].score2 == 5 && data[i].score1 < 5)) {
-                team[player1+" "+player2].elo -= change_team1
-                team[player3+" "+player4].elo += change_team2
-            }
-            elo_team[Object.keys(team).indexOf(player1+" "+player2)] = team[player1+" "+player2].elo
-            elo_team[Object.keys(team).indexOf(player3+" "+player4)] = team[player3+" "+player4].elo
-
-            // console.log(i + ", " + "TEAM1 :" + player1+"_"+player2 + ", " +
-            // "TEAM2 :" + player3+"_"+player4 + ", " + "P1v2:" + Ea + ", " + "P2v1:" + Ec + ", " +
-            // "SCORE_TEAM1 :" + data[i].score1 + ", " + "SCORE_TEAM2 :" + data[i].score2 + ", " + "change1: " + change_team1 +
-            // ", " + "change2: " + change_team2 +
-            // "ELO1:" + team[player1+" "+player2].elo +
-            // ", " + "ELO2:" + team[player3+" "+player4].elo)
-        }
-        // Display ELO Classification
-        var team_names = {}
-        var classification = document.getElementById("classification_team")
-        classification_team.innerHTML = ""
-        // Sort players according to their ELO
-        var sort_elo_team = []
-        for (j = 0; j < names_team.length; j++) {
+            // Display ELO Classification
+            var team_names = {}
+            var classification = document.getElementById("classification_team")
+            classification_team.innerHTML = ""
+            // Sort players according to their ELO
+            var sort_elo_team = []
+            for (j = 0; j < names_team.length; j++) {
                 var temp = []
                 temp.push(elo_team[j])
                 temp.push(names_team[j])
@@ -807,11 +812,12 @@ function statistics(selected_season){
                 temp.push(total_losses_team[j])
                 sort_elo_team.push(temp)
                 temp = []
+            }
+            sort_elo_team.sort(compareNombres).reverse()
+            for (i = 0; i < sort_elo_team.length; i++) {
+                classification_team.insertAdjacentHTML('beforeend', '<tr><td class="rank">' + String(i + 1) + '</td><td class="team">' + '<button onClick="reply_click(this.id)" style="background:transparent; border:none; cursor:pointer;""   ' + '  id=' + String(sort_elo_team[i][1]) + '>' + String(sort_elo_team[i][1]).replace(/ /g, ' & ').replace("_", " ").replace("_", " ") + '</button>' + '</td><td class="points">' + String(Math.round(sort_elo_team[i][0])) + '</td><td class="points">' + String(Math.round(sort_elo_team[i][2])) + '</td><td class="points">' + String(Math.round(sort_elo_team[i][3])) + '</td><td class="points">' + String(Math.round(sort_elo_team[i][4])) + '</td></tr>')
+            }
         }
-        sort_elo_team.sort(compareNombres).reverse()
-        for (i = 0; i < sort_elo_team.length; i++) {
-            classification_team.insertAdjacentHTML('beforeend', '<tr><td class="rank">' + String(i + 1) + '</td><td class="team">' + '<button onClick="reply_click(this.id)" style="background:transparent; border:none; cursor:pointer;""   ' + '  id=' + String(sort_elo_team[i][1]) + '>' + String(sort_elo_team[i][1]).replace(/ /g, ' & ').replace("_", " ").replace("_", " ") + '</button>' + '</td><td class="points">' + String(Math.round(sort_elo_team[i][0])) + '</td><td class="points">' + String(Math.round(sort_elo_team[i][2])) + '</td><td class="points">' + String(Math.round(sort_elo_team[i][3])) + '</td><td class="points">' + String(Math.round(sort_elo_team[i][4])) + '</td></tr>')
-        }
-    }
 
-)};
+    )
+};
