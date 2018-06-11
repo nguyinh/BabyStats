@@ -9,18 +9,6 @@ var storageRef = storage.ref();
 
 
 
-function afficheProfil() {
-    var user = firebase.auth().currentUser;
-    if (user) {
-        // User is signed in.
-        clearArea();
-        document.getElementById('affiche_connect').style.display = 'none';
-    } else {
-        // No user is signed in.
-        console.log('Grave erreur dans la fonction afficheProfil');
-    }
-}
-
 document.getElementById('signup').addEventListener('click', function() {
     $(".signin_form").css("display", "block");
     $("#signin").removeClass("mb-3");
