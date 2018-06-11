@@ -95,7 +95,7 @@ hr {
     border-width: 2px 1px 1px 1px;
 }
 
-#victories_number, #total_games, #ranking, #total_goals, #sweat_amount {
+.information_box_text {
     font-size: 2.8rem;
 }
 

@@ -194,6 +194,7 @@ firebase.auth().onAuthStateChanged(function(user) {
             .then(function(querySnapshot) {
                 // Firestore player already has uid
                 if (querySnapshot.docs.length != 0) {
+                    GetPlayersInfo(querySnapshot.docs[0].data());
                     document.getElementById("link_button_container").style.display = 'none';
                     document.getElementById('players_infos_container').style.display = 'flex';
                     if (!querySnapshot.docs[0].data().isActive) {
@@ -600,7 +601,7 @@ function linkToPlayer() {
                                             gamelles: 0,
                                             betrays: 0,
                                             wins: 0,
-                                            defeats: 0,
+                                            loses: 0,
                                             isActive: true,
                                             uid: firebase.auth().currentUser.uid,
                                             photoURL: firebase.auth().currentUser.photoURL,
@@ -1169,9 +1170,16 @@ function reportMatch(match, addToEnd) {
     history.insertBefore(match_template, history.lastChild);
 }
 
-GetPlayersInfo();
 
-function GetPlayersInfo() {
+
+function GetPlayersInfo(playerData) {
+    console.log(playerData.goals);
+    document.getElementById('total_wins').innerHTML = playerData.wins;
+    document.getElementById('total_games').innerHTML = playerData.wins + playerData.loses;
+    var rank = playerData.rank == undefined ? 0 : playerData.rank;
+    document.getElementById('ranking').innerHTML = (rank == 1 ? '1er' : (rank == 2 ? '2nd' : rank + 'e'));
+    document.getElementById('total_goals').innerHTML = playerData.goals;
+
     var chart = document.getElementById("VD_ratio");
 
     var curve = document.getElementById("ELO_curve");
@@ -1179,30 +1187,39 @@ function GetPlayersInfo() {
     chart.height = 250;
     curve.height = 128;
 
-    new Chart(chart, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [
-                    20,
-                    60
-                ],
-                backgroundColor: [
-                    'rgb(194, 33, 33)',
-                    'rgb(29, 184, 40)'
+    if (playerData.wins + playerData.loses != 0)
+        new Chart(chart, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        playerData.loses,
+                        playerData.wins
+                    ],
+                    backgroundColor: [
+                        'rgb(194, 33, 33)',
+                        'rgb(29, 184, 40)'
+                    ]
+                }],
+                labels: [
+                    "Défaites",
+                    "Victoires"
                 ]
-            }],
-            labels: [
-                "Défaites",
-                "Victoires"
-            ]
-        },
-        options: {
-            legend: {
-                display: false
+            },
+            options: {
+                legend: {
+                    display: false
+                }
             }
-        }
-    });
+        });
+    else {
+        document.getElementById('VD_ratio').style.display = 'none';
+        document.getElementById('VD_ratio_text').innerHTML = '<i class="em em-no_entry_sign"></i><br/><p style="font-size: 1.25rem;"><br/>Pas de partie jouée</p>';
+        document.getElementById('VD_ratio_text').style = 'font-size: 2.8rem; margin-top: 2rem;'
+        document.getElementById('VD_ratio_text').parentNode.classList.remove("mt-2");
+        document.getElementById('VD_ratio_text').parentNode.classList.add("mt-4");
+    }
+
 
 
     new Chart(curve, {

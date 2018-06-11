@@ -149,7 +149,7 @@ document.getElementById("add_player").addEventListener("click", function() {
                     gamelles: 0,
                     betrays: 0,
                     wins: 0,
-                    defeats: 0,
+                    loses: 0,
                     isActive: true,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
