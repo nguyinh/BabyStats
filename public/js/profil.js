@@ -9,18 +9,6 @@ var storageRef = storage.ref();
 
 
 
-function afficheProfil() {
-    var user = firebase.auth().currentUser;
-    if (user) {
-        // User is signed in.
-        clearArea();
-        document.getElementById('affiche_connect').style.display = 'none';
-    } else {
-        // No user is signed in.
-        console.log('Grave erreur dans la fonction afficheProfil');
-    }
-}
-
 document.getElementById('signup').addEventListener('click', function() {
     $(".signin_form").css("display", "block");
     $("#signin").removeClass("mb-3");
@@ -49,16 +37,15 @@ document.getElementById('log_out').addEventListener('click', function() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
         logMode();
+        document.getElementById("admin_container").style.display = "none";
         document.getElementById("submit_card").style.display = "none";
-        document.getElementById("new_season_container").style.display = "none";
-        document.getElementById("players_status_container").style.display = "none";
         document.getElementById("profil_picture").src = "../blank_profile.png";
         $(".signin_form").css("display", "block");
         $("#signin").removeClass("mb-3");
         document.getElementById('affiche_connect').style.display = 'block';
         clearArea();
         console.log("logout");
-        document.getElementById('welcome_message').innerHTML = "Bienvenue ";
+        document.getElementById('welcome_message').innerHTML = "Hey ";
         this.style.display = "none";
         document.getElementById('signup').style.display = "block";
         document.getElementById('error_info').style.display = 'none';
@@ -118,7 +105,7 @@ document.getElementById('log_in').addEventListener('click', function() {
                     user.updateProfile({
                         displayName: document.getElementById('name_input').value + ' ' + document.getElementById('lastname_input').value
                     }).then(function() {
-                        document.getElementById('welcome_message').innerHTML += user.displayName;
+                        document.getElementById('welcome_message').innerHTML += user.displayName + ' <i class="em em-wave"></i>';
                     });
                     document.getElementById("log_in").disabled = false;
                     document.getElementById("log_in").innerHTML = "Créer un compte";
@@ -182,7 +169,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         // Check for user name
         if (user.displayName != null)
-            document.getElementById('welcome_message').innerHTML += user.displayName;
+            document.getElementById('welcome_message').innerHTML += user.displayName + ' <i class="em em-wave"></i>';
 
         document.getElementById("log_in").disabled = false;
         document.getElementById("log_in").innerHTML = "Se connecter";
@@ -195,7 +182,9 @@ firebase.auth().onAuthStateChanged(function(user) {
             .then(function(querySnapshot) {
                 // Firestore player already has uid
                 if (querySnapshot.docs.length != 0) {
+                    GetPlayersInfo(querySnapshot.docs[0].data());
                     document.getElementById("link_button_container").style.display = 'none';
+                    document.getElementById('players_infos_container').style.display = 'flex';
                     if (!querySnapshot.docs[0].data().isActive) {
                         document.getElementById("is_active_container").style.display = 'block';
                     } else {
@@ -205,6 +194,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 // Firestore player already has not uid
                 else {
                     document.getElementById("link_button_container").style.display = 'block';
+                    document.getElementById('players_infos_container').style.display = 'none';
                 }
             });
     }
@@ -344,8 +334,6 @@ document.getElementById("imageUploadButton").addEventListener('change', function
             }
             // No uid found for connected user in Firestore
             else {
-                // console.log("no user");
-
                 swal({
                     toast: true,
                     position: 'top-start',
@@ -425,7 +413,7 @@ function linkToPlayer() {
                     title: 'Déjà lié'
                 });
 
-                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                document.getElementById("link_button").innerHTML = 'Lier mon compte';
                 document.getElementById("link_button").disabled = false;
                 document.getElementById("link_button_container").style.display = 'none';
             }
@@ -529,7 +517,7 @@ function linkToPlayer() {
                                 title: 'Selectionnez ou créez un joueur'
                             });
 
-                            document.getElementById("link_button").innerHTML = 'Lier le compte';
+                            document.getElementById("link_button").innerHTML = 'Lier mon compte';
                             document.getElementById("link_button").disabled = false;
                             return false;
                         }
@@ -578,7 +566,7 @@ function linkToPlayer() {
                                                         });
 
                                                         // Remove loading button
-                                                        document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                        document.getElementById("link_button").innerHTML = 'Lier mon compte';
                                                         document.getElementById("link_button").disabled = false;
                                                         return;
                                                     }
@@ -599,7 +587,7 @@ function linkToPlayer() {
                                             gamelles: 0,
                                             betrays: 0,
                                             wins: 0,
-                                            defeats: 0,
+                                            loses: 0,
                                             isActive: true,
                                             uid: firebase.auth().currentUser.uid,
                                             photoURL: firebase.auth().currentUser.photoURL,
@@ -618,7 +606,7 @@ function linkToPlayer() {
                                             .set(added_player)
                                             .then(function() {
                                                 // Remove loading button
-                                                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                document.getElementById("link_button").innerHTML = 'Lier mon compte';
                                                 document.getElementById("link_button").disabled = false;
 
                                                 var quotes = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
@@ -637,6 +625,7 @@ function linkToPlayer() {
                                                 });
 
                                                 document.getElementById("link_button_container").style.display = 'none';
+                                                document.getElementById('players_infos_container').style.display = 'flex';
                                             })
                                             .catch(function(error) {
                                                 console.error("Error writing document: ", error);
@@ -693,7 +682,7 @@ function linkToPlayer() {
                                                     type: 'success',
                                                     title: 'Lié pour la vie <i class="em em-link"></i> <i class="em em-heart"></i>'
                                                 });
-                                                document.getElementById("link_button").innerHTML = 'Lier le compte';
+                                                document.getElementById("link_button").innerHTML = 'Lier mon compte';
                                                 document.getElementById("link_button").disabled = false;
                                                 document.getElementById("link_button_container").style.display = 'none';
                                                 // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
@@ -707,7 +696,7 @@ function linkToPlayer() {
                         result.dismiss === swal.DismissReason.cancel ||
                         result.dismiss === swal.DismissReason.close ||
                         result.dismiss === swal.DismissReason.esc) {
-                        document.getElementById("link_button").innerHTML = 'Lier le compte';
+                        document.getElementById("link_button").innerHTML = 'Lier mon compte';
                         document.getElementById("link_button").disabled = false;
                     }
                 });
@@ -766,13 +755,13 @@ function setPlayerActive() {
         })
 }
 
-// TODO: tester logout
 
 function logMode() {
     document.getElementById('log_user_container').style.display = 'block';
     document.getElementById('connected_container').style.display = 'none';
     document.getElementById('is_active_container').style.display = 'none';
     document.getElementById('link_button_container').style.display = 'none';
+    document.getElementById('players_infos_container').style.display = 'none';
 }
 
 
@@ -1012,9 +1001,8 @@ function refreshHistory(previous_matchs_number) {
         .get()
         .then(function(querySnapshot) {
             // Reveal deleted matchs ONLY if user is admin (he would receive matchs data)
+            document.getElementById("admin_container").style.display = "block";
             document.getElementById("submit_card").style.display = "block";
-            document.getElementById("new_season_container").style.display = "block";
-            document.getElementById("players_status_container").style.display = "block";
 
             matchs_buffer = []; // reset matchs buffer to re-import previous matchs and new ones
             querySnapshot.forEach(function(doc) {
@@ -1166,4 +1154,88 @@ function reportMatch(match, addToEnd) {
 
     // Add match to bottom of history
     history.insertBefore(match_template, history.lastChild);
+}
+
+
+
+function GetPlayersInfo(playerData) {
+    document.getElementById('total_wins').innerHTML = playerData.wins;
+    document.getElementById('total_games').innerHTML = playerData.wins + playerData.loses;
+    var rank = playerData.rank == undefined ? 0 : playerData.rank;
+    document.getElementById('ranking').innerHTML = (rank == 1 ? '1er' : (rank == 2 ? '2nd' : rank + 'e'));
+    document.getElementById('total_goals').innerHTML = playerData.goals;
+
+    var chart = document.getElementById("VD_ratio");
+
+    var curve = document.getElementById("ELO_curve");
+
+    chart.height = 250;
+    curve.height = 128;
+
+    if (playerData.wins + playerData.loses != 0)
+        new Chart(chart, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        playerData.loses,
+                        playerData.wins
+                    ],
+                    backgroundColor: [
+                        'rgb(194, 33, 33)',
+                        'rgb(29, 184, 40)'
+                    ]
+                }],
+                labels: [
+                    "Défaites",
+                    "Victoires"
+                ]
+            },
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
+    else {
+        document.getElementById('VD_ratio').style.display = 'none';
+        document.getElementById('VD_ratio_text').innerHTML = '<i class="em em-no_entry_sign"></i><br/><p style="font-size: 1.25rem;"><br/>Pas de partie jouée</p>';
+        document.getElementById('VD_ratio_text').style = 'font-size: 2.8rem; margin-top: 2rem;'
+        document.getElementById('VD_ratio_text').parentNode.classList.remove("mt-2");
+        document.getElementById('VD_ratio_text').parentNode.classList.add("mt-4");
+    }
+
+
+
+    new Chart(curve, {
+        type: 'line',
+        data: {
+            labels: ['1w', '6d', '5d', '4d', '3d', '2d', '1d', 'now'],
+            // labels: ['1w', '6d', '5d', '4d', '3d', '2d', '1d', 'now', '6d', '5d', '4d', '3d', '2d', '1d', 'now'],
+            datasets: [{
+                data: [1052, 1036, 1022, 1030, 1015, 1025, 1045, 1035],
+                // data: [1052, 1036, 1022, 1030, 1015, 1025, 1045, 1035, 1036, 1022, 1030, 1015, 1025, 1045, 1035],
+                label: "ELO",
+                borderColor: "#bf72f5",
+                fill: false
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            elements: {
+                line: {
+                    tension: 0, // disables bezier curves
+                }
+            },
+            animation: {
+                duration: 0, // general animation time
+            },
+            hover: {
+                animationDuration: 0, // duration of animations when hovering an item
+            },
+            responsiveAnimationDuration: 0, // animation duration after a resize
+        }
+    });
 }

@@ -41,6 +41,8 @@
     <link rel='stylesheet' type='text/css' href='../css/profil.css'>
     <link rel='stylesheet' type='text/css' href='../css/radiobutton.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <!-- https://afeld.github.io/emoji-css/ -->
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
@@ -120,29 +122,40 @@
     <!-- CONNECTED -->
     <div class='row mt-4' style='display: none;' id='connected_container'>
         <div class='col-xl-4 offset-xl-4'>
+            <!-- Welcome header -->
             <div class="row m-0">
                 <div class="col-3 px-1">
                     <img id="profil_picture" src="../blank_profile.png" alt="pp" onclick="$('#imageUploadButton').click()" width="100%;" style="border-radius: 50%;">
                     <i class="fa fa-circle-o-notch fa-spin" style="font-size: 4rem; display: none;" id="load_icon"></i>
                 </div>
                 <div class="col-9">
-                    <h3 style="text-align: left; vertical-align: bottom;" class="m-0 mt-1" id="welcome_message">Bienvenue </h3>
+                    <h3 style="text-align: left; vertical-align: bottom; font-family: 'Roboto', sans-serif; font-weight: Regular;" class="m-0 mt-1" id="welcome_message">Hey </h3>
+                </div>
+
+                <!-- <div class="col-12">
+                    <hr class="mx-1 mt-3" />
+                </div> -->
+            </div>
+
+            <!-- Link to player -->
+            <div class="row mt-3" id="link_button_container" style="display: none;">
+                <div class="col-10 ml-4 mb-3">
+                    <h4 style="text-align: left;" class="profile_title">Vous n'avez pas de profil joueur</h4>
+                </div>
+
+                <div class="col-10 offset-1">
+                    <button type='button' class='btn btn-success btn-lg btn-block' onclick="linkToPlayer()" id="link_button" style="height: 4rem; font-weight: bold;">Lier mon compte</button>
                 </div>
 
                 <div class="col-12">
-                    <hr class="mx-1 mt-3" />
+                    <hr class="mx-3 mt-3" />
                 </div>
             </div>
 
-            <div class="row mt-3" id="link_button_container" style="display: none;">
-                <div class="col-10 offset-1">
-                    <button type='button' class='btn btn-primary btn-lg btn-block' onclick="linkToPlayer()" id="link_button">Lier le compte à un joueur</button>
-                </div>
-            </div>
-
+            <!-- Re-activate player -->
             <div class="row mt-3" id="is_active_container" style="display: none;">
                 <div class="col-10 ml-4 mb-3">
-                    <h4 style="text-align: left;">Vous êtes inactif</h4>
+                    <h4 style="text-align: left;" class="profile_title">Vous êtes inactif</h4>
                 </div>
 
                 <div class="col-10 offset-1">
@@ -154,9 +167,80 @@
                 </div>
             </div>
 
-            <div class='row mt-3'>
+            <div class="row m-0 mt-3" id="players_infos_container" style="display: none;">
+                <!-- Total victories -->
+                <div class="col-6 information_box odd_box top_box">
+                    <p class="information_box_text"><strong id="total_wins">148</strong><br/><i class="em em-trophy"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>parties gagnées</strong></p>
+                </div>
+
+                <!-- Victories/defeats ratio -->
+                <div class="col-6 information_box even_box top_box">
+                    <canvas id="VD_ratio" class="mt-3"></canvas>
+                    <p style="font-size: 1.25rem;" class="mt-2"><strong id="VD_ratio_text">Victoires/Défaites</strong></p>
+                </div>
+
+                <!-- Rank in league -->
+                <div class="col-6 information_box even_box">
+                    <p class="information_box_text"><strong id="ranking">1e</strong><br/><i class="em em-sports_medal"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>sur <span id="total_players_ranking">1 joueurs</span></strong></p>
+                </div>
+
+                <!-- Sweat amount -->
+                <div class="col-6 information_box odd_box">
+                    <p class="information_box_text"><strong id="sweat_amount">0L</strong><br/><i class="em em-sweat_drops"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>de sueur versée</strong></p>
+                </div>
+
+                <!-- Curse words -->
+                <div class="col-6 information_box odd_box">
+                    <p class="information_box_text"><strong id="curse_words">0</strong><br/><i class="em em-serious_face_with_symbols_covering_mouth"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>gros mots</strong></p>
+                </div>
+
+                <!-- Total games -->
+                <div class="col-6 information_box even_box">
+                    <p class="information_box_text"><strong id="total_games">350</strong><br/><i class="em em-crossed_swords"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>parties jouées</strong></p>
+                </div>
+
+                <!-- ELO graph -->
+                <div class="col-12 information_box full_box">
+                    <canvas id="ELO_curve" class="mt-3"></canvas>
+                    <p style="font-size: 1.25rem;"><strong>Progression (WIP)</strong></p>
+                </div>
+
+                <!-- Broken wirsts -->
+                <div class="col-6 information_box even_box">
+                    <p class="information_box_text"><strong id="broken_wirsts">0</strong><br/><i class="em em-fist"></i><i class="em em-zap"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>poignets cassés</strong></p>
+                </div>
+
+                <!-- Total goals -->
+                <div class="col-6 information_box odd_box">
+                    <p class="information_box_text"><strong id="total_goals">0</strong><br/><i class="em em-soccer"></i></p>
+                    <p style="font-size: 1.25rem;"><strong>buts marqués</strong></p>
+                </div>
+
+                <div class="col-12">
+                    <hr class="mx-3 mt-3" />
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-10 ml-3 mb-3">
+                    <h4 class="profile_title">Se déconnecter</h4>
+                </div>
+            </div>
+
+            <!-- Log out -->
+            <div class='row'>
                 <div class='col-10 offset-1'>
-                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;"><strong>Se déconnecter</strong></button>
+                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;"><strong>Byebye <i class="em em-man-raising-hand"></i></strong></button>
+                </div>
+
+                <div class="col-12">
+                    <hr class="mx-3 mt-3" />
                 </div>
             </div>
         </div>
@@ -168,17 +252,31 @@
 
 
 
-    <div class="row mt-4" style="margin-right: 2px; margin-left: 2px; display:none;" id="new_season_container">
-        <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
-            <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
+    <div class='row' id="admin_container" style="display:none;">
+        <div class='col-xl-4 offset-xl-4'>
+            <div class="row mt-3">
+                <div class="col-10 ml-3 mb-3">
+                    <h4 class="profile_title">Administrateur <i class="em em-crown"></i></h4>
+                </div>
+            </div>
+
+            <!-- New season -->
+            <div class='row' id="new_season_container">
+                <div class='col-10 offset-1'>
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
+                </div>
+            </div>
+
+            <!-- Players active/inactive -->
+            <div class="row mt-3" id="players_status_container">
+                <div class="col-10 offset-1">
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button' style="height: 4rem;"><strong>Changer statut joueurs</strong></button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row mt-4" style="margin-right: 2px; margin-left: 2px; display:none;" id="players_status_container">
-        <div class="col-xl-4 offset-xl-4" style="padding-right: 0px; padding-left: 0px;">
-            <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button' style="height: 4rem;"><strong>Changer statut joueurs</strong></button>
-        </div>
-    </div>
+
 
     <!--  HISTORY  -->
     <div class="row mt-4" style="margin-right: 2px; margin-left: 2px; display:none;" id="submit_card">

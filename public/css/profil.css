@@ -1,6 +1,7 @@
 body {
     background-color: rgb(235, 240, 240);
     padding-bottom: 1rem;
+    font-family: 'Roboto', sans-serif;
 }
 
 html, body {
@@ -75,4 +76,41 @@ hr {
     text-align: justify;
     text-justify: inter-word;
     background: rgb(250, 251, 208);
+}
+
+.profile_title {
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+}
+
+.information_box {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, .1);
+    /* display: none; */
+}
+
+.top_box {
+    border-width: 2px 1px 1px 1px;
+}
+
+.information_box_text {
+    font-size: 2.8rem;
+}
+
+.even_box, .odd_box, .full_box {
+    height: 200px;
+}
+
+.even_box {
+    background: rgb(223, 227, 223);
+}
+
+.odd_box {
+    background: rgb(229, 232, 229);
+}
+
+.full_box {
+    background: rgb(217, 221, 217);
 }
