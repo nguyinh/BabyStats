@@ -13,6 +13,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
 
+
+
 // --------------- Players list ---------------
 var player1select = document.getElementById('player1_input');
 var player2select = document.getElementById('player2_input');
@@ -30,6 +32,12 @@ var dotLoadingInterval = setInterval(function() {
 }, 350);
 
 
+window.onbeforeunload = function() {
+    for (var s = 0; s < selectsElements.length; s++) {
+        if (selectsElements[s].selectedIndex != 0)
+            return "Si vous quittez cette page, les scores seront effacés";
+    }
+};
 
 
 // Get all players from database and PSA teams then fill 'select' elements with it
