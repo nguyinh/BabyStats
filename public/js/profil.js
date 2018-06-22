@@ -334,8 +334,6 @@ document.getElementById("imageUploadButton").addEventListener('change', function
             }
             // No uid found for connected user in Firestore
             else {
-                // console.log("no user");
-
                 swal({
                     toast: true,
                     position: 'top-start',
@@ -1161,7 +1159,6 @@ function reportMatch(match, addToEnd) {
 
 
 function GetPlayersInfo(playerData) {
-    console.log(playerData.goals);
     document.getElementById('total_wins').innerHTML = playerData.wins;
     document.getElementById('total_games').innerHTML = playerData.wins + playerData.loses;
     var rank = playerData.rank == undefined ? 0 : playerData.rank;
