@@ -836,7 +836,7 @@ document.getElementById("shuffle_button").addEventListener("click", function() {
     cancelButtonText: 'Annuler',
     reverseButtons: true,
     onOpen: () => {
-      $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+      $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin" style="font-size: 2rem;"></i>';
 
       db.collection("matches").orderBy('invert_number').limit(1).get().then(function(querySnapshot) {
         if (querySnapshot.docs != undefined)
