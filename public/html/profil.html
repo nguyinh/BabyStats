@@ -45,6 +45,8 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <!-- https://afeld.github.io/emoji-css/ -->
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css" />
+
 
     <title>Profil | BabyStats</title>
 </head>
@@ -135,6 +137,15 @@
                 <!-- <div class="col-12">
                     <hr class="mx-1 mt-3" />
                 </div> -->
+                <div class="collapse col-12 mt-3" id="cropper">
+                    <div class="row">
+                        <div class='col-10 offset-1 mb-2 mt-3'>
+                            <button type='button' class='btn btn-success btn-lg btn-block' id="crop_button">Enregistrer</button>
+                        </div>
+                    </div>
+
+                    <img src="../blank_profile.png" style="width: 100%;" id="img_to_crop">
+                </div>
             </div>
 
             <!-- Link to player -->
@@ -144,7 +155,7 @@
                 </div>
 
                 <div class="col-10 offset-1">
-                    <button type='button' class='btn btn-success btn-lg btn-block' onclick="linkToPlayer()" id="link_button" style="height: 4rem; font-weight: bold;">Lier mon compte</button>
+                    <button type='button' class='btn btn-success btn-lg btn-block' onclick="linkToPlayer()" id="link_button"><i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i></button>
                 </div>
 
                 <div class="col-12">
@@ -170,7 +181,7 @@
             <div class="row m-0 mt-3" id="players_infos_container" style="display: none;">
                 <!-- Total victories -->
                 <div class="col-6 information_box odd_box top_box">
-                    <p class="information_box_text"><strong id="total_wins">148</strong><br/><i class="em em-trophy"></i></p>
+                    <p class="information_box_text"><strong id="total_wins">0</strong><br/><i class="em em-trophy"></i></p>
                     <p style="font-size: 1.15rem;"><strong>parties gagnées</strong></p>
                 </div>
 
@@ -200,7 +211,7 @@
 
                 <!-- Total games -->
                 <div class="col-6 information_box even_box">
-                    <p class="information_box_text"><strong id="total_games">350</strong><br/><i class="em em-crossed_swords"></i></p>
+                    <p class="information_box_text"><strong id="total_games">0</strong><br/><i class="em em-crossed_swords"></i></p>
                     <p style="font-size: 1.15rem;"><strong>parties jouées</strong></p>
                 </div>
 
@@ -236,7 +247,7 @@
             <!-- Log out -->
             <div class='row'>
                 <div class='col-10 offset-1'>
-                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;"><strong>Byebye <i class="em em-man-raising-hand"></i></strong></button>
+                    <button type='button' class='btn btn-warning btn-lg btn-block' id='log_out' style="height: 4rem;">Byebye <i class="em em-man-raising-hand"></i></button>
                 </div>
 
                 <div class="col-12">
@@ -263,14 +274,14 @@
             <!-- New season -->
             <div class='row' id="new_season_container">
                 <div class='col-10 offset-1'>
-                    <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button' style="height: 4rem;"><strong>Démarrer nouvelle saison</strong></button>
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='new_season_button'>Démarrer nouvelle saison</button>
                 </div>
             </div>
 
             <!-- Players active/inactive -->
             <div class="row mt-3" id="players_status_container">
                 <div class="col-10 offset-1">
-                    <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button' style="height: 4rem;"><strong>Changer statut joueurs</strong></button>
+                    <button type='button' class='btn btn-danger btn-lg btn-block' id='players_status_button'>Inactivité joueurs</button>
                 </div>
             </div>
         </div>
@@ -369,6 +380,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/fr.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js' integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q' crossorigin='anonymous'></script>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js' integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl' crossorigin='anonymous'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.js"></script>
     <script src='../js/profil.js'></script>
 </body>
 

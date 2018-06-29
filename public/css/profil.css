@@ -114,3 +114,18 @@ hr {
 .full_box {
     background: rgb(217, 221, 217);
 }
+
+#cropper {
+    border-style: solid;
+    border-width: 0px 2px 2px 2px;
+    border-color: rgba(0, 0, 0, .2);
+    background: rgb(186, 195, 186);
+    -moz-box-shadow: inset 0px 25px 35px -25px #000000;
+    -webkit-box-shadow: inset 0px 25px 35px -25px #000000;
+    box-shadow: inset 0px 25px 35px -25px #000000;
+}
+
+#crop_button, #link_button, #log_out, #new_season_button, #players_status_button {
+    height: 4rem;
+    font-weight: bold;
+}

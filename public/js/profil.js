@@ -44,7 +44,6 @@ document.getElementById('log_out').addEventListener('click', function() {
         $("#signin").removeClass("mb-3");
         document.getElementById('affiche_connect').style.display = 'block';
         clearArea();
-        console.log("logout");
         document.getElementById('welcome_message').innerHTML = "Hey ";
         this.style.display = "none";
         document.getElementById('signup').style.display = "block";
@@ -225,130 +224,204 @@ function clearArea() {
 
 // Upload profile picture
 document.getElementById("imageUploadButton").addEventListener('change', function(e) {
-    document.getElementById('load_icon').style.display = 'block';
+
     document.getElementById('profil_picture').style.display = 'none';
+    var preview = document.getElementById('img_to_crop');
+    var file = e.target.files[0];
+    var reader = new FileReader();
 
-    var user = firebase.auth().currentUser;
+    $('#cropper').collapse('show');
 
-    // Check if player has user uid
-    db.collection("players")
-        .where("uid", "==", user.uid)
-        .get()
-        .then(function(querySnapshot) {
-            // Firestore player already has uid
-            if (querySnapshot.docs.length != 0) {
+    reader.addEventListener("load", function() {
+        preview.src = reader.result;
 
-                // File or Blob named mountains.jpg
-                var file = e.target.files[0];
+        var cropper = $('#img_to_crop');
+
+        cropper.croppie({
+            viewport: {
+                width: 200,
+                height: 200,
+                type: 'circle'
+            },
+            boundary: {
+                width: 300,
+                height: 300
+            },
+        });
+
+        $('#crop_button').on('click', function(ev) {
+            document.getElementById("crop_button").disabled = true;
+            cropper.croppie('result', {
+                type: 'blob',
+                circle: true,
+                format: 'png'
+            }).then(function(blob) {
+                document.getElementById('load_icon').style.display = 'block';
 
                 var user = firebase.auth().currentUser;
 
-                // Create the file metadata
-                var metadata = {
-                    contentType: 'image/png'
-                };
+                // Check if player has user uid
+                db.collection("players")
+                    .where("uid", "==", user.uid)
+                    .get()
+                    .then(function(querySnapshot) {
+                        // Firestore player already has uid
+                        if (querySnapshot.docs.length != 0) {
 
-                // Upload file and metadata to the object 'images/mountains.jpg'
-                var uploadTask = storageRef.child('profile_pictures/' + user.uid).put(file, metadata);
+                            // File or Blob named mountains.jpg
+                            var file = blob;
 
-                // Listen for state changes, errors, and completion of the upload.
-                uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-                    function(snapshot) {
-                        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
-                        switch (snapshot.state) {
-                            case firebase.storage.TaskState.PAUSED: // or 'paused'
-                                console.log('Upload is paused');
-                                break;
-                            case firebase.storage.TaskState.RUNNING: // or 'running'
-                                console.log('Upload is running');
-                                break;
-                        }
-                    },
-                    function(error) {
-                        swal({
-                            toast: true,
-                            position: 'top-start',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            type: 'error',
-                            title: 'Echec'
-                        });
-                        // A full list of error codes is available at
-                        // https://firebase.google.com/docs/storage/web/handle-errors
-                        switch (error.code) {
-                            case 'storage/unauthorized':
-                                // User doesn't have permission to access the object
-                                break;
+                            var user = firebase.auth().currentUser;
 
-                            case 'storage/canceled':
-                                // User canceled the upload
-                                break;
+                            // Create the file metadata
+                            var metadata = {
+                                contentType: 'image/png'
+                            };
 
-                            case 'storage/unknown':
-                                // Unknown error occurred, inspect error.serverResponse
-                                break;
-                        }
-                    },
-                    function() {
-                        // Upload completed successfully, now we can get the download URL
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            console.log('File available at', downloadURL);
+                            // Upload file and metadata to the object 'images/mountains.jpg'
+                            var uploadTask = storageRef.child('profile_pictures/' + user.uid).put(file, metadata);
 
-                            document.getElementById("profil_picture").src = downloadURL;
-
-                            // Update user profile
-                            user.updateProfile({
-                                photoURL: downloadURL
-                            });
-
-                            // Update player database
-                            db.collection("players")
-                                .doc(querySnapshot.docs[0].id)
-                                .update({
-                                    photoURL: downloadURL
-                                })
-                                .then(function(querySnapshot) {
-                                    document.getElementById('load_icon').style.display = 'none';
-                                    document.getElementById('profil_picture').style.display = 'block';
-
+                            // Listen for state changes, errors, and completion of the upload.
+                            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                                function(snapshot) {
+                                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                    console.log('Upload is ' + progress + '% done');
+                                    switch (snapshot.state) {
+                                        case firebase.storage.TaskState.PAUSED: // or 'paused'
+                                            console.log('Upload is paused');
+                                            break;
+                                        case firebase.storage.TaskState.RUNNING: // or 'running'
+                                            console.log('Upload is running');
+                                            break;
+                                    }
+                                },
+                                function(error) {
                                     swal({
                                         toast: true,
                                         position: 'top-start',
                                         showConfirmButton: false,
                                         timer: 3000,
-                                        type: 'success',
-                                        title: 'Image enregistrée'
+                                        type: 'error',
+                                        title: 'Echec'
                                     });
 
-                                    e.target.value = "";
+                                    // Reset crop element
+                                    $('#cropper').collapse('hide');
+                                    $('#cropper').on('hidden.bs.collapse', function() {
+                                        $('#crop_button').off('click');
+                                        $('.croppie-container').remove();
+                                    });
+                                    // Re-add img_to_crop
+                                    $('#cropper').append('<img src="../blank_profile.png" style="width:100%;" id="img_to_crop">');
+                                    document.getElementById("crop_button").disabled = false;
 
-                                }).catch(function(error) {
-                                    document.getElementById('load_icon').style.display = 'none';
-                                    document.getElementById('profil_picture').style.display = 'block';
-                                    e.target.value = "";
+                                    // A full list of error codes is available at
+                                    // https://firebase.google.com/docs/storage/web/handle-errors
+                                    switch (error.code) {
+                                        case 'storage/unauthorized':
+                                            // User doesn't have permission to access the object
+                                            break;
+
+                                        case 'storage/canceled':
+                                            // User canceled the upload
+                                            break;
+
+                                        case 'storage/unknown':
+                                            // Unknown error occurred, inspect error.serverResponse
+                                            break;
+                                    }
+                                },
+                                function() {
+                                    // Upload completed successfully, now we can get the download URL
+                                    uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                                        console.log('File available at', downloadURL);
+
+                                        document.getElementById("profil_picture").src = downloadURL;
+
+                                        // Update user profile
+                                        user.updateProfile({
+                                            photoURL: downloadURL
+                                        });
+
+                                        // Update player database
+                                        db.collection("players")
+                                            .doc(querySnapshot.docs[0].id)
+                                            .update({
+                                                photoURL: downloadURL
+                                            })
+                                            .then(function(querySnapshot) {
+                                                document.getElementById('load_icon').style.display = 'none';
+                                                document.getElementById('profil_picture').style.display = 'block';
+
+                                                swal({
+                                                    toast: true,
+                                                    position: 'top-start',
+                                                    showConfirmButton: false,
+                                                    timer: 3000,
+                                                    type: 'success',
+                                                    title: 'Image enregistrée'
+                                                });
+
+                                                e.target.value = "";
+
+                                                // Reset crop element
+                                                $('#cropper').collapse('hide');
+                                                $('#cropper').on('hidden.bs.collapse', function() {
+                                                    $('#crop_button').off('click');
+                                                    $('.croppie-container').remove();
+                                                });
+                                                // Re-add img_to_crop
+                                                $('#cropper').append('<img src="../blank_profile.png" style="width:100%;" id="img_to_crop">');
+                                                document.getElementById("crop_button").disabled = false;
+
+                                            }).catch(function(error) {
+                                                document.getElementById('load_icon').style.display = 'none';
+                                                document.getElementById('profil_picture').style.display = 'block';
+                                                e.target.value = "";
+                                            });
+                                    });
                                 });
-                        });
+                        }
+                        // No uid found for connected user in Firestore
+                        else {
+                            swal({
+                                toast: true,
+                                position: 'top-start',
+                                showConfirmButton: false,
+                                timer: 4500,
+                                type: 'error',
+                                title: 'Lie ton compte pour ajouter une photo de profil <i class="em em-wink"></i>'
+                            });
+
+                            e.target.value = "";
+
+                            // Reset crop element
+                            $('#cropper').collapse('hide');
+                            $('#cropper').on('hidden.bs.collapse', function() {
+                                $('#crop_button').off('click');
+                                $('.croppie-container').remove();
+                            });
+                            // Re-add img_to_crop
+                            $('#cropper').append('<img src="../blank_profile.png" style="width:100%;" id="img_to_crop">');
+                            document.getElementById("crop_button").disabled = false;
+
+                            document.getElementById('load_icon').style.display = 'none';
+                            document.getElementById('profil_picture').style.display = 'block';
+                        }
                     });
-            }
-            // No uid found for connected user in Firestore
-            else {
-                swal({
-                    toast: true,
-                    position: 'top-start',
-                    showConfirmButton: false,
-                    timer: 4500,
-                    type: 'error',
-                    title: 'Lie ton compte pour ajouter une photo de profil <i class="em em-wink"></i>'
-                });
 
-                e.target.value = "";
-
-                document.getElementById('load_icon').style.display = 'none';
-                document.getElementById('profil_picture').style.display = 'block';
-            }
+            });
         });
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+
+
+
+
 
 
 
@@ -395,7 +468,7 @@ var borders_template = begin_template + end_template;
 
 
 function linkToPlayer() {
-    document.getElementById("link_button").innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
+    document.getElementById("link_button").innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
     document.getElementById("link_button").disabled = true;
     var user = firebase.auth().currentUser;
     db.collection("players")
@@ -413,7 +486,7 @@ function linkToPlayer() {
                     title: 'Déjà lié'
                 });
 
-                document.getElementById("link_button").innerHTML = 'Lier mon compte';
+                document.getElementById("link_button").innerHTML = '<i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i>';
                 document.getElementById("link_button").disabled = false;
                 document.getElementById("link_button_container").style.display = 'none';
             }
@@ -517,7 +590,7 @@ function linkToPlayer() {
                                 title: 'Selectionnez ou créez un joueur'
                             });
 
-                            document.getElementById("link_button").innerHTML = 'Lier mon compte';
+                            document.getElementById("link_button").innerHTML = '<i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i>';
                             document.getElementById("link_button").disabled = false;
                             return false;
                         }
@@ -566,7 +639,7 @@ function linkToPlayer() {
                                                         });
 
                                                         // Remove loading button
-                                                        document.getElementById("link_button").innerHTML = 'Lier mon compte';
+                                                        document.getElementById("link_button").innerHTML = '<i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i>';
                                                         document.getElementById("link_button").disabled = false;
                                                         return;
                                                     }
@@ -606,7 +679,7 @@ function linkToPlayer() {
                                             .set(added_player)
                                             .then(function() {
                                                 // Remove loading button
-                                                document.getElementById("link_button").innerHTML = 'Lier mon compte';
+                                                document.getElementById("link_button").innerHTML = '<i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i>';
                                                 document.getElementById("link_button").disabled = false;
 
                                                 var quotes = [name + ", c'est un joli prénom <i class=\"em em-smirk\"></i>",
@@ -682,7 +755,7 @@ function linkToPlayer() {
                                                     type: 'success',
                                                     title: 'Lié pour la vie <i class="em em-link"></i> <i class="em em-heart"></i>'
                                                 });
-                                                document.getElementById("link_button").innerHTML = 'Lier mon compte';
+                                                document.getElementById("link_button").innerHTML = '<i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i>';
                                                 document.getElementById("link_button").disabled = false;
                                                 document.getElementById("link_button_container").style.display = 'none';
                                                 // INSERT HERE USER DATA INSERT HERE USER DATA INSERT HERE USER DATA
@@ -696,7 +769,7 @@ function linkToPlayer() {
                         result.dismiss === swal.DismissReason.cancel ||
                         result.dismiss === swal.DismissReason.close ||
                         result.dismiss === swal.DismissReason.esc) {
-                        document.getElementById("link_button").innerHTML = 'Lier mon compte';
+                        document.getElementById("link_button").innerHTML = '<i class="em em-exclamation"></i> Lier mon compte <i class="em em-exclamation"></i>';
                         document.getElementById("link_button").disabled = false;
                     }
                 });
@@ -845,7 +918,7 @@ document.getElementById('new_season_button').addEventListener('click', function(
                                 title: 'Saison commencée ! <i class="em em-soccer"></i>'
                             });
                             document.getElementById("new_season_button").disabled = false;
-                            document.getElementById("new_season_button").innerHTML = "<strong>Démarrer nouvelle saison</strong>";
+                            document.getElementById("new_season_button").innerHTML = "Démarrer nouvelle saison";
                         }).catch(function(error) {
                             swal({
                                 toast: true,
@@ -856,7 +929,7 @@ document.getElementById('new_season_button').addEventListener('click', function(
                                 title: 'Erreur lors de la création'
                             });
                             document.getElementById("new_season_button").disabled = true;
-                            document.getElementById("new_season_button").innerHTML = "<strong>Démarrer nouvelle saison</strong>";
+                            document.getElementById("new_season_button").innerHTML = "Démarrer nouvelle saison";
                         });
                 });
         }
@@ -879,7 +952,7 @@ document.getElementById('players_status_button').addEventListener('click', funct
         confirmButtonText: 'All good',
         cancelButtonText: 'Plus tard',
         onOpen: () => {
-            $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
+            $("#swal_container_custom")[0].innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:3rem"></i>';
 
             // Get players from database and display it when ready
             db.collection("players")
@@ -964,7 +1037,7 @@ document.getElementById('players_status_button').addEventListener('click', funct
                     });
 
                     document.getElementById("players_status_button").disabled = false;
-                    document.getElementById("players_status_button").innerHTML = "<strong>Changer statut joueur</strong>";
+                    document.getElementById("players_status_button").innerHTML = "inactivité joueurs";
                 })
                 .catch(function(error) {
                     swal({
@@ -977,7 +1050,7 @@ document.getElementById('players_status_button').addEventListener('click', funct
                     });
 
                     document.getElementById("players_status_button").disabled = false;
-                    document.getElementById("players_status_button").innerHTML = "<strong>Changer statut joueur</strong>";
+                    document.getElementById("players_status_button").innerHTML = "inactivité joueurs";
                 });
         }
     }).then((result) => {
@@ -986,7 +1059,7 @@ document.getElementById('players_status_button').addEventListener('click', funct
             result.dismiss === swal.DismissReason.close ||
             result.dismiss === swal.DismissReason.esc) {
             document.getElementById("players_status_button").disabled = false;
-            document.getElementById("players_status_button").innerHTML = "<strong>Changer statut joueur</strong>";
+            document.getElementById("players_status_button").innerHTML = "inactivité joueurs";
         }
     });
 });
