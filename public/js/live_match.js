@@ -656,6 +656,7 @@ function validate() {
                                         ]);
                                 }
 
+                                // Check which type of goals have been added to the match
                                 for (var i = 0; i < players.length; i++) {
                                     if (players[i][1] != 0 && !goal_type.includes("goal")) {
                                         goal_type.push("goal");
@@ -668,7 +669,7 @@ function validate() {
                                     }
                                 }
 
-                                quote = "Le match a bien été validé !";
+                                quote = "Le match a bien été enregistré !";
 
                                 switch (goal_type[Math.floor(Math.random() * goal_type.length)]) {
                                     case "goal": // sort with goals
@@ -699,19 +700,32 @@ function validate() {
                                             }
                                         });
 
-                                        if (players[0][2] != 0)
-                                            quote = players[0][0].value.split(" ")[0] +
-                                            " a le poignet en feu avec ses " +
-                                            players[0][2] +
-                                            " gamelles <i class=\"em em-clap\"></i>";
-                                        else {
+                                        if (players[0][2] != 0) {
+                                            if (players[0][2] > 1) { // If there was more than 1 gamelles
+                                                quote = players[0][0].value.split(" ")[0] +
+                                                    " a le poignet en feu avec ses " +
+                                                    players[0][2] +
+                                                    " gamelles <i class=\"em em-clap\"></i>";
+                                            } else { // If there was just 1 gamelle
+                                                quote = "Bravo " +
+                                                    players[0][0].value.split(" ")[0] +
+                                                    " pour cette exceptionnelle gamelle <i class=\"em em-open_mouth\"></i>";
+                                            }
+                                        } else {
                                             if (high_low)
                                                 quote = "Pas de gamelle aujourd'hui ? <i class=\"em em-cry\"></i>";
-                                            else
-                                                quote = players[players.length - 1][0].value.split(" ")[0] +
-                                                " a le poignet en feu avec ses " +
-                                                players[players.length - 1][2] +
-                                                " gamelles <i class=\"em em-clap\"></i>";
+                                            else {
+                                                if (players[players.length - 1][2] > 1) { // If there was more than 1 gamelles
+                                                    quote = players[players.length - 1][0].value.split(" ")[0] +
+                                                        " a le poignet en feu avec ses " +
+                                                        players[players.length - 1][2] +
+                                                        " gamelles <i class=\"em em-clap\"></i>";
+                                                } else { // If there was just 1 gamelle
+                                                    quote = "Bravo " +
+                                                        players[players.length - 1][0].value.split(" ")[0] +
+                                                        " pour cette exceptionnelle gamelle <i class=\"em em-open_mouth\"></i>";
+                                                }
+                                            }
                                         }
                                         break;
 
@@ -725,13 +739,19 @@ function validate() {
                                         });
 
 
-                                        if (players[0][3] != 0)
-                                            quote = "Une ovation pour " +
-                                            players[0][0].value.split(" ")[0] +
-                                            " et ses " +
-                                            players[0][3] +
-                                            " buts contre son camp <i class=\"em em-upside_down_face\"></i>";
-                                        else
+                                        if (players[0][3] != 0) {
+                                            if (players[0][3] > 1) { // If there was more than 1 betrays
+                                                quote = "Une ovation pour " +
+                                                    players[0][0].value.split(" ")[0] +
+                                                    " et ses " +
+                                                    players[0][3] +
+                                                    " buts contre son camp <i class=\"em em-upside_down_face\"></i>";
+                                            } else { // If there was just 1 betray
+                                                quote = "Bravo la trahison " +
+                                                    players[0][0].value.split(" ")[0] +
+                                                    " <i class=\"em em-anguished\"></i>";
+                                            }
+                                        } else
                                             quote = "L'avant-bras de " +
                                             players[0][0].value.split(" ")[0] +
                                             " est plus gros qu'hier non ? <i class=\"em em-fist\"></i><i class=\"em em-smirk\"></i>";
@@ -756,7 +776,7 @@ function validate() {
                                     // else
                                     if (result.value) {
                                         swal({
-                                            title: 'Selectionnez les joueurs',
+                                            title: 'Variations d\'ELO',
                                             html: 'Ici seront affiché les changements d\'ELOs',
                                             showCloseButton: true,
                                             showCancelButton: false,
