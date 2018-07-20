@@ -1071,8 +1071,13 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                 .then(function(querySnapshot) {
 
                     $("#swal_container_choose")[0].innerHTML = '';
+
                     querySnapshot.forEach(function(doc) {
                         fetchedPlayers[doc.id] = doc.data();
+
+
+
+
                         player_element_template.id = doc.id;
                         if (doc.data().photoURL != null)
                             player_element_template.querySelector('.pic').src = doc.data().photoURL;
@@ -1080,8 +1085,71 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                             player_element_template.querySelector('.pic').src = 'blank_profile.png';
                         player_element_template.querySelector('.player_selector_name').innerHTML = doc.data().name;
                         $("#swal_container_choose")[0].innerHTML += player_element_template.outerHTML;
-                        console.log(doc.data());
                     });
+
+                    // Tri
+                    var teamSet = new Set();
+
+                    for (var p in fetchedPlayers) {
+                        teamSet.add(fetchedPlayers[p].team);
+                    }
+                    console.log(teamSet);
+                    var sortedPlayers = {};
+                    for (var t of teamSet) {
+                        sortedPlayers[t] = {};
+                        for (var p in fetchedPlayers) {
+                            if (fetchedPlayers[p].team === t)
+                                sortedPlayers[t][p] = fetchedPlayers[p];
+                        }
+
+                        // function sortObjKeysAlphabetically(obj) {
+                        //     return Object.keys(obj).sort((a, b) => a.name > b.name).reduce((result, key) => {
+                        //         console.log(result.name);
+                        //         result[result.name] = obj[result.name];
+                        //         return result;
+                        //     }, {});
+                        // }
+                        // console.log(sortObjKeysAlphabetically(sortedPlayers[t]))
+                        var arr = [];
+
+                        for (var i in sortedPlayers[t]) {
+                            console.log(sortedPlayers[t][i]);
+                        }
+                        // function sortObject(obj) {
+                        //     var arr = [];
+                        //     var prop;
+                        //     for (prop in obj) {
+                        //         if (obj.hasOwnProperty(prop)) {
+                        //             arr.push({
+                        //                 'key': prop,
+                        //                 'value': obj[prop]
+                        //             });
+                        //         }
+                        //     }
+                        //     console.log(arr);
+                        //     arr.sort(function(a, b) {
+                        //         return a.value - b.value;
+                        //     });
+                        //     return arr; // returns array
+                        // }
+                    }
+
+
+                    // console.log(sortObject(sortedPlayers));
+
+
+
+                    // players.sort(function(a, b) {
+                    //     if (a[3] === b[3]) {
+                    //         return 0;
+                    //     } else {
+                    //         return (a[3] < b[3]) ? (high_low ? 1 : -1) : (high_low ? -1 : 1);
+                    //     }
+                    // });
+
+
+
+                    // console.log(Object.values(fetchedPlayers));
 
                     // Get all player selectors
                     var elements = $("#swal_container_choose")[0].children;
@@ -1096,11 +1164,11 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                             if (actualOpacity < 0.75) {
                                 player_container.querySelector('.overlay').style.opacity = 0.75;
                                 player_container.classList.add('player_selected');
-                                console.log('actif');
+                                // console.log('actif');
                             } else {
                                 player_container.querySelector('.overlay').style.opacity = 0;
                                 player_container.classList.remove('player_selected');
-                                console.log('off');
+                                // console.log('off');
                             }
                         })
                     }
