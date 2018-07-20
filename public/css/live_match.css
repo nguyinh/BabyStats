@@ -59,8 +59,7 @@ hr {
     margin: 0px;
 }
 
-.scores_separator {
-}
+.scores_separator {}
 
 .col-3.pl-2 {
     padding-right: 1px;
@@ -133,3 +132,51 @@ hr {
 #betray_section {
     padding-top: 0.5rem;
 }
+
+#debug_hide {
+    display: none;
+}
+
+.pic {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    /* filter: blur(3px); */
+}
+
+/* * {
+    box-sizing: border-box
+} */
+
+.containerr {
+    position: relative;
+    /* width: 50%; */
+    /* max-width: 300px; */
+}
+
+/* Make the image to responsive */
+
+/* The overlay effect - lays on top of the container and over the image */
+
+.overlay {
+    position: absolute;
+    border-radius: 50%;
+    bottom: 0;
+    /* background: rgb(0, 0, 0); */
+    /* background: rgba(0, 0, 0, 0.08); */
+    /* Black see-through */
+    /* color: #f1f1f1; */
+    width: 100%;
+    transition: .2s ease;
+    opacity: 0;
+    /* color: white; */
+    /* font-size: 20px; */
+    /* padding: 20px; */
+    /* text-align: center; */
+}
+
+/* When you mouse over the container, fade in the overlay title */
+
+/* .container:hover .overlay {
+    opacity: 0.75;
+} */

@@ -6,6 +6,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
         document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
+        document.getElementById('player_selector_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
     } else {
         console.log("no user connected");
     }
@@ -1005,4 +1006,115 @@ function updateButtons() {
             }
         }
     }
+}
+
+
+
+
+[].forEach.call(document.getElementsByClassName('debug_hide'), function(el) {
+    el.style.display = 'none';
+});
+
+
+
+var begin = '<div class="container">' +
+    '<div class="row align-items-center" id="container_row">' +
+    '<div class="col-12 col-xl-10 offset-xl-1" id="sw_container">';
+
+function addPlayerChooser(name, n) {
+    return '<div class="container mt-2">' +
+        '<div class="row">' +
+        '<span class="switch switch-lg">' +
+        '<input type="checkbox" class="switch" id="sw_id' + n + '"></input>' +
+        '<label for="sw_id' + n + '" id="sw_name_id' + n + '">' + name + '</label>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+}
+
+var end = '</div>' +
+    '</div>' +
+    '</div>'
+
+var bt = begin + end;
+
+// document.getElementById('player_placeholder').addEventListener('click', function(event) {
+//     console.log('coucou');
+// });
+
+var fetchedPlayers = {};
+
+document.getElementById('debug_button2').addEventListener('click', function() {
+    swal({
+        title: 'Selectionnez les joueurs',
+        html: '<div id="swal_container_choose" class="row"></div>',
+        showCloseButton: true,
+        showCancelButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonClass: 'btn btn-success ml-1 btn-lg',
+        cancelButtonClass: 'btn btn-danger mr-1 btn-lg',
+        buttonsStyling: false,
+        confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
+        cancelButtonText: 'Annuler',
+        reverseButtons: true,
+        onOpen: () => {
+            $("#swal_container_choose")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin col-12" style="font-size: 3rem;"></i>';
+
+            var player_element_template = document.getElementById('player_placeholder').cloneNode(true);
+
+            db.collection("players")
+                .where("isActive", "==", true)
+                // .orderBy("team")
+                .get()
+                .then(function(querySnapshot) {
+
+                    $("#swal_container_choose")[0].innerHTML = '';
+                    querySnapshot.forEach(function(doc) {
+                        fetchedPlayers[doc.id] = doc.data();
+                        player_element_template.id = doc.id;
+                        if (doc.data().photoURL != null)
+                            player_element_template.querySelector('.pic').src = doc.data().photoURL;
+                        else
+                            player_element_template.querySelector('.pic').src = 'blank_profile.png';
+                        player_element_template.querySelector('.player_selector_name').innerHTML = doc.data().name;
+                        $("#swal_container_choose")[0].innerHTML += player_element_template.outerHTML;
+                        console.log(doc.data());
+                    });
+
+                    // Get all player selectors
+                    var elements = $("#swal_container_choose")[0].children;
+
+                    for (var e = 0; e < elements.length; e++) {
+                        // Display it
+                        elements[e].style.display = 'block';
+                        // Add click listener
+                        elements[e].addEventListener('click', function(event) {
+                            var player_container = event.target.closest('.player_placeholder');
+                            var actualOpacity = player_container.querySelector('.overlay').style.opacity;
+                            if (actualOpacity < 0.75) {
+                                player_container.querySelector('.overlay').style.opacity = 0.75;
+                                player_container.classList.add('player_selected');
+                                console.log('actif');
+                            } else {
+                                player_container.querySelector('.overlay').style.opacity = 0;
+                                player_container.classList.remove('player_selected');
+                                console.log('off');
+                            }
+                        })
+                    }
+                });
+        },
+        preConfirm: () => {
+            for (var t of document.getElementsByClassName('player_selected')) {
+                console.log(t.id);
+            }
+
+        }
+    });
+});
+
+function test(param) {
+    console.log(param);
 }
