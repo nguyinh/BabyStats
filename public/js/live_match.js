@@ -1077,7 +1077,6 @@ document.getElementById('debug_button2').addEventListener('click', function() {
 
 
 
-
                         player_element_template.id = doc.id;
                         if (doc.data().photoURL != null)
                             player_element_template.querySelector('.pic').src = doc.data().photoURL;
@@ -1085,6 +1084,7 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                             player_element_template.querySelector('.pic').src = 'blank_profile.png';
                         player_element_template.querySelector('.player_selector_name').innerHTML = doc.data().name;
                         $("#swal_container_choose")[0].innerHTML += player_element_template.outerHTML;
+
                     });
 
                     // Tri
@@ -1102,37 +1102,29 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                                 sortedPlayers[t][p] = fetchedPlayers[p];
                         }
 
-                        // function sortObjKeysAlphabetically(obj) {
-                        //     return Object.keys(obj).sort((a, b) => a.name > b.name).reduce((result, key) => {
-                        //         console.log(result.name);
-                        //         result[result.name] = obj[result.name];
-                        //         return result;
-                        //     }, {});
-                        // }
-                        // console.log(sortObjKeysAlphabetically(sortedPlayers[t]))
+                        // Teams are sorted
+
                         var arr = [];
 
                         for (var i in sortedPlayers[t]) {
-                            console.log(sortedPlayers[t][i]);
+                            arr.push([t, i, sortedPlayers[t][i]]);
                         }
-                        // function sortObject(obj) {
-                        //     var arr = [];
-                        //     var prop;
-                        //     for (prop in obj) {
-                        //         if (obj.hasOwnProperty(prop)) {
-                        //             arr.push({
-                        //                 'key': prop,
-                        //                 'value': obj[prop]
-                        //             });
-                        //         }
-                        //     }
-                        //     console.log(arr);
-                        //     arr.sort(function(a, b) {
-                        //         return a.value - b.value;
-                        //     });
-                        //     return arr; // returns array
-                        // }
+
+                        arr.sort(function(a, b) {
+                            if (a[2].name === b[2].name) {
+                                return 0;
+                            } else {
+                                return a[2].name > b[2].name;
+                            }
+                        });
+
+                        console.log(arr);
+
+
+
                     }
+
+
 
 
                     // console.log(sortObject(sortedPlayers));
@@ -1182,7 +1174,3 @@ document.getElementById('debug_button2').addEventListener('click', function() {
         }
     });
 });
-
-function test(param) {
-    console.log(param);
-}
