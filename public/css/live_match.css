@@ -139,7 +139,7 @@ hr {
 
 .pic {
     width: 100%;
-    height: auto;
+    height: 100%;
     border-radius: 50%;
     /* filter: blur(3px); */
 }
@@ -151,7 +151,7 @@ hr {
 .containerr {
     position: relative;
     /* width: 50%; */
-    /* max-width: 300px; */
+    min-width: 100%;
 }
 
 /* Make the image to responsive */
@@ -167,7 +167,7 @@ hr {
     /* Black see-through */
     /* color: #f1f1f1; */
     width: 100%;
-    transition: .2s ease;
+    transition: .05s linear;
     opacity: 0;
     /* color: white; */
     /* font-size: 20px; */

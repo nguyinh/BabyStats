@@ -1117,6 +1117,8 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                         $("#swal_container_choose")[0].innerHTML += '<h2 class="col-12">' + arr[0][0] + '</h2>';
                         for (var a=0 ; a<arr.length; a++) {
                             player_element_template.id = arr[a][1];
+                            player_element_template.querySelector('.pic').id = arr[a][1] + '_pic';
+                            // player_element_template.style.minHeight = '95px';
                             if (arr[a][2].photoURL != null)
                                 player_element_template.querySelector('.pic').src = arr[a][2].photoURL;
                             else
@@ -1146,6 +1148,21 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                                 player_container.querySelector('.overlay').style.opacity = 0;
                                 player_container.classList.remove('player_selected');
                             }
+
+                            $('#' + player_container.id + ' .pic').animate({width: "95%"}, 35, function() {
+                                $(this).animate({width: "100%"}, 35);
+                            });
+                            // $('#' + player_container.querySelector('.pic').id + '.validator').animate({width: "95%"}, 200, function() {
+                            //     $(this).animate({width: "100%"}, 200);
+                            // });
+                            // player_container.animate([
+                            //   // keyframes
+                            //   { transform: 'translateY(0px)' },
+                            //   { transform: 'translateY(-300px)' }
+                            // ], {
+                            //   // timing options
+                            //   duration: 1000
+                            // });
                         })
                     }
                 });
