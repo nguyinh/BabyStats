@@ -1077,13 +1077,7 @@ document.getElementById('debug_button2').addEventListener('click', function() {
 
 
 
-                        player_element_template.id = doc.id;
-                        if (doc.data().photoURL != null)
-                            player_element_template.querySelector('.pic').src = doc.data().photoURL;
-                        else
-                            player_element_template.querySelector('.pic').src = 'blank_profile.png';
-                        player_element_template.querySelector('.player_selector_name').innerHTML = doc.data().name;
-                        $("#swal_container_choose")[0].innerHTML += player_element_template.outerHTML;
+
 
                     });
 
@@ -1120,28 +1114,20 @@ document.getElementById('debug_button2').addEventListener('click', function() {
 
                         console.log(arr);
 
-
-
+                        $("#swal_container_choose")[0].innerHTML += '<h2 class="col-12">' + arr[0][0] + '</h2>';
+                        for (var a=0 ; a<arr.length; a++) {
+                            player_element_template.id = arr[a][1];
+                            if (arr[a][2].photoURL != null)
+                                player_element_template.querySelector('.pic').src = arr[a][2].photoURL;
+                            else
+                                player_element_template.querySelector('.pic').src = 'blank_profile.png';
+                                player_element_template.querySelector('.player_selector_name').innerHTML = arr[a][2].name;
+                                $("#swal_container_choose")[0].innerHTML += player_element_template.outerHTML;
+                        }
+                        $("#swal_container_choose")[0].innerHTML += '<div class="col-12 mb-2"/>';
                     }
 
 
-
-
-                    // console.log(sortObject(sortedPlayers));
-
-
-
-                    // players.sort(function(a, b) {
-                    //     if (a[3] === b[3]) {
-                    //         return 0;
-                    //     } else {
-                    //         return (a[3] < b[3]) ? (high_low ? 1 : -1) : (high_low ? -1 : 1);
-                    //     }
-                    // });
-
-
-
-                    // console.log(Object.values(fetchedPlayers));
 
                     // Get all player selectors
                     var elements = $("#swal_container_choose")[0].children;
@@ -1156,11 +1142,9 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                             if (actualOpacity < 0.75) {
                                 player_container.querySelector('.overlay').style.opacity = 0.75;
                                 player_container.classList.add('player_selected');
-                                // console.log('actif');
                             } else {
                                 player_container.querySelector('.overlay').style.opacity = 0;
                                 player_container.classList.remove('player_selected');
-                                // console.log('off');
                             }
                         })
                     }
