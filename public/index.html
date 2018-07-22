@@ -109,7 +109,7 @@
                             </div>
 
                             <!--  SHUFFLE BUTTON  -->
-                            <div class="container pr-0 pl-0 debug_hide" id="shuffle_container">
+                            <div class="container pr-0 pl-0" id="shuffle_container">
                                 <div class="row">
                                     <div class="col-xl-6 offset-xl-3 col-8 offset-2">
                                         <button type="button" class="btn btn-primary btn-block pb-2" id="shuffle_button"><i class="fas fa-sync-alt fa-lg" aria-hidden="true"></i></span></button>
@@ -147,8 +147,41 @@
                             </div>
 
 
-
                             <div class="container pr-0 pl-0">
+                                <div class="row no-gutters" style="margin-top: 1rem;">
+                                    <div class="col-3 px-2 my-1 match_player_placeholder" id="player1_placeholder">
+                                        <div class="img_container">
+                                            <img class="pic" alt="Photo" id="player1_img" src="blank_profile.png">
+                                        </div>
+                                        <div style="font-size: 0.75rem;" class="player_name" id="player1_name">Joueur 1</div>
+                                    </div>
+
+                                    <div class="col-3 px-2 my-1 match_player_placeholder" id="player2_placeholder">
+                                        <div class="img_container">
+                                            <img class="pic" alt="Photo" id="player2_img" src="blank_profile.png">
+                                        </div>
+                                        <div style="font-size: 0.75rem;" class="player_name" id="player2_name">Joueur 2</div>
+                                    </div>
+
+                                    <div class="col-3 px-2 my-1 match_player_placeholder" id="player3_placeholder">
+                                        <div class="img_container">
+                                            <img class="pic" alt="Photo" id="player3_img" src="blank_profile.png">
+                                        </div>
+                                        <div style="font-size: 0.75rem;" class="player_name" id="player3_name">Joueur 3</div>
+                                    </div>
+
+                                    <div class="col-3 px-2 my-1 match_player_placeholder" id="player4_placeholder">
+                                        <div class="img_container">
+                                            <img class="pic" alt="Photo" id="player4_img" src="blank_profile.png">
+                                        </div>
+                                        <div style="font-size: 0.75rem;" class="player_name" id="player4_name">Joueur 4</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="container pr-0 pl-0 debug_hide">
                                 <div class="row">
                                     <div class="col-10 offset-1">
                                         <h2>Choix</h2>
@@ -161,16 +194,14 @@
                                     </div>
 
 
-                                    <!-- PLayer container -->
-                                    <div class="col-3 px-2 my-1 player_placeholder debug_hide" id="player_placeholder">
-                                        <div class="containerr">
-                                            <img class="pic" id="player_selector_picture" alt="Photo" src="blank_profile.png">
-                                            <div class="overlay"><img class="pic" id="player_selector_picture" alt="Photo" src="val.png"></div>
+                                    <!-- Player container template -->
+                                    <div class="col-3 px-2 my-1 player_placeholder" id="player_placeholder">
+                                        <div class="img_container">
+                                            <img class="pic" alt="Photo" src="blank_profile.png">
+                                            <div class="overlay"><img class="pic" alt="Photo" src="val.png"></div>
                                         </div>
-                                        <div style="font-size: 0.75rem;" class="player_selector_name" id="player_selector_name">Florent D.</div>
+                                        <div style="font-size: 0.75rem;" class="player_selector_name">chooser</div>
                                     </div>
-
-
                                 </div>
                             </div>
 

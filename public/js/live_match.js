@@ -6,7 +6,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
         document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
-        document.getElementById('player_selector_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
     } else {
         console.log("no user connected");
     }
@@ -840,7 +839,7 @@ var borders_template = begin_template + end_template;
 
 
 // --------------- Shuffle button listener ---------------
-document.getElementById("shuffle_button").addEventListener("click", function() {
+document.getElementById("debug_button2").addEventListener("click", function() {
     swal({
         title: 'Selectionnez les joueurs',
         html: '<div id="swal_container_custom"></div>',
@@ -1016,38 +1015,12 @@ function updateButtons() {
 });
 
 
-
-var begin = '<div class="container">' +
-    '<div class="row align-items-center" id="container_row">' +
-    '<div class="col-12 col-xl-10 offset-xl-1" id="sw_container">';
-
-function addPlayerChooser(name, n) {
-    return '<div class="container mt-2">' +
-        '<div class="row">' +
-        '<span class="switch switch-lg">' +
-        '<input type="checkbox" class="switch" id="sw_id' + n + '"></input>' +
-        '<label for="sw_id' + n + '" id="sw_name_id' + n + '">' + name + '</label>' +
-        '</div>' +
-        '</div>' +
-        '<hr/>';
-}
-
-var end = '</div>' +
-    '</div>' +
-    '</div>'
-
-var bt = begin + end;
-
-// document.getElementById('player_placeholder').addEventListener('click', function(event) {
-//     console.log('coucou');
-// });
-
 var fetchedPlayers = {};
 
-document.getElementById('debug_button2').addEventListener('click', function() {
+document.getElementById('shuffle_button').addEventListener('click', function() {
     swal({
         title: 'Selectionnez les joueurs',
-        html: '<div id="swal_container_choose" class="row"></div>',
+        html: '<div id="swal_container_chooser" class="row"></div>',
         showCloseButton: true,
         showCancelButton: true,
         showCancelButton: true,
@@ -1060,50 +1033,50 @@ document.getElementById('debug_button2').addEventListener('click', function() {
         cancelButtonText: 'Annuler',
         reverseButtons: true,
         onOpen: () => {
-            $("#swal_container_choose")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin col-12" style="font-size: 3rem;"></i>';
+            // Main chooser container
+            var chooser = $("#swal_container_chooser")[0];
+            // Display loading icon while players are fetched from database
+            chooser.innerHTML = '<i class="fas fa-circle-notch fa-spin col-12" style="font-size: 3rem;"></i>';
 
+            // Copy player selector template
             var player_element_template = document.getElementById('player_placeholder').cloneNode(true);
 
+            // Fetch all active players
             db.collection("players")
                 .where("isActive", "==", true)
-                // .orderBy("team")
                 .get()
                 .then(function(querySnapshot) {
+                    // Empty the chooser container
+                    chooser.innerHTML = '';
 
-                    $("#swal_container_choose")[0].innerHTML = '';
-
+                    // Store all players data
                     querySnapshot.forEach(function(doc) {
                         fetchedPlayers[doc.id] = doc.data();
-
-
-
-
-
                     });
 
-                    // Tri
+                    // Get all teams available
                     var teamSet = new Set();
 
                     for (var p in fetchedPlayers) {
                         teamSet.add(fetchedPlayers[p].team);
                     }
-                    console.log(teamSet);
+
                     var sortedPlayers = {};
-                    for (var t of teamSet) {
-                        sortedPlayers[t] = {};
-                        for (var p in fetchedPlayers) {
-                            if (fetchedPlayers[p].team === t)
-                                sortedPlayers[t][p] = fetchedPlayers[p];
+                    // Sort players on team they belong
+                    for (var team of teamSet) {
+                        sortedPlayers[team] = {};
+                        for (var playerID in fetchedPlayers) {
+                            if (fetchedPlayers[playerID].team === team)
+                                sortedPlayers[team][playerID] = fetchedPlayers[playerID];
                         }
 
-                        // Teams are sorted
-
+                        // Store players data in array to sort alphabetically
                         var arr = [];
-
-                        for (var i in sortedPlayers[t]) {
-                            arr.push([t, i, sortedPlayers[t][i]]);
+                        for (var playerID in sortedPlayers[team]) {
+                            arr.push([team, playerID, sortedPlayers[team][playerID]]);
                         }
 
+                        // Sort players alphabetically
                         arr.sort(function(a, b) {
                             if (a[2].name === b[2].name) {
                                 return 0;
@@ -1112,34 +1085,38 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                             }
                         });
 
-                        console.log(arr);
-
-                        $("#swal_container_choose")[0].innerHTML += '<h2 class="col-12">' + arr[0][0] + '</h2>';
-                        for (var a=0 ; a<arr.length; a++) {
-                            player_element_template.id = arr[a][1];
-                            player_element_template.querySelector('.pic').id = arr[a][1] + '_pic';
-                            // player_element_template.style.minHeight = '95px';
+                        // Display team name
+                        chooser.innerHTML += '<h2 class="col-12">' + arr[0][0] + '</h2>';
+                        // Display each player
+                        for (var a = 0; a < arr.length; a++) {
+                            player_element_template.id = arr[a][1]; // Change each div ID
+                            player_element_template.querySelector('.pic').id = arr[a][1] + '_pic'; // Change each img ID
+                            // Display picture if available
                             if (arr[a][2].photoURL != null)
                                 player_element_template.querySelector('.pic').src = arr[a][2].photoURL;
                             else
                                 player_element_template.querySelector('.pic').src = 'blank_profile.png';
-                                player_element_template.querySelector('.player_selector_name').innerHTML = arr[a][2].name;
-                                $("#swal_container_choose")[0].innerHTML += player_element_template.outerHTML;
+                            // Display player name
+                            player_element_template.querySelector('.player_selector_name').innerHTML = arr[a][2].name;
+                            // Add copied node to chooser container
+                            chooser.innerHTML += player_element_template.outerHTML;
                         }
-                        $("#swal_container_choose")[0].innerHTML += '<div class="col-12 mb-2"/>';
+                        // Add bottom margin between each team
+                        chooser.innerHTML += '<div class="col-12 mb-2"/>';
                     }
 
 
-
-                    // Get all player selectors
-                    var elements = $("#swal_container_choose")[0].children;
+                    // Add click event listener to all player element
+                    var elements = chooser.children;
 
                     for (var e = 0; e < elements.length; e++) {
-                        // Display it
-                        elements[e].style.display = 'block';
+                        elements[e].style.display = 'block'; // Display element
                         // Add click listener
                         elements[e].addEventListener('click', function(event) {
                             var player_container = event.target.closest('.player_placeholder');
+                            // Fix for height animation
+                            player_container.querySelector('.img_container').style.minHeight = player_container.querySelector('.img_container').offsetHeight + 'px';
+                            // Display validator image
                             var actualOpacity = player_container.querySelector('.overlay').style.opacity;
                             if (actualOpacity < 0.75) {
                                 player_container.querySelector('.overlay').style.opacity = 0.75;
@@ -1149,28 +1126,55 @@ document.getElementById('debug_button2').addEventListener('click', function() {
                                 player_container.classList.remove('player_selected');
                             }
 
-                            $('#' + player_container.id + ' .pic').animate({width: "95%"}, 35, function() {
-                                $(this).animate({width: "100%"}, 35);
+                            // Animate height
+                            $('#' + player_container.id + ' .pic').animate({
+                                width: "95%"
+                            }, 35, function() {
+                                $(this).animate({
+                                    width: "100%"
+                                }, 35);
                             });
-                            // $('#' + player_container.querySelector('.pic').id + '.validator').animate({width: "95%"}, 200, function() {
-                            //     $(this).animate({width: "100%"}, 200);
-                            // });
-                            // player_container.animate([
-                            //   // keyframes
-                            //   { transform: 'translateY(0px)' },
-                            //   { transform: 'translateY(-300px)' }
-                            // ], {
-                            //   // timing options
-                            //   duration: 1000
-                            // });
                         })
                     }
                 });
         },
         preConfirm: () => {
-            for (var t of document.getElementsByClassName('player_selected')) {
-                console.log(t.id);
+            var selected_players = document.getElementsByClassName('player_selected');
+            var selected_players = Array.from(selected_players);
+            // for (var t of selected_players) {
+            //     console.log(t.id);
+            // }
+            // console.log(selected_players);
+
+            // If less than 2 players are selected
+            if (selected_players.length < 2)
+                swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
+            // If only 2 players are selected
+            else if (selected_players.length == 2) {
+                document.getElementById('player1_placeholder').querySelector('#player1_img').src = fetchedPlayers[selected_players[0].id].photoURL;
+                document.getElementById('player1_placeholder').querySelector('#player1_name').innerHTML = fetchedPlayers[selected_players[0].id].name;
+                document.getElementById('player3_placeholder').querySelector('#player3_img').src = fetchedPlayers[selected_players[1].id].photoURL;
+                document.getElementById('player3_placeholder').querySelector('#player3_name').innerHTML = fetchedPlayers[selected_players[1].id].name;
+                document.getElementById("shuffle_container").style.display = "none";
+                document.getElementById("score_indicators").style.display = "block";
             }
+            // If 3 or more players are selected
+            else {
+                // Request to Statistiques HERE
+                for (var placeHolder of document.getElementsByClassName('match_player_placeholder')) {
+                    if (selected_players.length == 0)
+                        break; // if only 3 players have been selected, exit function if names array is empty
+                    var rand_nb = Math.floor(Math.random() * selected_players.length);
+                    console.log(fetchedPlayers[selected_players[rand_nb].id].photoURL);
+                    placeHolder.querySelector('.pic').src = (fetchedPlayers[selected_players[rand_nb].id].photoURL != null ? fetchedPlayers[selected_players[rand_nb].id].photoURL : './blank_profile.png');
+                    placeHolder.querySelector('.player_name').innerHTML = fetchedPlayers[selected_players[rand_nb].id].name;
+                    selected_players.splice(rand_nb, 1); // remove name from array
+                }
+
+                document.getElementById("shuffle_container").style.display = "none";
+                document.getElementById("score_indicators").style.display = "block";
+            }
+            updateButtons();
 
         }
     });
