@@ -1205,3 +1205,193 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
         }
     });
 });
+
+
+for (var holder of document.getElementsByClassName('match_player_placeholder')) {
+    holder.addEventListener('click', function(e) {
+        // console.log(e.target.closest('.match_player_placeholder'));
+        var player_header = document.getElementById('players_container').cloneNode(true);
+        player_header.querySelector('#player1_img').src = './player1.png';
+        player_header.querySelector('#player1_img').style.opacity = 1;
+        player_header.querySelector('#player1_placeholder').classList.add('selected');
+        player_header.querySelector('#player2_img').src = './player2.png';
+        player_header.querySelector('#player2_img').style.opacity = 0.25;
+        player_header.querySelector('#player3_img').src = './player3.png';
+        player_header.querySelector('#player3_img').style.opacity = 0.25;
+        player_header.querySelector('#player4_img').src = './player4.png';
+        player_header.querySelector('#player4_img').style.opacity = 0.25;
+
+        // var placeHolders = player_header.getElementsByClassName('match_player_placeholder');
+        // for (var i = 0; i < placeHolders.length; i++) {
+        //     // console.log(placeHolders[i]);
+        //     placeHolders[i].addEventListener('click', function(e) {
+        //         console.log(e);
+        //     });
+        // }
+
+        // var elements = chooser.children;
+        //
+        // for (var e = 0; e < elements.length; e++) {
+        //     // Add click listener
+        //     elements[e].addEventListener('click', function(event) {
+        //     });
+        // }
+
+        swal({
+            title: 'Selectionnez les joueurs',
+            html: '<div id="swal_container_chooser" class="row"></div>',
+            showCloseButton: true,
+            showCancelButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonClass: 'btn btn-success ml-1 btn-lg',
+            cancelButtonClass: 'btn btn-danger mr-1 btn-lg',
+            buttonsStyling: false,
+            confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
+            cancelButtonText: 'Annuler',
+            reverseButtons: true,
+            onOpen: () => {
+                var chooser = $("#swal_container_chooser")[0];
+                chooser.innerHTML += '<i class="fas fa-circle-notch fa-spin col-12" style="font-size: 3rem;"></i>';
+
+                // Copy player selector template
+                var player_element_template = document.getElementById('player_placeholder').cloneNode(true);
+
+                // Fetch all active players
+                db.collection("players")
+                    .where("isActive", "==", true)
+                    .get()
+                    .then(function(querySnapshot) {
+                        // Empty the chooser container
+                        chooser.innerHTML = '';
+
+                        chooser.innerHTML += player_header.outerHTML;
+
+                        console.log(chooser);
+
+                        // Store all players data
+                        querySnapshot.forEach(function(doc) {
+                            fetchedPlayers[doc.id] = doc.data();
+                        });
+
+                        // Get all teams available
+                        var teamSet = new Set();
+
+                        for (var p in fetchedPlayers) {
+                            teamSet.add(fetchedPlayers[p].team);
+                        }
+
+                        var sortedPlayers = {};
+                        // Sort players on team they belong
+                        for (var team of teamSet) {
+                            sortedPlayers[team] = {};
+                            for (var playerID in fetchedPlayers) {
+                                if (fetchedPlayers[playerID].team === team)
+                                    sortedPlayers[team][playerID] = fetchedPlayers[playerID];
+                            }
+
+                            // Store players data in array to sort alphabetically
+                            var arr = [];
+                            for (var playerID in sortedPlayers[team]) {
+                                arr.push([team, playerID, sortedPlayers[team][playerID]]);
+                            }
+
+                            // Sort players alphabetically
+                            arr.sort(function(a, b) {
+                                if (a[2].name === b[2].name) {
+                                    return 0;
+                                } else {
+                                    return a[2].name > b[2].name;
+                                }
+                            });
+
+                            // Display team name
+                            chooser.innerHTML += '<h2 class="col-12">' + arr[0][0] + '</h2>';
+                            // Display each player
+                            for (var a = 0; a < arr.length; a++) {
+                                player_element_template.id = arr[a][1]; // Change each div ID
+                                player_element_template.querySelector('.pic').id = arr[a][1] + '_pic'; // Change each img ID
+                                // Display picture if available
+                                if (arr[a][2].photoURL != null)
+                                    player_element_template.querySelector('.pic').src = arr[a][2].photoURL;
+                                else
+                                    player_element_template.querySelector('.pic').src = 'blank_profile.png';
+                                // Display player name
+                                player_element_template.querySelector('.player_selector_name').innerHTML = arr[a][2].name;
+                                // Add copied node to chooser container
+                                chooser.innerHTML += player_element_template.outerHTML;
+                            }
+                            // Add bottom margin between each team
+                            chooser.innerHTML += '<div class="col-12 mb-2"/>';
+                        }
+
+
+                        // Add click event listener to all player element
+                        var elements = chooser.children;
+
+                        for (var e = 0; e < elements.length; e++) {
+                            elements[e].style.display = 'block'; // Display element
+                            // Add click listener
+                            elements[e].addEventListener('click', function(event) {
+                                var player_container = event.target.closest('.player_placeholder');
+                                var holders = chooser.getElementsByClassName('match_player_placeholder');
+
+                                // If player is clicked
+                                if (player_container != null) {
+                                    var selectorSrc = chooser.querySelector('.selected').querySelector('.pic').src;
+                                    chooser.querySelector('.selected').querySelector('.pic').src = player_container.querySelector('.pic').src;
+                                    chooser.querySelector('.selected').querySelector('.player_name').innerHTML = player_container.querySelector('.player_selector_name').innerHTML;
+                                    // console.log(chooser.querySelector('.selected').id.split('player')[1].split('_')[0]);
+                                    // player_container.querySelector('.pic').src = chooser.querySelector('.selected').id.split('player')[1].split('_')[0];
+                                    // // Fix for height animation
+                                    // player_container.querySelector('.img_container').style.minHeight = player_container.querySelector('.img_container').offsetHeight + 'px';
+                                    // // Display validator image
+                                    // var actualOpacity = player_container.querySelector('.overlay').style.opacity;
+                                    // if (actualOpacity < 0.75) {
+                                    //     player_container.querySelector('.overlay').style.opacity = 0.75;
+                                    //     player_container.classList.add('player_selected');
+                                    // } else {
+                                    //     player_container.querySelector('.overlay').style.opacity = 0;
+                                    //     player_container.classList.remove('player_selected');
+                                    // }
+                                    //
+                                    // // Animate height
+                                    // $('#' + player_container.id + ' .pic').animate({
+                                    //     width: "95%"
+                                    // }, 35, function() {
+                                    //     $(this).animate({
+                                    //         width: "100%"
+                                    //     }, 35);
+                                    // });
+
+                                    // If player selector is clicked
+                                } else {
+                                    var player_container = event.target.closest('.match_player_placeholder');
+
+                                    if (!player_container.classList.contains('selected')) {
+                                        for (var holder of holders) {
+                                            holder.classList.remove('selected');
+                                        }
+                                        player_container.classList.add('selected');
+
+                                        for (var holder of holders) {
+                                            if (holder.classList.contains('selected')) {
+                                                holder.querySelector('.pic').style.opacity = 1;
+                                            } else {
+                                                holder.querySelector('.pic').style.opacity = 0.25;
+                                            }
+                                        }
+                                    } else {
+                                        console.log(player_container.id.split('player')[1].split('_')[0]);
+                                        player_container.querySelector('.pic').src = './player' + player_container.id.split('player')[1].split('_')[0] + '.png';
+                                        player_container.querySelector('.player_name').innerHTML = 'Joueur ' + player_container.id.split('player')[1].split('_')[0];
+                                    }
+                                }
+                            })
+                        }
+                    });
+            }
+        });
+    });
+}
