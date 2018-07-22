@@ -174,3 +174,12 @@ hr {
 #player_placeholder {
     display: none;
 }
+
+.invalid_player {
+    color: red;
+    font-weight: 700;
+}
+
+.player_name {
+    font-weight: 700;
+}

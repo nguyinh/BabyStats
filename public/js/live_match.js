@@ -16,84 +16,84 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
 // --------------- Players list ---------------
-var player1select = document.getElementById('player1_input');
-var player2select = document.getElementById('player2_input');
-var player3select = document.getElementById('player3_input');
-var player4select = document.getElementById('player4_input');
+// var player1select = document.getElementById('player1_input');
+// var player2select = document.getElementById('player2_input');
+// var player3select = document.getElementById('player3_input');
+// var player4select = document.getElementById('player4_input');
 
-var selectsElements = [player1select, player2select, player3select, player4select];
+// var selectsElements = [player1select, player2select, player3select, player4select];
 
-var dotLoadingInterval = setInterval(function() {
-    for (var s = 0; s < selectsElements.length; s++) { // Foreach option boxes
-        var elmt = selectsElements[s].options[0].innerHTML;
+// var dotLoadingInterval = setInterval(function() {
+//     for (var s = 0; s < selectsElements.length; s++) { // Foreach option boxes
+//         var elmt = selectsElements[s].options[0].innerHTML;
+//
+//         selectsElements[s].options[0].innerHTML = (elmt == "" ? "." : (elmt == "." ? ".." : (elmt == ".." ? "..." : (elmt == "..." ? "" : ""))));
+//     }
+// }, 350);
 
-        selectsElements[s].options[0].innerHTML = (elmt == "" ? "." : (elmt == "." ? ".." : (elmt == ".." ? "..." : (elmt == "..." ? "" : ""))));
-    }
-}, 350);
 
-
-window.onbeforeunload = function() {
-    for (var s = 0; s < selectsElements.length; s++) {
-        if (selectsElements[s].selectedIndex != 0)
-            return "Si vous quittez cette page, les scores seront effacés";
-    }
-};
+// window.onbeforeunload = function() {
+//     for (var s = 0; s < selectsElements.length; s++) {
+//         if (selectsElements[s].selectedIndex != 0)
+//             return "Si vous quittez cette page, les scores seront effacés";
+//     }
+// };
 
 
 // Get all players from database and PSA teams then fill 'select' elements with it
-db.collection("players")
-    .orderBy("team")
-    .get()
-    .then(function(querySnapshot) {
-        // var n = 0;
-        var team_name = "";
-        var player_buffer = [];
-        querySnapshot.forEach(function(doc) {
-            if (!doc.data().isActive)
-                return;
-            if (team_name == "") { // Initialization
-                team_name = doc.data().team;
-                for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
-                    selectsElements[j].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_name + "\">"); // insert team name as title
-                }
-            } else if (team_name != doc.data().team) { // When team changes
-                // Sort and place sorted players in swal (1 team)
-                player_buffer.sort();
-                for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
-                    for (var i = 0; i < player_buffer.length; i++) {
-                        var opt = document.createElement('option');
-                        opt.value = player_buffer[i];
-                        opt.innerHTML = player_buffer[i];
-                        selectsElements[j].appendChild(opt);
-                    }
-                }
-                player_buffer = [];
-                team_name = doc.data().team;
-                for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
-                    selectsElements[j].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_name + "\">"); // insert team name as title
-                }
-            }
-            player_buffer.push(doc.data().name);
-        })
-
-        // Sort and place sorted players in swal for the last team
-        player_buffer.sort(); // sort players
-        for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
-            for (var i = 0; i < player_buffer.length; i++) {
-                var opt = document.createElement('option');
-                opt.value = player_buffer[i];
-                opt.innerHTML = player_buffer[i];
-                selectsElements[j].appendChild(opt);
-            }
-            selectsElements[j].disabled = false;
-            selectsElements[j].options[0].innerHTML = "Joueur " + (j + 1);
-        }
-
-        clearInterval(dotLoadingInterval);
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+// db.collection("players")
+//     .orderBy("team")
+//     .get()
+//     .then(function(querySnapshot) {
+//         // var n = 0;
+//         var team_name = "";
+//         var player_buffer = [];
+//         querySnapshot.forEach(function(doc) {
+//             if (!doc.data().isActive)
+//                 return;
+//             if (team_name == "") { // Initialization
+//                 team_name = doc.data().team;
+//                 for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+//                     selectsElements[j].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_name + "\">"); // insert team name as title
+//                 }
+//             } else if (team_name != doc.data().team) { // When team changes
+//                 // Sort and place sorted players in swal (1 team)
+//                 player_buffer.sort();
+//                 for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+//                     for (var i = 0; i < player_buffer.length; i++) {
+//                         var opt = document.createElement('option');
+//                         opt.value = player_buffer[i];
+//                         opt.innerHTML = player_buffer[i];
+//                         selectsElements[j].appendChild(opt);
+//                     }
+//                 }
+//                 player_buffer = [];
+//                 team_name = doc.data().team;
+//                 for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+//                     selectsElements[j].insertAdjacentHTML('beforeend', "<optgroup label=\"" + team_name + "\">"); // insert team name as title
+//                 }
+//             }
+//             player_buffer.push(doc.data().name);
+//         })
+//
+//         // Sort and place sorted players in swal for the last team
+//         player_buffer.sort(); // sort players
+//         for (var j = 0; j < selectsElements.length; j++) { // Foreach option boxes
+//             for (var i = 0; i < player_buffer.length; i++) {
+//                 var opt = document.createElement('option');
+//                 opt.value = player_buffer[i];
+//                 opt.innerHTML = player_buffer[i];
+//                 selectsElements[j].appendChild(opt);
+//             }
+//             selectsElements[j].disabled = false;
+//             selectsElements[j].options[0].innerHTML = "Joueur " + (j + 1);
+//         }
+//
+//         clearInterval(dotLoadingInterval);
+//     })
+//     .catch(function(error) {
+//         console.log("Error getting documents: ", error);
+//     });
 
 
 
@@ -476,11 +476,22 @@ for (i = 0; i < buttons.length; i++) {
         if (this.id.split("|")[0] == "validate_button")
             validate();
         else if (this.id.split("|")[0] == "random_button") {
+            var playersNames = Array.from(document.getElementsByClassName('player_name'));
+            var playersCount = 0;
+            for (var name of playersNames) {
+                if (name.innerHTML != '') {
+                    playersCount++;
+                }
+            }
+            if (playersCount == 2)
+                return;
+            console.log(playersCount);
             // Get all choosen players
-            var choosenPlayers = [document.getElementById("player1_input").options[document.getElementById("player1_input").selectedIndex].value,
-                document.getElementById("player2_input").options[document.getElementById("player2_input").selectedIndex].value,
-                document.getElementById("player3_input").options[document.getElementById("player3_input").selectedIndex].value,
-                document.getElementById("player4_input").options[document.getElementById("player4_input").selectedIndex].value
+            var choosenPlayers = [
+                [document.getElementById("player1_img").src, document.getElementById("player1_name").innerHTML],
+                [document.getElementById("player2_img").src, document.getElementById("player2_name").innerHTML],
+                [document.getElementById("player3_img").src, document.getElementById("player3_name").innerHTML],
+                [document.getElementById("player4_img").src, document.getElementById("player4_name").innerHTML]
             ];
 
             function shuffle(array) {
@@ -498,10 +509,14 @@ for (i = 0; i < buttons.length; i++) {
 
             // Shuffle and replace players
             choosenPlayers = shuffle(choosenPlayers);
-            $("#player1_input")[0].value = choosenPlayers[0];
-            $("#player2_input")[0].value = choosenPlayers[1];
-            $("#player3_input")[0].value = choosenPlayers[2];
-            $("#player4_input")[0].value = choosenPlayers[3];
+            document.getElementById("player1_img").src = choosenPlayers[0][0];
+            document.getElementById("player1_name").innerHTML = choosenPlayers[0][1];
+            document.getElementById("player2_img").src = choosenPlayers[1][0];
+            document.getElementById("player2_name").innerHTML = choosenPlayers[1][1];
+            document.getElementById("player3_img").src = choosenPlayers[2][0];
+            document.getElementById("player3_name").innerHTML = choosenPlayers[2][1];
+            document.getElementById("player4_img").src = choosenPlayers[3][0];
+            document.getElementById("player4_name").innerHTML = choosenPlayers[3][1];
 
             updateButtons();
         } else {
@@ -525,30 +540,32 @@ function validate() {
 
     // Get all inputs
     var inputs = [
-        document.getElementById("player1_input"),
-        document.getElementById("player2_input"),
-        document.getElementById("player3_input"),
-        document.getElementById("player4_input")
+        document.getElementById("player1_placeholder"),
+        document.getElementById("player2_placeholder"),
+        document.getElementById("player3_placeholder"),
+        document.getElementById("player4_placeholder")
     ];
+
+    console.log(inputs);
 
     // Clear color for all inputs
     for (var i = 0; i < inputs.length; i++) {
-        $("#" + inputs[i].id).removeClass("is-invalid");
+        inputs[i].querySelector('.player_name').classList.remove('invalid_player');
         document.getElementsByClassName("score_border").item(0).style.borderColor = "rgb(121, 121, 121)";
         document.getElementsByClassName("score_border").item(1).style.borderColor = "rgb(121, 121, 121)";
     }
 
     // Check for errors
     var errorFlag = false;
-    if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "") ||
-        (inputs[2].options[inputs[2].selectedIndex].value == "" && inputs[3].options[inputs[3].selectedIndex].value == "") ||
+    if ((inputs[0].querySelector('.player_name').innerHTML == "" && inputs[1].querySelector('.player_name').innerHTML == "") ||
+        (inputs[2].querySelector('.player_name').innerHTML == "" && inputs[3].querySelector('.player_name').innerHTML == "") ||
         ((int(score1) == 0) && (int(score2) == 0))) {
         // ((int(score1) == 10) && (int(score2) == 10)) ||
         // ((int(score1) != 10) && (int(score2) != 10))) {
 
-        if ((inputs[0].options[inputs[0].selectedIndex].value == "" && inputs[1].options[inputs[1].selectedIndex].value == "")) {
-            $("#player1_input").addClass("is-invalid");
-            $("#player2_input").addClass("is-invalid");
+        if ((inputs[0].querySelector('.player_name').innerHTML == "" && inputs[1].querySelector('.player_name').innerHTML == "")) {
+            inputs[0].querySelector('.player_name').classList.add('invalid_player');
+            inputs[1].querySelector('.player_name').classList.add('invalid_player');
         }
         // if (((int(score1) == 10) && (int(score2) == 10)) ||
         //     ((int(score1) != 10) && (int(score2) != 10))) {
@@ -556,29 +573,29 @@ function validate() {
             document.getElementsByClassName("score_border").item(0).style.borderColor = "rgb(194, 57, 57)";
             document.getElementsByClassName("score_border").item(1).style.borderColor = "rgb(194, 57, 57)";
         }
-        if ((inputs[2].options[inputs[2].selectedIndex].value == "" && inputs[3].options[inputs[3].selectedIndex].value == "")) {
-            $("#player3_input").addClass("is-invalid");
-            $("#player4_input").addClass("is-invalid");
+        if ((inputs[2].querySelector('.player_name').innerHTML == "" && inputs[3].querySelector('.player_name').innerHTML == "")) {
+            inputs[2].querySelector('.player_name').classList.add('invalid_player');
+            inputs[3].querySelector('.player_name').classList.add('invalid_player');
         }
 
         // Exit method if error(s)
         errorFlag = true;
     }
 
-    inputsValues = [];
-    for (var i = 0; i < inputs.length; i++) {
-        inputsValues.push(inputs[i].options[inputs[i].selectedIndex].value);
-    }
-
-    for (a = 0; a < inputsValues.length; a++) {
-        for (b = a + 1; b < inputsValues.length; b++) {
-            if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
-                $("#player" + (a + 1) + "_input").addClass("is-invalid");
-                $("#player" + (b + 1) + "_input").addClass("is-invalid");
-                errorFlag = true;
-            }
-        }
-    }
+    // inputsValues = [];
+    // for (var i = 0; i < inputs.length; i++) {
+    //     inputsValues.push(inputs[i].options[inputs[i].selectedIndex].value);
+    // }
+    //
+    // for (a = 0; a < inputsValues.length; a++) {
+    //     for (b = a + 1; b < inputsValues.length; b++) {
+    //         if (inputsValues[a] == inputsValues[b] && inputsValues[a] != "") {
+    //             $("#player" + (a + 1) + "_input").addClass("is-invalid");
+    //             $("#player" + (b + 1) + "_input").addClass("is-invalid");
+    //             errorFlag = true;
+    //         }
+    //     }
+    // }
     if (errorFlag)
         return;
 
@@ -598,10 +615,10 @@ function validate() {
             querySnapshot.forEach(function(doc) {
                 // Create match object
                 var reported_match = {
-                    player1: inputs[0].options[inputs[0].selectedIndex].value,
-                    player2: inputs[1].options[inputs[1].selectedIndex].value,
-                    player3: inputs[2].options[inputs[2].selectedIndex].value,
-                    player4: inputs[3].options[inputs[3].selectedIndex].value,
+                    player1: inputs[0].querySelector('.player_name').innerHTML,
+                    player2: inputs[1].querySelector('.player_name').innerHTML,
+                    player3: inputs[2].querySelector('.player_name').innerHTML,
+                    player4: inputs[3].querySelector('.player_name').innerHTML,
                     score1: int(score1),
                     score2: int(score2),
                     player1_goals: int(goalJ1),
@@ -647,9 +664,9 @@ function validate() {
                                 var players = [];
                                 for (var i = 0; i < inputs.length; i++) {
                                     var nb = inputs[i].id.split("player")[1].split("_")[0];
-                                    if (inputs[i].value != "")
+                                    if (inputs[i].querySelector('.player_name').innerHTML != "")
                                         players.push([
-                                            inputs[i],
+                                            inputs[i].querySelector('.player_name').innerHTML,
                                             parseInt($("#goalJ" + nb + "score")[0].innerHTML),
                                             parseInt($("#gamelleJ" + nb + "score")[0].innerHTML),
                                             parseInt($("#betrayJ" + nb + "score")[0].innerHTML)
@@ -682,12 +699,12 @@ function validate() {
                                         });
 
                                         if (high_low)
-                                            quote = "Woah ! " + players[0][0].value.split(" ")[0] +
+                                            quote = "Woah ! " + players[0][0].split(" ")[0] +
                                             " est en grande forme aujourd'hui avec ses " +
                                             players[0][1] +
                                             " points <i class=\"em em-open_mouth\"></i>";
                                         else
-                                            quote = players[0][0].value.split(" ")[0] +
+                                            quote = players[0][0].split(" ")[0] +
                                             ", faut dormir plus la nuit <i class=\"em em-smiling_face_with_smiling_eyes_and_hand_covering_mouth\"></i>";
                                         break;
 
@@ -702,13 +719,13 @@ function validate() {
 
                                         if (players[0][2] != 0) {
                                             if (players[0][2] > 1) { // If there was more than 1 gamelles
-                                                quote = players[0][0].value.split(" ")[0] +
+                                                quote = players[0][0].split(" ")[0] +
                                                     " a le poignet en feu avec ses " +
                                                     players[0][2] +
                                                     " gamelles <i class=\"em em-clap\"></i>";
                                             } else { // If there was just 1 gamelle
                                                 quote = "Bravo " +
-                                                    players[0][0].value.split(" ")[0] +
+                                                    players[0][0].split(" ")[0] +
                                                     " pour cette exceptionnelle gamelle <i class=\"em em-open_mouth\"></i>";
                                             }
                                         } else {
@@ -716,13 +733,13 @@ function validate() {
                                                 quote = "Pas de gamelle aujourd'hui ? <i class=\"em em-cry\"></i>";
                                             else {
                                                 if (players[players.length - 1][2] > 1) { // If there was more than 1 gamelles
-                                                    quote = players[players.length - 1][0].value.split(" ")[0] +
+                                                    quote = players[players.length - 1][0].split(" ")[0] +
                                                         " a le poignet en feu avec ses " +
                                                         players[players.length - 1][2] +
                                                         " gamelles <i class=\"em em-clap\"></i>";
                                                 } else { // If there was just 1 gamelle
                                                     quote = "Bravo " +
-                                                        players[players.length - 1][0].value.split(" ")[0] +
+                                                        players[players.length - 1][0].split(" ")[0] +
                                                         " pour cette exceptionnelle gamelle <i class=\"em em-open_mouth\"></i>";
                                                 }
                                             }
@@ -742,18 +759,18 @@ function validate() {
                                         if (players[0][3] != 0) {
                                             if (players[0][3] > 1) { // If there was more than 1 betrays
                                                 quote = "Une ovation pour " +
-                                                    players[0][0].value.split(" ")[0] +
+                                                    players[0][0].split(" ")[0] +
                                                     " et ses " +
                                                     players[0][3] +
                                                     " buts contre son camp <i class=\"em em-upside_down_face\"></i>";
                                             } else { // If there was just 1 betray
                                                 quote = "Bravo la trahison " +
-                                                    players[0][0].value.split(" ")[0] +
+                                                    players[0][0].split(" ")[0] +
                                                     " <i class=\"em em-anguished\"></i>";
                                             }
                                         } else
                                             quote = "L'avant-bras de " +
-                                            players[0][0].value.split(" ")[0] +
+                                            players[0][0].split(" ")[0] +
                                             " est plus gros qu'hier non ? <i class=\"em em-fist\"></i><i class=\"em em-smirk\"></i>";
                                         break;
                                     default:
@@ -794,8 +811,9 @@ function validate() {
                                         indicators[i].innerHTML = 0;
 
                                     for (var i = 0; i < inputs.length; i++) {
-                                        $("#" + inputs[i].id).removeClass("is-invalid");
-                                        inputs[i].value = "";
+                                        inputs[i].querySelector('.player_name').classList.remove('invalid_player');
+                                        inputs[i].querySelector('.player_name').innerHTML = 'Joueur ' + (i + 1);
+                                        inputs[i].querySelector('.pic').src = './blank_profile.png';
                                     }
 
                                     updateButtons();
@@ -985,10 +1003,10 @@ $("select").change(function() {
 function updateButtons() {
     // Get all players selected
     var inputs = [
-        document.getElementById("player1_input").value,
-        document.getElementById("player2_input").value,
-        document.getElementById("player3_input").value,
-        document.getElementById("player4_input").value
+        document.getElementById("player1_name").innerHTML,
+        document.getElementById("player2_name").innerHTML,
+        document.getElementById("player3_name").innerHTML,
+        document.getElementById("player4_name").innerHTML
     ];
 
     for (j = 0; j < inputs.length; j++) {
@@ -1151,10 +1169,14 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
                 swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
             // If only 2 players are selected
             else if (selected_players.length == 2) {
-                document.getElementById('player1_placeholder').querySelector('#player1_img').src = fetchedPlayers[selected_players[0].id].photoURL;
+                document.getElementById('player1_placeholder').querySelector('#player1_img').src = (fetchedPlayers[selected_players[0].id].photoURL != null ? fetchedPlayers[selected_players[0].id].photoURL : './blank_profile.png');
                 document.getElementById('player1_placeholder').querySelector('#player1_name').innerHTML = fetchedPlayers[selected_players[0].id].name;
-                document.getElementById('player3_placeholder').querySelector('#player3_img').src = fetchedPlayers[selected_players[1].id].photoURL;
+                document.getElementById('player2_placeholder').querySelector('#player2_img').src = './empty_pic.png';
+                document.getElementById('player2_placeholder').querySelector('#player2_name').innerHTML = '';
+                document.getElementById('player3_placeholder').querySelector('#player3_img').src = (fetchedPlayers[selected_players[1].id].photoURL != null ? fetchedPlayers[selected_players[1].id].photoURL : './blank_profile.png');
                 document.getElementById('player3_placeholder').querySelector('#player3_name').innerHTML = fetchedPlayers[selected_players[1].id].name;
+                document.getElementById('player4_placeholder').querySelector('#player4_img').src = './empty_pic.png';
+                document.getElementById('player4_placeholder').querySelector('#player4_name').innerHTML = '';
                 document.getElementById("shuffle_container").style.display = "none";
                 document.getElementById("score_indicators").style.display = "block";
             }
@@ -1162,8 +1184,12 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
             else {
                 // Request to Statistiques HERE
                 for (var placeHolder of document.getElementsByClassName('match_player_placeholder')) {
-                    if (selected_players.length == 0)
+                    if (selected_players.length == 0) {
+                        placeHolder.querySelector('.pic').src = './empty_pic.png';
+                        placeHolder.querySelector('.player_name').innerHTML = '';
                         break; // if only 3 players have been selected, exit function if names array is empty
+                    }
+
                     var rand_nb = Math.floor(Math.random() * selected_players.length);
                     console.log(fetchedPlayers[selected_players[rand_nb].id].photoURL);
                     placeHolder.querySelector('.pic').src = (fetchedPlayers[selected_players[rand_nb].id].photoURL != null ? fetchedPlayers[selected_players[rand_nb].id].photoURL : './blank_profile.png');
