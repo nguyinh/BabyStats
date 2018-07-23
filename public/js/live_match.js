@@ -857,124 +857,124 @@ var borders_template = begin_template + end_template;
 
 
 // --------------- Shuffle button listener ---------------
-document.getElementById("debug_button2").addEventListener("click", function() {
-    swal({
-        title: 'Selectionnez les joueurs',
-        html: '<div id="swal_container_custom"></div>',
-        showCloseButton: true,
-        showCancelButton: true,
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonClass: 'btn btn-success ml-1 btn-lg',
-        cancelButtonClass: 'btn btn-danger mr-1 btn-lg',
-        buttonsStyling: false,
-        confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
-        cancelButtonText: 'Annuler',
-        reverseButtons: true,
-        onOpen: () => {
-            $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin" style="font-size: 2rem;"></i>';
-
-            db.collection("matches").orderBy('invert_number').limit(1).get().then(function(querySnapshot) {
-                if (querySnapshot.docs != undefined)
-                    var last_players = [querySnapshot.docs[0].data().player1, querySnapshot.docs[0].data().player2, querySnapshot.docs[0].data().player3, querySnapshot.docs[0].data().player4];
-                else
-                    var last_players = ['x', 'x', 'x', 'x'];
-
-                // Get players from database and display it when ready
-                db.collection("players")
-                    .orderBy("team")
-                    .get()
-                    .then(function(querySnapshot) {
-                        var n = 0;
-                        $("#swal_container_custom")[0].innerHTML = borders_template;
-                        var team_name = "";
-                        var player_buffer = [];
-                        querySnapshot.forEach(function(doc) {
-                            if (!doc.data().isActive)
-                                return;
-                            if (team_name == "") {
-                                team_name = doc.data().team;
-                                $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>'); // insert team name in swal
-                            } else if (team_name != doc.data().team) {
-                                // Sort and place sorted players in swal (1 team)
-                                player_buffer.sort();
-                                for (var i = 0; i < player_buffer.length; i++) {
-                                    // Insert markers for players who played in last match
-                                    for (var l = 0; l < last_players.length; l++) {
-                                        if (player_buffer[i] == last_players[0] || player_buffer[i] == last_players[1])
-                                            player_buffer[i] += ' <i class="em em-large_blue_circle mb-1" style="font-size: 0.75rem;"></i>';
-                                        else if (player_buffer[i] == last_players[2] || player_buffer[i] == last_players[3])
-                                            player_buffer[i] += ' <i class="em em-red_circle mb-1" style="font-size: 0.75rem;"></i>';
-                                    }
-                                    $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
-                                }
-                                player_buffer = [];
-                                team_name = doc.data().team;
-                                $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>');
-                            }
-                            player_buffer.push(doc.data().name);
-                        })
-
-                        // Sort and place sorted players in swal for the last team
-                        player_buffer.sort(); // sort players
-                        for (var i = 0; i < player_buffer.length; i++) {
-                            // Insert markers for players who played in last match
-                            for (var l = 0; l < last_players.length; l++) {
-                                if (player_buffer[i] == last_players[0] || player_buffer[i] == last_players[1])
-                                    player_buffer[i] += ' <i class="em em-large_blue_circle mb-1" style="font-size: 0.75rem;"></i>';
-                                else if (player_buffer[i] == last_players[2] || player_buffer[i] == last_players[3])
-                                    player_buffer[i] += ' <i class="em em-red_circle mb-1" style="font-size: 0.75rem;"></i>';
-                            }
-                            $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
-                        }
-                    })
-                    .catch(function(error) {
-                        console.log("Error getting documents: ", error);
-                        swal.showValidationError('Un petit problème est survenu ... Nos meilleurs ingénieurs sont sur le coup !');
-                    });
-            });
-        },
-        preConfirm: () => {
-            var names = [];
-            // PUT HERE ALL CONDITIONS
-
-            // Get all names from swal
-            $('[id*="sw_id"]').each(function() {
-                if (!this.checked) {
-
-                } else {
-                    names.push($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML.split(' <i')[0]);
-                }
-            })
-
-            // If less than 2 players are selected
-            if (names.length < 2)
-                swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
-            // If only 2 players are selected
-            else if (names.length == 2) {
-                $("#player1_input")[0].value = names[0];
-                $("#player3_input")[0].value = names[1];
-                document.getElementById("shuffle_container").style.display = "none";
-                document.getElementById("score_indicators").style.display = "block";
-            }
-            // If 3 or more players are selected
-            else {
-                // Request to Statistiques HERE
-                $('select[id*="_input"][id*="player"]').each(function() {
-                    if (names.length == 0)
-                        return; // if only 3 players have been selected, exit function if names array is empty
-                    var rand_nb = Math.floor(Math.random() * names.length);
-                    this.value = names[rand_nb]; // place random name in select element
-                    names.splice(rand_nb, 1); // remove name from array
-                });
-                document.getElementById("shuffle_container").style.display = "none";
-                document.getElementById("score_indicators").style.display = "block";
-            }
-            updateButtons();
-        }
-    })
-});
+// document.getElementById("debug_button2").addEventListener("click", function() {
+//     swal({
+//         title: 'Selectionnez les joueurs',
+//         html: '<div id="swal_container_custom"></div>',
+//         showCloseButton: true,
+//         showCancelButton: true,
+//         showCancelButton: true,
+//         confirmButtonColor: '#3085d6',
+//         cancelButtonColor: '#d33',
+//         confirmButtonClass: 'btn btn-success ml-1 btn-lg',
+//         cancelButtonClass: 'btn btn-danger mr-1 btn-lg',
+//         buttonsStyling: false,
+//         confirmButtonText: 'Let\'s <i class="em em-soccer"></i>',
+//         cancelButtonText: 'Annuler',
+//         reverseButtons: true,
+//         onOpen: () => {
+//             $("#swal_container_custom")[0].innerHTML = '<i class="fas fa-circle-notch fa-spin" style="font-size: 2rem;"></i>';
+//
+//             db.collection("matches").orderBy('invert_number').limit(1).get().then(function(querySnapshot) {
+//                 if (querySnapshot.docs != undefined)
+//                     var last_players = [querySnapshot.docs[0].data().player1, querySnapshot.docs[0].data().player2, querySnapshot.docs[0].data().player3, querySnapshot.docs[0].data().player4];
+//                 else
+//                     var last_players = ['x', 'x', 'x', 'x'];
+//
+//                 // Get players from database and display it when ready
+//                 db.collection("players")
+//                     .orderBy("team")
+//                     .get()
+//                     .then(function(querySnapshot) {
+//                         var n = 0;
+//                         $("#swal_container_custom")[0].innerHTML = borders_template;
+//                         var team_name = "";
+//                         var player_buffer = [];
+//                         querySnapshot.forEach(function(doc) {
+//                             if (!doc.data().isActive)
+//                                 return;
+//                             if (team_name == "") {
+//                                 team_name = doc.data().team;
+//                                 $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>'); // insert team name in swal
+//                             } else if (team_name != doc.data().team) {
+//                                 // Sort and place sorted players in swal (1 team)
+//                                 player_buffer.sort();
+//                                 for (var i = 0; i < player_buffer.length; i++) {
+//                                     // Insert markers for players who played in last match
+//                                     for (var l = 0; l < last_players.length; l++) {
+//                                         if (player_buffer[i] == last_players[0] || player_buffer[i] == last_players[1])
+//                                             player_buffer[i] += ' <i class="em em-large_blue_circle mb-1" style="font-size: 0.75rem;"></i>';
+//                                         else if (player_buffer[i] == last_players[2] || player_buffer[i] == last_players[3])
+//                                             player_buffer[i] += ' <i class="em em-red_circle mb-1" style="font-size: 0.75rem;"></i>';
+//                                     }
+//                                     $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+//                                 }
+//                                 player_buffer = [];
+//                                 team_name = doc.data().team;
+//                                 $("#sw_container")[0].insertAdjacentHTML('beforeend', '<h2 class="mt-3">' + team_name + '</h2>');
+//                             }
+//                             player_buffer.push(doc.data().name);
+//                         })
+//
+//                         // Sort and place sorted players in swal for the last team
+//                         player_buffer.sort(); // sort players
+//                         for (var i = 0; i < player_buffer.length; i++) {
+//                             // Insert markers for players who played in last match
+//                             for (var l = 0; l < last_players.length; l++) {
+//                                 if (player_buffer[i] == last_players[0] || player_buffer[i] == last_players[1])
+//                                     player_buffer[i] += ' <i class="em em-large_blue_circle mb-1" style="font-size: 0.75rem;"></i>';
+//                                 else if (player_buffer[i] == last_players[2] || player_buffer[i] == last_players[3])
+//                                     player_buffer[i] += ' <i class="em em-red_circle mb-1" style="font-size: 0.75rem;"></i>';
+//                             }
+//                             $("#sw_container")[0].insertAdjacentHTML('beforeend', addPlayerCheckbox(player_buffer[i], n++));
+//                         }
+//                     })
+//                     .catch(function(error) {
+//                         console.log("Error getting documents: ", error);
+//                         swal.showValidationError('Un petit problème est survenu ... Nos meilleurs ingénieurs sont sur le coup !');
+//                     });
+//             });
+//         },
+//         preConfirm: () => {
+//             var names = [];
+//             // PUT HERE ALL CONDITIONS
+//
+//             // Get all names from swal
+//             $('[id*="sw_id"]').each(function() {
+//                 if (!this.checked) {
+//
+//                 } else {
+//                     names.push($("#sw_name_id" + this.id.split("sw_id")[1])[0].innerHTML.split(' <i')[0]);
+//                 }
+//             })
+//
+//             // If less than 2 players are selected
+//             if (names.length < 2)
+//                 swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
+//             // If only 2 players are selected
+//             else if (names.length == 2) {
+//                 $("#player1_input")[0].value = names[0];
+//                 $("#player3_input")[0].value = names[1];
+//                 document.getElementById("shuffle_container").style.display = "none";
+//                 document.getElementById("score_indicators").style.display = "block";
+//             }
+//             // If 3 or more players are selected
+//             else {
+//                 // Request to Statistiques HERE
+//                 $('select[id*="_input"][id*="player"]').each(function() {
+//                     if (names.length == 0)
+//                         return; // if only 3 players have been selected, exit function if names array is empty
+//                     var rand_nb = Math.floor(Math.random() * names.length);
+//                     this.value = names[rand_nb]; // place random name in select element
+//                     names.splice(rand_nb, 1); // remove name from array
+//                 });
+//                 document.getElementById("shuffle_container").style.display = "none";
+//                 document.getElementById("score_indicators").style.display = "block";
+//             }
+//             updateButtons();
+//         }
+//     })
+// });
 // -------------------------------------------------------
 
 
@@ -1211,15 +1211,20 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
     holder.addEventListener('click', function(e) {
         // console.log(e.target.closest('.match_player_placeholder'));
         var player_header = document.getElementById('players_container').cloneNode(true);
+        player_header.id = 'players_container_swal';
         player_header.querySelector('#player1_img').src = './player1.png';
         player_header.querySelector('#player1_img').style.opacity = 1;
         player_header.querySelector('#player1_placeholder').classList.add('selected');
+        player_header.querySelector('#player1_placeholder').classList.add('empty_selector');
         player_header.querySelector('#player2_img').src = './player2.png';
         player_header.querySelector('#player2_img').style.opacity = 0.25;
+        player_header.querySelector('#player2_placeholder').classList.add('empty_selector');
         player_header.querySelector('#player3_img').src = './player3.png';
         player_header.querySelector('#player3_img').style.opacity = 0.25;
+        player_header.querySelector('#player3_placeholder').classList.add('empty_selector');
         player_header.querySelector('#player4_img').src = './player4.png';
         player_header.querySelector('#player4_img').style.opacity = 0.25;
+        player_header.querySelector('#player4_placeholder').classList.add('empty_selector');
 
         // var placeHolders = player_header.getElementsByClassName('match_player_placeholder');
         // for (var i = 0; i < placeHolders.length; i++) {
@@ -1342,28 +1347,30 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                                     var selectorSrc = chooser.querySelector('.selected').querySelector('.pic').src;
                                     chooser.querySelector('.selected').querySelector('.pic').src = player_container.querySelector('.pic').src;
                                     chooser.querySelector('.selected').querySelector('.player_name').innerHTML = player_container.querySelector('.player_selector_name').innerHTML;
+                                    chooser.querySelector('.selected').classList.remove('empty_selector');
                                     // console.log(chooser.querySelector('.selected').id.split('player')[1].split('_')[0]);
                                     // player_container.querySelector('.pic').src = chooser.querySelector('.selected').id.split('player')[1].split('_')[0];
-                                    // // Fix for height animation
-                                    // player_container.querySelector('.img_container').style.minHeight = player_container.querySelector('.img_container').offsetHeight + 'px';
-                                    // // Display validator image
+
+                                    // Fix for height animation
+                                    player_container.querySelector('.img_container').style.minHeight = player_container.querySelector('.img_container').offsetHeight + 'px';
+                                    // Display validator image
                                     // var actualOpacity = player_container.querySelector('.overlay').style.opacity;
                                     // if (actualOpacity < 0.75) {
-                                    //     player_container.querySelector('.overlay').style.opacity = 0.75;
-                                    //     player_container.classList.add('player_selected');
+                                    // player_container.querySelector('.overlay').style.opacity = 0.75;
+                                    // player_container.classList.add('player_selected');
                                     // } else {
-                                    //     player_container.querySelector('.overlay').style.opacity = 0;
-                                    //     player_container.classList.remove('player_selected');
+                                    // player_container.querySelector('.overlay').style.opacity = 0;
+                                    // player_container.classList.remove('player_selected');
                                     // }
-                                    //
-                                    // // Animate height
-                                    // $('#' + player_container.id + ' .pic').animate({
-                                    //     width: "95%"
-                                    // }, 35, function() {
-                                    //     $(this).animate({
-                                    //         width: "100%"
-                                    //     }, 35);
-                                    // });
+
+                                    // Animate height
+                                    $('#' + player_container.id + ' .pic').animate({
+                                        width: "95%"
+                                    }, 35, function() {
+                                        $(this).animate({
+                                            width: "100%"
+                                        }, 35);
+                                    });
 
                                     // If player selector is clicked
                                 } else {
@@ -1383,14 +1390,66 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                                             }
                                         }
                                     } else {
-                                        console.log(player_container.id.split('player')[1].split('_')[0]);
                                         player_container.querySelector('.pic').src = './player' + player_container.id.split('player')[1].split('_')[0] + '.png';
                                         player_container.querySelector('.player_name').innerHTML = 'Joueur ' + player_container.id.split('player')[1].split('_')[0];
+                                        player_container.classList.add('empty_selector');
                                     }
                                 }
                             })
                         }
                     });
+            },
+            preConfirm: () => {
+                var filledPlaceholders = $("#swal_container_chooser")[0].getElementsByClassName('match_player_placeholder');
+                filledPlaceholders = Array.from(filledPlaceholders);
+
+                var selectedPlayers = [];
+                var noSelectedPlayers = [];
+                for (var filledSelector of filledPlaceholders) {
+                    if (!filledSelector.classList.contains('empty_selector')) {
+                        selectedPlayers.push(filledSelector);
+                        // console.log(filledSelector.querySelector('.player_name').innerHTML);
+                    } else
+                        noSelectedPlayers.push(filledSelector);
+                }
+
+
+                // If less than 2 players are selected
+                if (selectedPlayers.length < 2)
+                    swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
+                // If only 2 players are selected
+                else if (selectedPlayers.length == 2) {
+                    if (!((selectedPlayers[0].id.split('_')[0] == 'player1' ||
+                                selectedPlayers[0].id.split('_')[0] == 'player2') &&
+                            (selectedPlayers[1].id.split('_')[0] == 'player3' ||
+                                selectedPlayers[1].id.split('_')[0] == 'player4'))) {
+                        swal.showValidationError('Veuillez placer les joueurs dans deux équipes différentes');
+                    } else {
+                        for (var selectedPlayer of selectedPlayers) {
+                            document.getElementById('players_container').querySelector('#' + selectedPlayer.id + ' .player_name').innerHTML = selectedPlayer.querySelector('.player_name').innerHTML;
+                            document.getElementById('players_container').querySelector('#' + selectedPlayer.id + ' .pic').src = selectedPlayer.querySelector('.pic').src;
+                        }
+                        for (var noSelectedPlayer of noSelectedPlayers) {
+                            document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .player_name').innerHTML = '';
+                            document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .pic').src = './empty_pic.png';
+                        }
+                        document.getElementById("shuffle_container").style.display = "none";
+                        document.getElementById("score_indicators").style.display = "block";
+                    }
+                    // If more than 2 players are selected
+                } else if (selectedPlayers.length > 2) {
+                    for (var selectedPlayer of selectedPlayers) {
+                        document.getElementById('players_container').querySelector('#' + selectedPlayer.id + ' .player_name').innerHTML = selectedPlayer.querySelector('.player_name').innerHTML;
+                        document.getElementById('players_container').querySelector('#' + selectedPlayer.id + ' .pic').src = selectedPlayer.querySelector('.pic').src;
+                    }
+                    for (var noSelectedPlayer of noSelectedPlayers) {
+                        document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .player_name').innerHTML = '';
+                        document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .pic').src = './empty_pic.png';
+                    }
+                    document.getElementById("shuffle_container").style.display = "none";
+                    document.getElementById("score_indicators").style.display = "block";
+                }
+                updateButtons();
             }
         });
     });
