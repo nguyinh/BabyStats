@@ -1450,6 +1450,15 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                     swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
                 // If only 2 players are selected
                 else if (selectedPlayers.length == 2) {
+                    // Verify if a player has been selected twice or more
+                    for (var s = 0; s < selectedPlayers.length; s++) {
+                        for (var p = s + 1; p < selectedPlayers.length; p++) {
+                            if (selectedPlayers[s].querySelector('.player_name').innerHTML == selectedPlayers[p].querySelector('.player_name').innerHTML)
+                                swal.showValidationError('Veuillez retirer les doublons');
+                        }
+                    }
+
+                    // Verify if players are dispatched between teams
                     if (!((selectedPlayers[0].id.split('_')[0] == 'player1' ||
                                 selectedPlayers[0].id.split('_')[0] == 'player2') &&
                             (selectedPlayers[1].id.split('_')[0] == 'player3' ||
@@ -1469,6 +1478,14 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                     }
                     // If more than 2 players are selected
                 } else if (selectedPlayers.length > 2) {
+                    // Verify if a player has been selected twice or more
+                    for (var s = 0; s < selectedPlayers.length; s++) {
+                        for (var p = s + 1; p < selectedPlayers.length; p++) {
+                            if (selectedPlayers[s].querySelector('.player_name').innerHTML == selectedPlayers[p].querySelector('.player_name').innerHTML)
+                                swal.showValidationError('Veuillez retirer les doublons');
+                        }
+                    }
+
                     for (var selectedPlayer of selectedPlayers) {
                         document.getElementById('players_container').querySelector('#' + selectedPlayer.id + ' .player_name').innerHTML = selectedPlayer.querySelector('.player_name').innerHTML;
                         document.getElementById('players_container').querySelector('#' + selectedPlayer.id + ' .pic').src = selectedPlayer.querySelector('.pic').src;
