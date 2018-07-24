@@ -813,7 +813,7 @@ function validate() {
                                     for (var i = 0; i < inputs.length; i++) {
                                         inputs[i].querySelector('.player_name').classList.remove('invalid_player');
                                         inputs[i].querySelector('.player_name').innerHTML = 'Joueur ' + (i + 1);
-                                        inputs[i].querySelector('.pic').src = './blank_profile.png';
+                                        inputs[i].querySelector('.pic').src = './player' + (i + 1) + '.png';
                                     }
 
                                     updateButtons();
@@ -1207,24 +1207,55 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
 });
 
 
+
+
+
 for (var holder of document.getElementsByClassName('match_player_placeholder')) {
     holder.addEventListener('click', function(e) {
         // console.log(e.target.closest('.match_player_placeholder'));
         var player_header = document.getElementById('players_container').cloneNode(true);
         player_header.id = 'players_container_swal';
-        player_header.querySelector('#player1_img').src = './player1.png';
+        // player_header.querySelector('#player1_img').src = './player1.png';
         player_header.querySelector('#player1_img').style.opacity = 1;
+        // player_header.querySelector('#player1_name').innerHTML = 'Joueur 1';
         player_header.querySelector('#player1_placeholder').classList.add('selected');
-        player_header.querySelector('#player1_placeholder').classList.add('empty_selector');
-        player_header.querySelector('#player2_img').src = './player2.png';
+        if (player_header.querySelector('#player1_name').innerHTML == 'Joueur 1')
+            player_header.querySelector('#player1_placeholder').classList.add('empty_selector');
+        if (player_header.querySelector('#player1_name').innerHTML == '') {
+            player_header.querySelector('#player1_placeholder').classList.add('empty_selector');
+            player_header.querySelector('#player1_img').src = './player1.png';
+            player_header.querySelector('#player1_name').innerHTML = 'Joueur 1';
+        }
+        // player_header.querySelector('#player2_img').src = './player2.png';
         player_header.querySelector('#player2_img').style.opacity = 0.25;
-        player_header.querySelector('#player2_placeholder').classList.add('empty_selector');
-        player_header.querySelector('#player3_img').src = './player3.png';
+        // player_header.querySelector('#player2_name').innerHTML = 'Joueur 2';
+        if (player_header.querySelector('#player2_name').innerHTML == 'Joueur 2')
+            player_header.querySelector('#player2_placeholder').classList.add('empty_selector');
+        if (player_header.querySelector('#player2_name').innerHTML == '') {
+            player_header.querySelector('#player2_placeholder').classList.add('empty_selector');
+            player_header.querySelector('#player2_img').src = './player2.png';
+            player_header.querySelector('#player2_name').innerHTML = 'Joueur 2';
+        }
+        // player_header.querySelector('#player3_img').src = './player3.png';
         player_header.querySelector('#player3_img').style.opacity = 0.25;
-        player_header.querySelector('#player3_placeholder').classList.add('empty_selector');
-        player_header.querySelector('#player4_img').src = './player4.png';
+        // player_header.querySelector('#player3_name').innerHTML = 'Joueur 3';
+        if (player_header.querySelector('#player3_name').innerHTML == 'Joueur 3')
+            player_header.querySelector('#player3_placeholder').classList.add('empty_selector');
+        if (player_header.querySelector('#player3_name').innerHTML == '') {
+            player_header.querySelector('#player3_placeholder').classList.add('empty_selector');
+            player_header.querySelector('#player3_img').src = './player3.png';
+            player_header.querySelector('#player3_name').innerHTML = 'Joueur 3';
+        }
+        // player_header.querySelector('#player4_img').src = './player4.png';
         player_header.querySelector('#player4_img').style.opacity = 0.25;
-        player_header.querySelector('#player4_placeholder').classList.add('empty_selector');
+        // player_header.querySelector('#player4_name').innerHTML = 'Joueur 4';
+        if (player_header.querySelector('#player4_name').innerHTML == 'Joueur 4')
+            player_header.querySelector('#player4_placeholder').classList.add('empty_selector');
+        if (player_header.querySelector('#player4_name').innerHTML == '') {
+            player_header.querySelector('#player4_placeholder').classList.add('empty_selector');
+            player_header.querySelector('#player4_img').src = './player4.png';
+            player_header.querySelector('#player4_name').innerHTML = 'Joueur 4';
+        }
 
         // var placeHolders = player_header.getElementsByClassName('match_player_placeholder');
         // for (var i = 0; i < placeHolders.length; i++) {
@@ -1312,7 +1343,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                             });
 
                             // Display team name
-                            chooser.innerHTML += '<h2 class="col-12">' + arr[0][0] + '</h2>';
+                            chooser.innerHTML += '<h2 class="col-12 mt-3">' + arr[0][0] + '</h2>';
                             // Display each player
                             for (var a = 0; a < arr.length; a++) {
                                 player_element_template.id = arr[a][1]; // Change each div ID
@@ -1328,7 +1359,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                                 chooser.innerHTML += player_element_template.outerHTML;
                             }
                             // Add bottom margin between each team
-                            chooser.innerHTML += '<div class="col-12 mb-2"/>';
+                            chooser.innerHTML += '<div class="col-12"/>';
                         }
 
 
