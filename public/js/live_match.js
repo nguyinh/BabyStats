@@ -4,8 +4,8 @@ var db = firebase.firestore();
 // User profil display
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
-        document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../blank_profile.png");
+        document.getElementById('profile_name').innerHTML = '<img id="profile_picture" alt="Photo" src="res/blank_profile.png" style="width: 2rem; height:2rem; border-radius: 50%;" class="mr-2">' + user.displayName
+        document.getElementById('profile_picture').src = (user.photoURL != null ? user.photoURL : "../res/blank_profile.png");
     } else {
         console.log("no user connected");
     }
@@ -813,7 +813,7 @@ function validate() {
                                     for (var i = 0; i < inputs.length; i++) {
                                         inputs[i].querySelector('.player_name').classList.remove('invalid_player');
                                         inputs[i].querySelector('.player_name').innerHTML = 'Joueur ' + (i + 1);
-                                        inputs[i].querySelector('.pic').src = './player' + (i + 1) + '.png';
+                                        inputs[i].querySelector('.pic').src = './res/player' + (i + 1) + '.png';
                                     }
 
                                     updateButtons();
@@ -1113,7 +1113,7 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
                             if (arr[a][2].photoURL != null)
                                 player_element_template.querySelector('.pic').src = arr[a][2].photoURL;
                             else
-                                player_element_template.querySelector('.pic').src = 'blank_profile.png';
+                                player_element_template.querySelector('.pic').src = 'res/blank_profile.png';
                             // Display player name
                             player_element_template.querySelector('.player_selector_name').innerHTML = arr[a][2].name;
                             // Add copied node to chooser container
@@ -1169,13 +1169,13 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
                 swal.showValidationError('Veuillez selectionner au moins 2 joueurs <i class=\"em em-v\"></i>');
             // If only 2 players are selected
             else if (selected_players.length == 2) {
-                document.getElementById('player1_placeholder').querySelector('#player1_img').src = (fetchedPlayers[selected_players[0].id].photoURL != null ? fetchedPlayers[selected_players[0].id].photoURL : './blank_profile.png');
+                document.getElementById('player1_placeholder').querySelector('#player1_img').src = (fetchedPlayers[selected_players[0].id].photoURL != null ? fetchedPlayers[selected_players[0].id].photoURL : './res/blank_profile.png');
                 document.getElementById('player1_placeholder').querySelector('#player1_name').innerHTML = fetchedPlayers[selected_players[0].id].name;
-                document.getElementById('player2_placeholder').querySelector('#player2_img').src = './empty_pic.png';
+                document.getElementById('player2_placeholder').querySelector('#player2_img').src = './res/empty_pic.png';
                 document.getElementById('player2_placeholder').querySelector('#player2_name').innerHTML = '';
-                document.getElementById('player3_placeholder').querySelector('#player3_img').src = (fetchedPlayers[selected_players[1].id].photoURL != null ? fetchedPlayers[selected_players[1].id].photoURL : './blank_profile.png');
+                document.getElementById('player3_placeholder').querySelector('#player3_img').src = (fetchedPlayers[selected_players[1].id].photoURL != null ? fetchedPlayers[selected_players[1].id].photoURL : './res/blank_profile.png');
                 document.getElementById('player3_placeholder').querySelector('#player3_name').innerHTML = fetchedPlayers[selected_players[1].id].name;
-                document.getElementById('player4_placeholder').querySelector('#player4_img').src = './empty_pic.png';
+                document.getElementById('player4_placeholder').querySelector('#player4_img').src = './res/empty_pic.png';
                 document.getElementById('player4_placeholder').querySelector('#player4_name').innerHTML = '';
                 document.getElementById("shuffle_container").style.display = "none";
                 document.getElementById("score_indicators").style.display = "block";
@@ -1185,14 +1185,14 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
                 // Request to Statistiques HERE
                 for (var placeHolder of document.getElementsByClassName('match_player_placeholder')) {
                     if (selected_players.length == 0) {
-                        placeHolder.querySelector('.pic').src = './empty_pic.png';
+                        placeHolder.querySelector('.pic').src = './res/empty_pic.png';
                         placeHolder.querySelector('.player_name').innerHTML = '';
                         break; // if only 3 players have been selected, exit function if names array is empty
                     }
 
                     var rand_nb = Math.floor(Math.random() * selected_players.length);
                     console.log(fetchedPlayers[selected_players[rand_nb].id].photoURL);
-                    placeHolder.querySelector('.pic').src = (fetchedPlayers[selected_players[rand_nb].id].photoURL != null ? fetchedPlayers[selected_players[rand_nb].id].photoURL : './blank_profile.png');
+                    placeHolder.querySelector('.pic').src = (fetchedPlayers[selected_players[rand_nb].id].photoURL != null ? fetchedPlayers[selected_players[rand_nb].id].photoURL : './res/blank_profile.png');
                     placeHolder.querySelector('.player_name').innerHTML = fetchedPlayers[selected_players[rand_nb].id].name;
                     selected_players.splice(rand_nb, 1); // remove name from array
                 }
@@ -1223,7 +1223,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
             player_header.querySelector('#player1_placeholder').classList.add('empty_selector');
         if (player_header.querySelector('#player1_name').innerHTML == '') {
             player_header.querySelector('#player1_placeholder').classList.add('empty_selector');
-            player_header.querySelector('#player1_img').src = './player1.png';
+            player_header.querySelector('#player1_img').src = './res/player1.png';
             player_header.querySelector('#player1_name').innerHTML = 'Joueur 1';
         }
         // player_header.querySelector('#player2_img').src = './player2.png';
@@ -1233,7 +1233,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
             player_header.querySelector('#player2_placeholder').classList.add('empty_selector');
         if (player_header.querySelector('#player2_name').innerHTML == '') {
             player_header.querySelector('#player2_placeholder').classList.add('empty_selector');
-            player_header.querySelector('#player2_img').src = './player2.png';
+            player_header.querySelector('#player2_img').src = './res/player2.png';
             player_header.querySelector('#player2_name').innerHTML = 'Joueur 2';
         }
         // player_header.querySelector('#player3_img').src = './player3.png';
@@ -1243,7 +1243,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
             player_header.querySelector('#player3_placeholder').classList.add('empty_selector');
         if (player_header.querySelector('#player3_name').innerHTML == '') {
             player_header.querySelector('#player3_placeholder').classList.add('empty_selector');
-            player_header.querySelector('#player3_img').src = './player3.png';
+            player_header.querySelector('#player3_img').src = './res/player3.png';
             player_header.querySelector('#player3_name').innerHTML = 'Joueur 3';
         }
         // player_header.querySelector('#player4_img').src = './player4.png';
@@ -1253,7 +1253,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
             player_header.querySelector('#player4_placeholder').classList.add('empty_selector');
         if (player_header.querySelector('#player4_name').innerHTML == '') {
             player_header.querySelector('#player4_placeholder').classList.add('empty_selector');
-            player_header.querySelector('#player4_img').src = './player4.png';
+            player_header.querySelector('#player4_img').src = './res/player4.png';
             player_header.querySelector('#player4_name').innerHTML = 'Joueur 4';
         }
 
@@ -1352,7 +1352,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                                 if (arr[a][2].photoURL != null)
                                     player_element_template.querySelector('.pic').src = arr[a][2].photoURL;
                                 else
-                                    player_element_template.querySelector('.pic').src = 'blank_profile.png';
+                                    player_element_template.querySelector('.pic').src = 'res/blank_profile.png';
                                 // Display player name
                                 player_element_template.querySelector('.player_selector_name').innerHTML = arr[a][2].name;
                                 // Add copied node to chooser container
@@ -1421,7 +1421,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                                             }
                                         }
                                     } else {
-                                        player_container.querySelector('.pic').src = './player' + player_container.id.split('player')[1].split('_')[0] + '.png';
+                                        player_container.querySelector('.pic').src = './res/player' + player_container.id.split('player')[1].split('_')[0] + '.png';
                                         player_container.querySelector('.player_name').innerHTML = 'Joueur ' + player_container.id.split('player')[1].split('_')[0];
                                         player_container.classList.add('empty_selector');
                                     }
@@ -1471,7 +1471,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                         }
                         for (var noSelectedPlayer of noSelectedPlayers) {
                             document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .player_name').innerHTML = '';
-                            document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .pic').src = './empty_pic.png';
+                            document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .pic').src = './res/empty_pic.png';
                         }
                         document.getElementById("shuffle_container").style.display = "none";
                         document.getElementById("score_indicators").style.display = "block";
@@ -1492,7 +1492,7 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                     }
                     for (var noSelectedPlayer of noSelectedPlayers) {
                         document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .player_name').innerHTML = '';
-                        document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .pic').src = './empty_pic.png';
+                        document.getElementById('players_container').querySelector('#' + noSelectedPlayer.id + ' .pic').src = './res/empty_pic.png';
                     }
                     document.getElementById("shuffle_container").style.display = "none";
                     document.getElementById("score_indicators").style.display = "block";
