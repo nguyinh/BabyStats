@@ -169,6 +169,13 @@ hr {
     /* text-align: center; */
 }
 
+.team_overlay {
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
+    width: 100%;
+}
+
 /* Hide selector template */
 
 #player_placeholder {
