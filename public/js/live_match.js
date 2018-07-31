@@ -976,7 +976,7 @@ document.getElementById('shuffle_button').addEventListener('click', function() {
 
 
 
-
+// Add click event listener for all placeholders 
 for (var holder of document.getElementsByClassName('match_player_placeholder')) {
     holder.addEventListener('click', function(e) {
         var player_header = document.getElementById('players_container').cloneNode(true);
