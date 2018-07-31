@@ -1322,10 +1322,9 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                         // Sort players on team they belong
                         for (var team of teamSet) {
                             sortedPlayers[team] = {};
-                            for (var playerID in fetchedPlayers) {
+                            for (var playerID in fetchedPlayers)
                                 if (fetchedPlayers[playerID].team === team)
                                     sortedPlayers[team][playerID] = fetchedPlayers[playerID];
-                            }
 
                             // Store players data in array to sort alphabetically
                             var arr = [];
@@ -1375,10 +1374,30 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
 
                                 // If player is clicked
                                 if (player_container != null) {
-                                    var selectorSrc = chooser.querySelector('.selected').querySelector('.pic').src;
+                                    // var selectorSrc = chooser.querySelector('.selected').querySelector('.pic').src;
+                                    // Change placeholder source and name for selected player
                                     chooser.querySelector('.selected').querySelector('.pic').src = player_container.querySelector('.pic').src;
                                     chooser.querySelector('.selected').querySelector('.player_name').innerHTML = player_container.querySelector('.player_selector_name').innerHTML;
                                     chooser.querySelector('.selected').classList.remove('empty_selector');
+
+                                    // Iterate cursor until last player
+                                    if (parseInt(chooser.querySelector('.selected').id.split('player')[1].split('_')[0]) < 4) {
+                                        chooser.querySelector('#player' + (parseInt(chooser.querySelector('.selected').id.split('player')[1].split('_')[0]) + 1) + '_placeholder').classList.add('selected');
+                                        chooser.querySelector('#' + chooser.querySelector('.selected').id).classList.remove('selected');
+                                    } else {
+                                        chooser.querySelector('#player1_placeholder').classList.add('selected');
+                                        chooser.querySelector('#player4_placeholder').classList.remove('selected');
+                                    }
+
+                                    // Refresh opacities for selected placeholder
+                                    for (var holder of holders)
+                                        if (holder.classList.contains('selected'))
+                                            holder.querySelector('.pic').style.opacity = 1;
+                                        else
+                                            holder.querySelector('.pic').style.opacity = 0.25;
+
+
+
                                     // console.log(chooser.querySelector('.selected').id.split('player')[1].split('_')[0]);
                                     // player_container.querySelector('.pic').src = chooser.querySelector('.selected').id.split('player')[1].split('_')[0];
 
@@ -1403,24 +1422,29 @@ for (var holder of document.getElementsByClassName('match_player_placeholder')) 
                                         }, 35);
                                     });
 
-                                    // If player selector is clicked
-                                } else {
+
+
+
+                                }
+                                // If player placeholder is clicked
+                                else {
                                     var player_container = event.target.closest('.match_player_placeholder');
 
+                                    // If placeholder was not selected
                                     if (!player_container.classList.contains('selected')) {
-                                        for (var holder of holders) {
+                                        for (var holder of holders)
                                             holder.classList.remove('selected');
-                                        }
+
                                         player_container.classList.add('selected');
 
-                                        for (var holder of holders) {
-                                            if (holder.classList.contains('selected')) {
+                                        for (var holder of holders)
+                                            if (holder.classList.contains('selected'))
                                                 holder.querySelector('.pic').style.opacity = 1;
-                                            } else {
+                                            else
                                                 holder.querySelector('.pic').style.opacity = 0.25;
-                                            }
-                                        }
-                                    } else {
+                                    }
+                                    // If placeholder was selected, delete player selected
+                                    else {
                                         player_container.querySelector('.pic').src = './res/player' + player_container.id.split('player')[1].split('_')[0] + '.png';
                                         player_container.querySelector('.player_name').innerHTML = 'Joueur ' + player_container.id.split('player')[1].split('_')[0];
                                         player_container.classList.add('empty_selector');
